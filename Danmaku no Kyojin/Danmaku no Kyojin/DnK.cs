@@ -30,6 +30,8 @@ namespace Danmaku_no_Kyojin
             Point resolution = new Point(800, 600);
             bool isFullScreen = false;
 
+            this.IsMouseVisible = true;
+
             Graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = resolution.X,

@@ -53,14 +53,14 @@
     <Folder Include="Audio\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Charsets\ship.png">
+    <Compile Include="Graphics\Entities\ship.png">
       <Name>ship</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Charsets\ship2.png">
+    <Compile Include="Graphics\Entities\ship2.png">
       <Name>ship2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

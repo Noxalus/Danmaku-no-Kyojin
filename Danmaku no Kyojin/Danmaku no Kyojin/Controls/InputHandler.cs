@@ -9,6 +9,13 @@ namespace Danmaku_no_Kyojin.Controls
 {
     class InputHandler : Microsoft.Xna.Framework.GameComponent
     {
+        #region Mouse Field Region
+
+        static MouseState mouseState;
+        static MouseState lastMouseState;
+
+        #endregion
+
         #region Keyboard Field Region
 
         static KeyboardState keyboardState;
@@ -20,6 +27,20 @@ namespace Danmaku_no_Kyojin.Controls
 
         static GamePadState[] gamePadStates;
         static GamePadState[] lastGamePadStates;
+
+        #endregion
+
+        #region Mouse Property Region
+
+        public static MouseState MouseState
+        {
+            get { return mouseState; }
+        }
+
+        public static MouseState LastMouseState
+        {
+            get { return lastMouseState; }
+        }
 
         #endregion
 
@@ -56,6 +77,8 @@ namespace Danmaku_no_Kyojin.Controls
         public InputHandler(Game game)
             : base(game)
         {
+            mouseState = Mouse.GetState();
+
             keyboardState = Keyboard.GetState();
 
             gamePadStates = new GamePadState[Enum.GetValues(typeof(PlayerIndex)).Length];
@@ -75,6 +98,9 @@ namespace Danmaku_no_Kyojin.Controls
 
         public override void Update(GameTime gameTime)
         {
+            lastMouseState = mouseState;
+            mouseState = Mouse.GetState();
+
             lastKeyboardState = keyboardState;
             keyboardState = Keyboard.GetState();
 
@@ -91,8 +117,15 @@ namespace Danmaku_no_Kyojin.Controls
 
         public static void Flush()
         {
+            lastMouseState = mouseState;
             lastKeyboardState = keyboardState;
         }
+
+        #endregion
+
+        #region Mouse Region
+
+
 
         #endregion
 
