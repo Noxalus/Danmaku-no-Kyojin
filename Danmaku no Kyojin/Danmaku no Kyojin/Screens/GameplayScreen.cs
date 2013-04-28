@@ -1,5 +1,5 @@
 ﻿using Danmaku_no_Kyojin.Controls;
-using Danmaku_no_Kyojin.Entity;
+using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

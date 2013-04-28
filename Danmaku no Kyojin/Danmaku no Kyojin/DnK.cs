@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Danmaku_no_Kyojin.Entity;
+using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 

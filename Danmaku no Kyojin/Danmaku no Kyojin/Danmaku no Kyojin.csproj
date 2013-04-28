@@ -107,14 +107,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collisions\BoundingCircle.cs" />
+    <Compile Include="Collisions\BoundingElement.cs" />
+    <Compile Include="Collisions\BoundingRectangle.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Controls\GameState.cs" />
     <Compile Include="Controls\GameStateManager.cs" />
     <Compile Include="Controls\InputHandler.cs" />
-    <Compile Include="Entity\BaseBullet.cs" />
-    <Compile Include="Entity\Bullet.cs" />
-    <Compile Include="Entity\Ship.cs" />
+    <Compile Include="Entities\BaseBullet.cs" />
+    <Compile Include="Entities\Bullet.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\ICollidable.cs" />
+    <Compile Include="Entities\Ship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DnK.cs" />
