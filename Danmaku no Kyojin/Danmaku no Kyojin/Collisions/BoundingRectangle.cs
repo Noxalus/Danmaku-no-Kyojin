@@ -54,12 +54,22 @@ namespace Danmaku_no_Kyojin.Collisions
         {
         }
 
-        public bool Intersects(BoundingRectangle boundingSquare)
+        public bool Intersects(BoundingElement boundingElement)
+        {
+            if (boundingElement is BoundingRectangle)
+                return Intersects(boundingElement as BoundingRectangle);
+            else if (boundingElement is BoundingCircle)
+                return Intersects(boundingElement as BoundingCircle);
+            else
+                return false;
+        }
+
+        private bool Intersects(BoundingRectangle boundingSquare)
         {
             return false;
         }
 
-        public bool Intersects(BoundingCircle boundingCircle)
+        private bool Intersects(BoundingCircle boundingCircle)
         {
             return false;
         }

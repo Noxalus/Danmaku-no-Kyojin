@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,7 @@ namespace Danmaku_no_Kyojin.Collisions
         Vector2 GetPosition();
         void SetPosition(Vector2 position);
 
-        bool Intersects(BoundingRectangle boundingSquare);
-        bool Intersects(BoundingCircle boundingCircle);
+        bool Intersects(BoundingElement boundingElement);
 
         void Draw();
     }

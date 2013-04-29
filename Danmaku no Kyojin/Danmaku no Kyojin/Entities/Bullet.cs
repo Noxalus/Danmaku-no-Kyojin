@@ -7,6 +7,8 @@ namespace Danmaku_no_Kyojin.Entities
 {
     class Bullet : BaseBullet
     {
-
+        public Bullet(DnK game) : base(game)
+        {
+        }
     }
 }

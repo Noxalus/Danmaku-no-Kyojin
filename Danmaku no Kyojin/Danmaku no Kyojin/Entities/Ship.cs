@@ -15,7 +15,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         #region Fields
 
-        private DnK _gameRef;
+        DnK _gameRef;
 
         // Specific to the sprite
         private Texture2D _sprite;
@@ -29,9 +29,11 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        public Ship(DnK gameRef, Vector2 position)
+        public Ship(DnK game, Vector2 position)
+            : base(game)
         {
-            _gameRef = gameRef;
+            _gameRef = game;
+
             _position = position;
             _velocity = 5f;
             _velocitySlowMode = 2.5f;
@@ -40,16 +42,25 @@ namespace Danmaku_no_Kyojin.Entities
             _distance = Vector2.Zero;
         }
 
-        public void LoadContent(ContentManager content)
+        public override void Initialize()
         {
-            _sprite = content.Load<Texture2D>("Graphics/Entities/ship2");
-            _position.X = _position.X - _sprite.Width;
-            _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
-            _boundingElement = new BoundingCircle(_gameRef, _position, 20);
+            base.Initialize();
         }
 
-        public void Update(GameTime gameTime)
+        protected override void LoadContent()
         {
+            base.LoadContent();
+
+            _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
+            _position.X = _position.X - _sprite.Width;
+            _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
+            _boundingElement = new BoundingCircle((DnK)this.Game, _position, 20);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
             Point motion = Point.Zero;
 
             // Keyboard
@@ -94,12 +105,18 @@ namespace Danmaku_no_Kyojin.Entities
             UpdateBoundingElementPosition();
         }
 
-        public void Draw()
+        public override void Draw(GameTime gameTime)
         {
+            _gameRef.SpriteBatch.Begin();
+
             _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
             _boundingElement.Draw();
             _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
             _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
+
+            _gameRef.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         private void UpdateBoundingElementPosition()

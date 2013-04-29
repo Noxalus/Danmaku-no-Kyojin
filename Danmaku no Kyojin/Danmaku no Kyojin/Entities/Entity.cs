@@ -7,13 +7,13 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    abstract class Entity : ICollidable
+    abstract class Entity : DrawableGameComponent, ICollidable
     {
         #region Fields
-        
+
         protected Vector2 _position;
         protected BoundingElement _boundingElement;
-        
+
         #endregion
 
         #region Accessors
@@ -32,9 +32,14 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
+        protected Entity(DnK game)
+            : base(game)
+        {
+        }
+
         public bool Intersects(Entity entity)
         {
-            return false;
+            return _boundingElement.Intersects(entity.BoundingElement);
         }
     }
 }

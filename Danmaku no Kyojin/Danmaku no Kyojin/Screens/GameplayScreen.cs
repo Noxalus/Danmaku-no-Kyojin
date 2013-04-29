@@ -23,13 +23,14 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
 
+            GameRef.Components.Add(_ship);
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _logo = GameRef.Content.Load<Texture2D>("Graphics/Pictures/logo");
-            _ship.LoadContent(GameRef.Content);
 
             base.LoadContent();
         }
@@ -41,21 +42,16 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
-            _ship.Update(gameTime);
-
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             ControlManager.Draw(GameRef.SpriteBatch);
 
             GameRef.SpriteBatch.Begin();
 
             GameRef.SpriteBatch.Draw(_logo, new Vector2((GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2), 0), Color.White);
-            _ship.Draw();
 
             GameRef.SpriteBatch.End();
 
