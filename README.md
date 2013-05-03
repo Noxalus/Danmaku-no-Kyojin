@@ -19,6 +19,6 @@ Danmaku no Kyojin (弾幕の巨人) is a 2D danmaku developed in C# with XNA.
 ### Touhou Project
 ![Touhou Project](http://www.freewebs.com/llawliets/Touhou_10.jpg)
 ### Warning Forever
-![Warning Forever](http://www.square-go.com/data/articlesdata/106/106_image_1)
+![Warning Forever](http://mandarth.files.wordpress.com/2008/09/warningforevernq0.jpg)
 ### Geometry Wars
 ![Geometry Wars](http://ln.guillet.free.fr/mediatheque/images/jeux/geometry_wars.jpg)
