@@ -13,6 +13,7 @@ Danmaku no Kyojin (弾幕の巨人) is a 2D danmaku developed in C# with XNA.
 * Control a ship with keyboard (moving + slow mode) and mouse (shoot + bullet time)
 * Simple sprites (geometric) but heavy use of shaders (kikoo effects)
 * Bounded area but 2D camera (game area is not limited to the screen size)
+* Scriptable bullet patterns
 
 ## Inspiration
 
