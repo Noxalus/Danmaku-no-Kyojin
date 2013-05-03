@@ -125,6 +125,7 @@
     <Compile Include="DnK.cs" />
     <Compile Include="Screens\BaseGameState.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
+    <Compile Include="Utils\FrameRateCounter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

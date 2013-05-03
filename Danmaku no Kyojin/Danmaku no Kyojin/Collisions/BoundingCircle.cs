@@ -18,6 +18,8 @@ namespace Danmaku_no_Kyojin.Collisions
 
         Texture2D _drawableCircle;
 
+        Texture2D _pixel;
+
         #endregion
 
         public BoundingCircle(DnK gameRef, Vector2 position, float radius)
@@ -27,6 +29,9 @@ namespace Danmaku_no_Kyojin.Collisions
             _position = position;
             _radius = radius;
             _drawableCircle = CreateDrawableCircle();
+
+            // Load
+            _pixel = _gameRef.Content.Load<Texture2D>("Graphics/Pictures/pixel");
         }
 
         public Vector2 GetPosition()
@@ -66,6 +71,19 @@ namespace Danmaku_no_Kyojin.Collisions
         public void Draw()
         {
             _gameRef.SpriteBatch.Draw(_drawableCircle, _position, Color.Red);
+        }
+
+        public void DrawDebug(Vector2 position, float rotation, Vector2 entitySize)
+        {
+            Vector2 formerPosition = position;
+            position.X = position.X - _radius/2;
+            position.Y = position.Y - _radius/2;
+
+            Vector2 center = new Vector2(entitySize.X / 2, entitySize.Y / 2);
+
+            _gameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)position.X, (int)position.Y, (int)_radius, (int)_radius), null,
+                Color.Red, rotation, center, SpriteEffects.None, 0f);
+            //_gameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)position.X, (int)position.Y, (int)_radius, (int)_radius), Color.Red);
         }
 
         private Texture2D CreateDrawableCircle()

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
+using Danmaku_no_Kyojin.Utils;
 
 namespace Danmaku_no_Kyojin
 {
@@ -55,6 +56,9 @@ namespace Danmaku_no_Kyojin
             GameplayScreen = new GameplayScreen(this, stateManager);
 
             stateManager.ChangeState(GameplayScreen);
+
+            // FPS
+            Components.Add(new FrameRateCounter(this));
         }
 
 

@@ -102,6 +102,9 @@ namespace Danmaku_no_Kyojin.Entities
                 _position.Y += motion.Y * _velocity;
             }
 
+            _center.X = _sprite.Width / 2;
+            _center.Y = _sprite.Height / 2;
+
             UpdateBoundingElementPosition();
         }
 
@@ -110,9 +113,9 @@ namespace Danmaku_no_Kyojin.Entities
             _gameRef.SpriteBatch.Begin();
 
             _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
-            _boundingElement.Draw();
-            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
-            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
+            _boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
+            //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
+            //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
             _gameRef.SpriteBatch.End();
 

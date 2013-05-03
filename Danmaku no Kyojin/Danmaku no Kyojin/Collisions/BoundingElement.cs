@@ -17,5 +17,6 @@ namespace Danmaku_no_Kyojin.Collisions
         bool Intersects(BoundingElement boundingElement);
 
         void Draw();
+        void DrawDebug(Vector2 position, float rotation, Vector2 entitySize);
     }
 }

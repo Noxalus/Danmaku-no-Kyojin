@@ -79,6 +79,11 @@ namespace Danmaku_no_Kyojin.Collisions
             _gameRef.SpriteBatch.Draw(_drawableRectangle, _position, Color.White);
         }
 
+        public void DrawDebug(Vector2 position, float rotation, Vector2 entitySize)
+        {
+            _gameRef.SpriteBatch.Draw(_drawableRectangle, position, Color.Red);
+        }
+
         private Texture2D CreateDrawableRectangle()
         {
             Texture2D box = new Texture2D(_gameRef.Graphics.GraphicsDevice, _rectangle.Width, _rectangle.Height);
