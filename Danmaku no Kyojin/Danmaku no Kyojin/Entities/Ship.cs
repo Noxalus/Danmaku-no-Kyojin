@@ -8,10 +8,11 @@ using Microsoft.Xna.Framework;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework.Input;
 using Danmaku_no_Kyojin.Collisions;
+using System.Diagnostics;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    class Ship : Entity
+    public class Ship : Entity
     {
         #region Fields
 
@@ -35,8 +36,8 @@ namespace Danmaku_no_Kyojin.Entities
             _gameRef = game;
 
             _position = position;
-            _velocity = 5f;
-            _velocitySlowMode = 2.5f;
+            _velocity = 400f;
+            _velocitySlowMode = 125f;
             _rotation = 0f;
             _center = Vector2.Zero;
             _distance = Vector2.Zero;
@@ -54,14 +55,18 @@ namespace Danmaku_no_Kyojin.Entities
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _position.X = _position.X - _sprite.Width;
             _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
-            _boundingElement = new BoundingCircle((DnK)this.Game, _position, 20);
+            _boundingElement = new CollisionCircle((DnK)this.Game, this, 20);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             Point motion = Point.Zero;
+
+            Debug.Print(gameTime.ElapsedGameTime.TotalSeconds.ToString());
 
             // Keyboard
             if (InputHandler.KeyDown(Keys.D))
@@ -86,26 +91,24 @@ namespace Danmaku_no_Kyojin.Entities
 
             _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
-            UpdatePosition(motion);
+            UpdatePosition(motion, dt);
         }
 
-        private void UpdatePosition(Point motion)
+        private void UpdatePosition(Point motion, float dt)
         {
             if (_slowMode)
             {
-                _position.X += motion.X * _velocitySlowMode;
-                _position.Y += motion.Y * _velocitySlowMode;
+                _position.X += motion.X * _velocitySlowMode * dt;
+                _position.Y += motion.Y * _velocitySlowMode * dt;
             }
             else
             {
-                _position.X += motion.X * _velocity;
-                _position.Y += motion.Y * _velocity;
+                _position.X += motion.X * _velocity * dt;
+                _position.Y += motion.Y * _velocity * dt;
             }
 
             _center.X = _sprite.Width / 2;
             _center.Y = _sprite.Height / 2;
-
-            UpdateBoundingElementPosition();
         }
 
         public override void Draw(GameTime gameTime)
@@ -113,18 +116,13 @@ namespace Danmaku_no_Kyojin.Entities
             _gameRef.SpriteBatch.Begin();
 
             _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
-            _boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
+            //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
             //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
             //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
             _gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private void UpdateBoundingElementPosition()
-        {
-            _boundingElement.SetPosition(new Vector2(_position.X - _sprite.Width / 2, _position.Y - _sprite.Height / 2));
         }
     }
 }

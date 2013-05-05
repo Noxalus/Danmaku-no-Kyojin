@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    abstract class Entity : DrawableGameComponent, ICollidable
+    public abstract class Entity : DrawableGameComponent, ICollidable
     {
         #region Fields
 
         protected Vector2 _position;
-        protected BoundingElement _boundingElement;
+        protected ColisionElement _boundingElement;
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Danmaku_no_Kyojin.Entities
             set { _position = value; }
         }
 
-        public BoundingElement BoundingElement
+        public ColisionElement BoundingElement
         {
             get { return _boundingElement; }
             set { _boundingElement = value; }

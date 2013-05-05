@@ -8,13 +8,14 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
-    class BoundingCircle : BoundingElement
+    public class CollisionCircle : ColisionElement
     {
         #region Fields
 
         private DnK _gameRef;
-        private Vector2 _position;
-        private float _radius;
+
+        public float Radius { get; set; }
+        public sealed override Entity Parent { get; set; }
 
         Texture2D _drawableCircle;
 
@@ -22,73 +23,61 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #endregion
 
-        public BoundingCircle(DnK gameRef, Vector2 position, float radius)
+        public CollisionCircle(DnK gameRef, Entity parent, float radius)
         {
             _gameRef = gameRef;
 
-            _position = position;
-            _radius = radius;
+            Radius = radius;
+            Parent = parent;
+
             _drawableCircle = CreateDrawableCircle();
 
             // Load
             _pixel = _gameRef.Content.Load<Texture2D>("Graphics/Pictures/pixel");
         }
 
-        public Vector2 GetPosition()
+        public override bool Intersects(ColisionElement collisionElement)
         {
-            return _position;
+            if (collisionElement is CollisionPolygon)
+                return Intersects(collisionElement as CollisionPolygon);
+
+            if (collisionElement is CollisionCircle)
+                return Intersects(collisionElement as CollisionCircle);
+
+            return collisionElement.Intersects(this);
         }
 
-        public void SetPosition(Vector2 position)
-        {
-            _position = position;
-        }
-
-        public void Update()
-        {
-        }
-
-        public bool Intersects(BoundingElement boundingElement)
-        {
-            if (boundingElement is BoundingRectangle)
-                return Intersects(boundingElement as BoundingRectangle);
-            else if (boundingElement is BoundingCircle)
-                return Intersects(boundingElement as BoundingCircle);
-            else
-                return false;
-        }
-
-        private bool Intersects(BoundingRectangle boundingSquare)
+        private bool Intersects(CollisionPolygon collisionPolygon)
         {
             return false;
         }
 
-        private bool Intersects(BoundingCircle boundingCircle)
+        private bool Intersects(CollisionCircle boundingCircle)
         {
             return false;
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            _gameRef.SpriteBatch.Draw(_drawableCircle, _position, Color.Red);
+            _gameRef.SpriteBatch.Draw(_drawableCircle, Parent.Position, Color.Red);
         }
 
-        public void DrawDebug(Vector2 position, float rotation, Vector2 entitySize)
+        public override void DrawDebug(Vector2 position, float rotation, Vector2 entitySize)
         {
             Vector2 formerPosition = position;
-            position.X = position.X - _radius/2;
-            position.Y = position.Y - _radius/2;
+            position.X = position.X - Radius/2;
+            position.Y = position.Y - Radius/2;
 
             Vector2 center = new Vector2(entitySize.X / 2, entitySize.Y / 2);
 
-            _gameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)position.X, (int)position.Y, (int)_radius, (int)_radius), null,
+            _gameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)position.X, (int)position.Y, (int)Radius, (int)Radius), null,
                 Color.Red, rotation, center, SpriteEffects.None, 0f);
             //_gameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)position.X, (int)position.Y, (int)_radius, (int)_radius), Color.Red);
         }
 
         private Texture2D CreateDrawableCircle()
         {
-            int outerRadius = (int)(_radius * 2 + 2); // So circle doesn't go out of bounds
+            int outerRadius = (int)(Radius * 2 + 2); // So circle doesn't go out of bounds
             Texture2D texture = new Texture2D(_gameRef.Graphics.GraphicsDevice, outerRadius, outerRadius);
 
             Color[] data = new Color[outerRadius * outerRadius];
@@ -98,13 +87,13 @@ namespace Danmaku_no_Kyojin.Collisions
                 data[i] = Color.Transparent;
 
             // Work out the minimum step necessary using trigonometry + sine approximation.
-            double angleStep = 1f / _radius;
+            double angleStep = 1f / Radius;
 
             for (double angle = 0; angle < Math.PI * 2; angle += angleStep)
             {
                 // Use the parametric definition of a circle: http://en.wikipedia.org/wiki/Circle#Cartesian_coordinates
-                int x = (int)Math.Round(_radius + _radius * Math.Cos(angle));
-                int y = (int)Math.Round(_radius + _radius * Math.Sin(angle));
+                int x = (int)Math.Round(Radius + Radius * Math.Cos(angle));
+                int y = (int)Math.Round(Radius + Radius * Math.Sin(angle));
 
                 data[y * outerRadius + x + 1] = Color.White;
             }

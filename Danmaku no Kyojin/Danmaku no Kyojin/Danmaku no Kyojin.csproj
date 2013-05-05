@@ -107,9 +107,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collisions\BoundingCircle.cs" />
-    <Compile Include="Collisions\BoundingElement.cs" />
-    <Compile Include="Collisions\BoundingRectangle.cs" />
+    <Compile Include="BulletEngine\BulletML\BulletMLBullet.cs" />
+    <Compile Include="BulletEngine\BulletML\BulletMLParser.cs" />
+    <Compile Include="BulletEngine\BulletML\BulletMLTree.cs" />
+    <Compile Include="BulletEngine\BulletSystem.cs" />
+    <Compile Include="BulletEngine\MoveManager.cs" />
+    <Compile Include="BulletEngine\Mover.cs" />
+    <Compile Include="Collisions\CollisionCircle.cs" />
+    <Compile Include="Collisions\ColisionElement.cs" />
+    <Compile Include="Collisions\CollisionPolygon.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Controls\GameState.cs" />
