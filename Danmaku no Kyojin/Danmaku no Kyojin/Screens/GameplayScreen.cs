@@ -60,7 +60,7 @@ namespace Danmaku_no_Kyojin.Screens
                 _logos.Add(GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo"));
             }
 
-            _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/bullet");
+            _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
             parser.ParseXML(@"Content/XML/sample.xml");
 
             BulletMLManager.Init(new MyBulletFunctions());
@@ -87,6 +87,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             base.Update(gameTime);
 
+            /*
             timer++;
             if (timer > 1)
             {
@@ -97,6 +98,14 @@ namespace Danmaku_no_Kyojin.Screens
                     mover.pos = new Vector2(40 + (800 * (float)Rand.NextDouble()), 40 + (600 * (float)Rand.NextDouble()));
                     mover.SetBullet(parser.tree);
                 }
+            }
+            */
+
+            if (MoverManager.movers.Count < 10000)
+            {
+                mover = MoverManager.CreateMover();
+                mover.pos = new Vector2(40 + (800 * (float)Rand.NextDouble()), 40 + (600 * (float)Rand.NextDouble()));
+                mover.SetBullet(parser.tree);
             }
 
             if (Ship.SlowMode)
@@ -138,7 +147,7 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
             foreach (Mover mover in MoverManager.movers)
-                GameRef.SpriteBatch.Draw(_bulletSprite, mover.pos, Color.Black);
+                GameRef.SpriteBatch.Draw(_bulletSprite, mover.pos, Color.White);
 
             GameRef.SpriteBatch.End();
 
