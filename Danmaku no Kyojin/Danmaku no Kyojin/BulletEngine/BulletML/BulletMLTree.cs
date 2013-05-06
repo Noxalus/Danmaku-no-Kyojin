@@ -215,6 +215,8 @@ namespace Danmaku_no_Kyojin.BulletML
             {
                 return false;
             }
+            else if (i > values.Count - 1)
+                return false;
             else if (values[i].value == ')' || values[i].value == '(')
             {
                 return false;

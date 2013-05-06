@@ -16,7 +16,9 @@ namespace Danmaku_no_Kyojin.Screens
     {
         private List<Texture2D> _logos;
         private Texture2D _bulletSprite;
+
         public static Ship Ship;
+        private Enemy _enemy;
 
         // Audio
         AudioEngine _audioEngine;
@@ -41,7 +43,9 @@ namespace Danmaku_no_Kyojin.Screens
         public override void Initialize()
         {
             Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            _enemy = new Enemy(GameRef);
 
+            GameRef.Components.Add(_enemy);
             GameRef.Components.Add(Ship);
 
             _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
@@ -64,10 +68,6 @@ namespace Danmaku_no_Kyojin.Screens
             parser.ParseXML(@"Content/XML/sample.xml");
 
             BulletMLManager.Init(new MyBulletFunctions());
-
-            mover = MoverManager.CreateMover();
-            mover.pos = new Vector2(800, 600);
-            mover.SetBullet(parser.tree);
 
             if (music == null)
             {
@@ -101,10 +101,11 @@ namespace Danmaku_no_Kyojin.Screens
             }
             */
 
-            if (MoverManager.movers.Count < 10000)
+
+            if (MoverManager.movers.Count < 1)
             {
                 mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(40 + (800 * (float)Rand.NextDouble()), 40 + (600 * (float)Rand.NextDouble()));
+                mover.pos = new Vector2(390, 200);
                 mover.SetBullet(parser.tree);
             }
 
@@ -138,10 +139,11 @@ namespace Danmaku_no_Kyojin.Screens
                     rand.Next(50, (GameRef.Graphics.GraphicsDevice.Viewport.Height) - (texture.Height / 2))), Color.White);
             }
             */
-
+            /*
             GameRef.SpriteBatch.Draw(_logos[0], new Vector2(
                     (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logos[0].Width / 2),
                     0), Color.White);
+            */
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);

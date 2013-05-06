@@ -123,6 +123,7 @@
     <Compile Include="Controls\InputHandler.cs" />
     <Compile Include="Entities\BaseBullet.cs" />
     <Compile Include="Entities\Bullet.cs" />
+    <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\ICollidable.cs" />
     <Compile Include="Entities\Ship.cs" />
