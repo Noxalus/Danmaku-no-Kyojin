@@ -23,7 +23,7 @@ namespace Danmaku_no_Kyojin.Entities
         private Vector2 _center;
 
         private float _velocity;
-        private bool _slowMode;
+        public bool SlowMode { get; set; }
         private float _velocitySlowMode;
         private float _rotation;
         private Vector2 _distance;
@@ -83,7 +83,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (InputHandler.KeyPressed(Keys.PageDown))
                 _rotation -= MathHelper.ToRadians(45);
 
-            _slowMode = InputHandler.KeyDown(Keys.LeftShift) ? true : false;
+            SlowMode = InputHandler.KeyDown(Keys.LeftShift) ? true : false;
 
             // Mouse
             _distance.X = _position.X - InputHandler.MouseState.X;
@@ -96,7 +96,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         private void UpdatePosition(Point motion, float dt)
         {
-            if (_slowMode)
+            if (SlowMode)
             {
                 _position.X += motion.X * _velocitySlowMode * dt;
                 _position.Y += motion.Y * _velocitySlowMode * dt;

@@ -24,10 +24,10 @@ namespace Danmaku_no_Kyojin.BulletEngine
             mlBullet = new BulletMLBullet(this);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             //BulletMLで自分を動かす
-            if (mlBullet.Run()) //自分が弾の発信源なら、処理終了後に自動的に消える
+            if (mlBullet.Run(gameTime)) //自分が弾の発信源なら、処理終了後に自動的に消える
                 if (bulletRoot)
                     used = false;
 

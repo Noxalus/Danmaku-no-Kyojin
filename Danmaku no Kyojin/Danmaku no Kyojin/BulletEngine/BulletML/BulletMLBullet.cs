@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Danmaku_no_Kyojin.BulletML
 {
@@ -92,7 +93,7 @@ namespace Danmaku_no_Kyojin.BulletML
         /// BulletMLを動作させる
         /// </summary>
         /// <returns>処理が終了していたらtrue</returns>
-        public bool Run()
+        public bool Run(GameTime gameTime)
         {
             int endNum = 0;
             for (int i = 0; i < tasks.Count; i++)
@@ -103,8 +104,10 @@ namespace Danmaku_no_Kyojin.BulletML
                     endNum++;
             }
 
-            X = X + spdX + (float)(Math.Sin(ibullet.Dir) * Speed);
-            Y = Y + spdY + (float)(-Math.Cos(ibullet.Dir) * Speed);
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 50;
+
+            X = X + spdX + (float)(Math.Sin(ibullet.Dir) * Speed * dt);
+            Y = Y + spdY + (float)(-Math.Cos(ibullet.Dir) * Speed * dt);
 
             if (endNum == tasks.Count)
                 return true;

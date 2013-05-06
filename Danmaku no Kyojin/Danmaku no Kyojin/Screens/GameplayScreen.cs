@@ -3,6 +3,7 @@ using Danmaku_no_Kyojin.BulletML;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,13 @@ namespace Danmaku_no_Kyojin.Screens
         private List<Texture2D> _logos;
         private Texture2D _bulletSprite;
         public static Ship Ship;
+
+        // Audio
+        AudioEngine _audioEngine;
+        WaveBank _waveBank;
+        SoundBank _soundBank;
+
+        Cue music = null;
 
         // Random
         public static Random Rand = new Random();
@@ -35,6 +43,10 @@ namespace Danmaku_no_Kyojin.Screens
             Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
 
             GameRef.Components.Add(Ship);
+
+            _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
+            _waveBank = new WaveBank(_audioEngine, "Content\\Audio\\Wave Bank.xwb");
+            _soundBank = new SoundBank(_audioEngine, "Content\\Audio\\Sound Bank.xsb");
 
             base.Initialize();
         }
@@ -57,6 +69,12 @@ namespace Danmaku_no_Kyojin.Screens
             mover.pos = new Vector2(800, 600);
             mover.SetBullet(parser.tree);
 
+            if (music == null)
+            {
+                music = _soundBank.GetCue("Background");
+                music.Play();
+            }
+
             base.LoadContent();
         }
 
@@ -67,18 +85,32 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
 
-            if (MoverManager.movers.Count < 10000)
+            timer++;
+            if (timer > 1)
             {
-                mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(800 / 4 * (float)Rand.NextDouble(), 600 / 4 * (float)Rand.NextDouble());
-                mover.SetBullet(parser.tree);
+                timer = 0;
+                if (mover.used == false)
+                {
+                    mover = MoverManager.CreateMover();
+                    mover.pos = new Vector2(40 + (800 * (float)Rand.NextDouble()), 40 + (600 * (float)Rand.NextDouble()));
+                    mover.SetBullet(parser.tree);
+                }
             }
 
-            MoverManager.Update();
+            if (Ship.SlowMode)
+            {
+                float DESIRED_TIME_MODIFIER = 5f;
+
+                GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
+                    new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / DESIRED_TIME_MODIFIER)));
+                gameTime = newGameTime;
+            }
+
+            MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
 
-            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -102,8 +134,8 @@ namespace Danmaku_no_Kyojin.Screens
                     (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logos[0].Width / 2),
                     0), Color.White);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullet: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullet: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
             foreach (Mover mover in MoverManager.movers)
                 GameRef.SpriteBatch.Draw(_bulletSprite, mover.pos, Color.Black);

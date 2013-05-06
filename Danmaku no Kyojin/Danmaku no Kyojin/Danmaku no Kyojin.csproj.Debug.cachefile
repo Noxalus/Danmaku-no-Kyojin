@@ -5,5 +5,8 @@ Content\Graphics\Entities\ship2.xnb
 Content\Graphics\Pictures\pixel.xnb
 Content\Graphics\Fonts\FPS.xnb
 Content\Graphics\Sprites\bullet.xnb
+Content\Audio\DnK.xgs
+Content\Audio\Wave Bank.xwb
+Content\Audio\Sound Bank.xsb
 Content\Graphics\Pictures\logo.png
 Content\XML\sample.xml

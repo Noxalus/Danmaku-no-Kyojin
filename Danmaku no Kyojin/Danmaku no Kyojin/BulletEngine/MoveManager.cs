@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,11 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// <summary>
         /// すべてのMoverの行動を実行する
         /// </summary>
-        static public void Update()
+        static public void Update(GameTime gameTime)
         {
             for (int i = 0; i < movers.Count; i++)
             {
-                movers[i].Update();
+                movers[i].Update(gameTime);
             }
         }
 

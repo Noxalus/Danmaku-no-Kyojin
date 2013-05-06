@@ -14,7 +14,7 @@ namespace Danmaku_no_Kyojin
     {
         public float GetRandom() { return (float)GameplayScreen.Rand.NextDouble(); }
 
-        public float GetRank() { return 0; }
+        public float GetRank() { return 0.5f; }
 
         public float GetShipPosX() { return GameplayScreen.Ship.Position.X; } //自機の座標を返す
 
