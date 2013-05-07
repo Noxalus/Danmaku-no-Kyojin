@@ -28,7 +28,22 @@ namespace Danmaku_no_Kyojin.Entities
         private float _rotation;
         private Vector2 _distance;
 
+
+        private int _lives;
+        public bool IsInvincible { get; set; }
+        private TimeSpan _invincibleTime;
+        private TimeSpan _invicibleMaxTime;
+
         #endregion
+
+        
+        private Rectangle GetCollisionBox()
+        {
+            return new Rectangle(
+                (int)_position.X - _sprite.Width / 8, 
+                (int)_position.Y - _sprite.Height / 8, 
+                _sprite.Width / 4, _sprite.Height / 4);
+        }
 
         public Ship(DnK game, Vector2 position)
             : base(game)
@@ -41,6 +56,11 @@ namespace Danmaku_no_Kyojin.Entities
             _rotation = 0f;
             _center = Vector2.Zero;
             _distance = Vector2.Zero;
+
+            _lives = 5;
+            IsInvincible = true;
+            _invicibleMaxTime = new TimeSpan(5 * 10000000);
+            _invincibleTime = _invicibleMaxTime;
         }
 
         public override void Initialize()
@@ -53,7 +73,6 @@ namespace Danmaku_no_Kyojin.Entities
             base.LoadContent();
 
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
-            _position.X = _position.X - _sprite.Width;
             _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
             _boundingElement = new CollisionCircle((DnK)this.Game, this, 20);
         }
@@ -61,6 +80,17 @@ namespace Danmaku_no_Kyojin.Entities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (IsInvincible)
+            {
+                _invincibleTime -= gameTime.ElapsedGameTime;
+
+                if (_invincibleTime.Seconds <= 0)
+                {
+                    _invincibleTime = _invicibleMaxTime;
+                    IsInvincible = false;
+                }
+            }
 
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -113,16 +143,47 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
+            if (IsInvincible)
+                _gameRef.Graphics.GraphicsDevice.Clear(Color.Red);
+
             _gameRef.SpriteBatch.Begin();
 
             _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
+            
+            if (Config.DisplayCollisionBoxes)
+                _gameRef.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
+
             //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
             //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
             //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
+            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(0, 40), Color.Black);
+            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(1, 41), Color.White);
+
             _gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public bool CheckCollision(Vector2 position, Point size)
+        {
+            Rectangle bullet = new Rectangle(
+                    (int)position.X - size.X / 2, (int)position.Y - size.Y / 2,
+                    size.X, size.Y);
+
+            Rectangle ship = GetCollisionBox();
+
+            if (ship.Intersects(bullet))
+            {
+                Debug.Print("Collision !");
+                _lives--;
+
+                IsInvincible = true;
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

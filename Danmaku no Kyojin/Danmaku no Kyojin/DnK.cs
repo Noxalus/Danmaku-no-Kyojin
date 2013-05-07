@@ -26,6 +26,8 @@ namespace Danmaku_no_Kyojin
 
         public Rectangle ScreenRectangle;
 
+        public static Texture2D _pixel;
+
         public DnK()
         {
             Point resolution = new Point(800, 600);
@@ -70,6 +72,8 @@ namespace Danmaku_no_Kyojin
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _pixel = Content.Load<Texture2D>("Graphics/Pictures/pixel");
         }
 
         protected override void UnloadContent()

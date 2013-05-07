@@ -45,8 +45,8 @@ namespace Danmaku_no_Kyojin.Screens
             Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
             _enemy = new Enemy(GameRef);
 
-            GameRef.Components.Add(_enemy);
             GameRef.Components.Add(Ship);
+            GameRef.Components.Add(_enemy);
 
             _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
             _waveBank = new WaveBank(_audioEngine, "Content\\Audio\\Wave Bank.xwb");
@@ -72,7 +72,7 @@ namespace Danmaku_no_Kyojin.Screens
             if (music == null)
             {
                 music = _soundBank.GetCue("Background");
-                music.Play();
+                //music.Play();
             }
 
             base.LoadContent();
@@ -101,11 +101,10 @@ namespace Danmaku_no_Kyojin.Screens
             }
             */
 
-
             if (MoverManager.movers.Count < 1)
             {
                 mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(390, 200);
+                mover.pos = new Vector2(401, 82);
                 mover.SetBullet(parser.tree);
             }
 
@@ -121,6 +120,13 @@ namespace Danmaku_no_Kyojin.Screens
             MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
 
+            if (!Ship.IsInvincible)
+            {
+                foreach (Mover mover in MoverManager.movers)
+                {
+                    Ship.CheckCollision(mover.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -149,7 +155,23 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
             foreach (Mover mover in MoverManager.movers)
-                GameRef.SpriteBatch.Draw(_bulletSprite, mover.pos, Color.White);
+            {
+                GameRef.SpriteBatch.Draw(_bulletSprite,
+                    new Vector2(
+                        mover.pos.X - _bulletSprite.Width / 2,
+                        mover.pos.Y - _bulletSprite.Height / 2),
+                        Color.White);
+
+                if (Config.DisplayCollisionBoxes)
+                {
+                    Rectangle bulletRectangle = new Rectangle(
+                        (int)mover.pos.X - _bulletSprite.Width / 2,
+                        (int)mover.pos.Y - _bulletSprite.Height / 2,
+                        _bulletSprite.Width,
+                        _bulletSprite.Height);
+                    GameRef.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
+                }
+            }
 
             GameRef.SpriteBatch.End();
 

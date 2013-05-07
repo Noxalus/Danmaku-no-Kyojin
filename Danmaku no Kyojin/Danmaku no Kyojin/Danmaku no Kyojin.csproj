@@ -116,6 +116,7 @@
     <Compile Include="Collisions\CollisionCircle.cs" />
     <Compile Include="Collisions\ColisionElement.cs" />
     <Compile Include="Collisions\CollisionPolygon.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Controls\GameState.cs" />
