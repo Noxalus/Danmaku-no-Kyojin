@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "http://www.asahi-net.or.jp/~cs8k-cyu/bulletml/bulletml.dtd">
+
+<bulletml type="vertical"
+          xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+
+  <action label="top">
+    <fire>
+      <bulletRef label="3way"/>
+    </fire>
+  </action>
+
+  <bullet label="3way">
+    <speed>0</speed>
+    <action>
+      <repeat>
+        <times>50+$rank*12</times>
+        <action>
+          <wait>10-$rank*6</wait>
+          <repeat>
+            <times>3</times>
+            <action>
+              <fire>
+                <direction type="sequence">118</direction>
+                <speed>8</speed>
+                <bullet/>
+              </fire>
+            </action>
+          </repeat>
+        </action>
+      </repeat>
+      <vanish/>
+    </action>
+  </bullet>
+
+</bulletml>

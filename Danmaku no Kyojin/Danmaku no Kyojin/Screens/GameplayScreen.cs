@@ -65,9 +65,10 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
-            parser.ParseXML(@"Content/XML/sample.xml");
+            //parser.ParseXML(@"Content/XML/sample.xml");
+            parser.ParseXML(@"Content/XML/3way.xml");
 
-            BulletMLManager.Init(new MyBulletFunctions());
+            BulletMLManager.Init(new BulletFunctions());
 
             if (music == null)
             {

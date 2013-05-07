@@ -10,7 +10,7 @@ namespace Danmaku_no_Kyojin
     /// <summary>
     /// BulletMLLibから呼ばれる関数群を実装
     /// </summary>
-    class MyBulletFunctions : IBulletMLManager
+    class BulletFunctions : IBulletMLManager
     {
         public float GetRandom() { return (float)GameplayScreen.Rand.NextDouble(); }
 

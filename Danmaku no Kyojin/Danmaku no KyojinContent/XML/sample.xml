@@ -7,7 +7,7 @@
   <bullet label="winderBullet">
     <speed>5</speed>
   </bullet>
-  
+
   <bullet label="testBullet">
     <speed>10</speed>
   </bullet>
@@ -16,7 +16,7 @@
     <direction type="sequence">$1</direction>
     <bulletRef label="winderBullet"/>
   </fire>
-  
+
   <fire label="fireTest">
     <direction type="sequence">$1</direction>
     <bulletRef label="testBullet"/>
@@ -36,7 +36,7 @@
     </repeat>
     <wait>5</wait>
   </action>
-  
+
   <action label="roundTest">
     <fireRef label="fireTest">
       <param>$1</param>
@@ -83,8 +83,8 @@
       <param>50</param>
     </actionRef>
   </action>
-  
-<action label="top2">
+
+  <action label="top2">
     <fire>
       <direction type="relative">40</direction>
       <bulletRef label="winderBullet"/>
