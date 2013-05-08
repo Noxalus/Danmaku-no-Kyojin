@@ -1,10 +1,12 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.BulletML;
+using Danmaku_no_Kyojin.Camera;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,15 +40,14 @@ namespace Danmaku_no_Kyojin.Screens
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
+            Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            _enemy = new Enemy(GameRef);
         }
 
         public override void Initialize()
         {
-            Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
-            _enemy = new Enemy(GameRef);
-
-            GameRef.Components.Add(Ship);
-            GameRef.Components.Add(_enemy);
+            Ship.Initialize();
+            _enemy.Initialize();
 
             _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
             _waveBank = new WaveBank(_audioEngine, "Content\\Audio\\Wave Bank.xwb");
@@ -66,7 +67,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
             //parser.ParseXML(@"Content/XML/sample.xml");
-            parser.ParseXML(@"Content/XML/3way.xml");
+            //parser.ParseXML(@"Content/XML/3way.xml");
+            parser.ParseXML(@"Content/XML/test.xml");
 
             BulletMLManager.Init(new BulletFunctions());
 
@@ -128,13 +130,39 @@ namespace Danmaku_no_Kyojin.Screens
                     Ship.CheckCollision(mover.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
                 }
             }
+
+            // Adjust zoom if the mouse wheel has moved
+            if (InputHandler.ScrollUp())
+                GameRef.Camera.Zoom += 0.1f;
+            else if (InputHandler.ScrollDown())
+                GameRef.Camera.Zoom -= 0.1f;
+
+            // Move the camera when the arrow keys are pressed
+            Vector2 movement = Vector2.Zero;
+            Viewport vp = GameRef.GraphicsDevice.Viewport;
+
+            if (InputHandler.KeyDown(Keys.Left))
+                movement.X -= 0.1f;
+            if (InputHandler.KeyDown(Keys.Right))
+                movement.X += 0.1f;
+            if (InputHandler.KeyDown(Keys.Up))
+                movement.Y -= 0.1f;
+            if (InputHandler.KeyDown(Keys.Down))
+                movement.Y += 0.1f;
+
+            GameRef.Camera.Pos += movement * 20;
+
+            Ship.Update(gameTime);
+            _enemy.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             ControlManager.Draw(GameRef.SpriteBatch);
 
-            GameRef.SpriteBatch.Begin();
+            GameRef.SpriteBatch.Begin(SpriteSortMode.FrontToBack,
+                    null, null, null, null, null,
+                    GameRef.Camera.GetTransformation());
 
             /*
             Random rand = new Random();
@@ -173,6 +201,9 @@ namespace Danmaku_no_Kyojin.Screens
                     GameRef.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
                 }
             }
+
+            _enemy.Draw(gameTime);
+            Ship.Draw(gameTime);
 
             GameRef.SpriteBatch.End();
 

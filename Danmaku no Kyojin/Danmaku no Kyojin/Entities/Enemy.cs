@@ -79,10 +79,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            _gameRef.SpriteBatch.Begin();
-
             _gameRef.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
-            _gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
         }

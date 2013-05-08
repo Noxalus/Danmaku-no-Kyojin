@@ -146,8 +146,6 @@ namespace Danmaku_no_Kyojin.Entities
             if (IsInvincible)
                 _gameRef.Graphics.GraphicsDevice.Clear(Color.Red);
 
-            _gameRef.SpriteBatch.Begin();
-
             _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
             
             if (Config.DisplayCollisionBoxes)
@@ -159,8 +157,6 @@ namespace Danmaku_no_Kyojin.Entities
 
             _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(0, 40), Color.Black);
             _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(1, 41), Color.White);
-
-            _gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
         }

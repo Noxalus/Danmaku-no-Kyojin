@@ -125,7 +125,20 @@ namespace Danmaku_no_Kyojin.Controls
 
         #region Mouse Region
 
+        public static bool Scroll()
+        {
+            return mouseState.ScrollWheelValue == lastMouseState.ScrollWheelValue;
+        }
 
+        public static bool ScrollUp()
+        {
+            return mouseState.ScrollWheelValue > lastMouseState.ScrollWheelValue;
+        }
+
+        public static bool ScrollDown()
+        {
+            return mouseState.ScrollWheelValue < lastMouseState.ScrollWheelValue;
+        }
 
         #endregion
 

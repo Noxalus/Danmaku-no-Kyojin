@@ -113,6 +113,7 @@
     <Compile Include="BulletEngine\BulletSystem.cs" />
     <Compile Include="BulletEngine\MoveManager.cs" />
     <Compile Include="BulletEngine\Mover.cs" />
+    <Compile Include="Camera\Camera2D.cs" />
     <Compile Include="Collisions\CollisionCircle.cs" />
     <Compile Include="Collisions\ColisionElement.cs" />
     <Compile Include="Collisions\CollisionPolygon.cs" />

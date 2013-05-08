@@ -12,6 +12,7 @@ using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 using Danmaku_no_Kyojin.Utils;
+using Danmaku_no_Kyojin.Camera;
 
 namespace Danmaku_no_Kyojin
 {
@@ -27,6 +28,9 @@ namespace Danmaku_no_Kyojin
         public Rectangle ScreenRectangle;
 
         public static Texture2D _pixel;
+
+        // Camera
+        public Camera2D Camera;
 
         public DnK()
         {
@@ -66,6 +70,8 @@ namespace Danmaku_no_Kyojin
 
         protected override void Initialize()
         {
+            Camera = new Camera2D(GraphicsDevice.Viewport, 1000, 1000, 1);
+
             base.Initialize();
         }
 

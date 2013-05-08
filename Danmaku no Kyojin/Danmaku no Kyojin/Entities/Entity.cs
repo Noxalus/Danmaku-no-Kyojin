@@ -7,10 +7,11 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    public abstract class Entity : DrawableGameComponent, ICollidable
+    public abstract class Entity : ICollidable
     {
         #region Fields
 
+        protected DnK Game;
         protected Vector2 _position;
         protected ColisionElement _boundingElement;
 
@@ -33,7 +34,24 @@ namespace Danmaku_no_Kyojin.Entities
         #endregion
 
         protected Entity(DnK game)
-            : base(game)
+        {
+            Game = game;
+        }
+
+        public virtual void Initialize()
+        {
+            LoadContent();
+        }
+
+        protected virtual void LoadContent()
+        {
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+        }
+
+        public virtual void Draw(GameTime gameTime)
         {
         }
 
