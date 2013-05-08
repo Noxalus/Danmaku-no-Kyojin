@@ -7,23 +7,13 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    class Enemy : DrawableGameComponent
+    class Enemy : Entity
     {
-        private DnK _gameRef;
-
-        public Vector2 _position;
-
-        public float _speed;
+        private float _speed;
 
         private Texture2D _sprite;
 
         private Vector2 _motion;
-
-        public Vector2 Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
 
         public float Speed
         {
@@ -40,9 +30,7 @@ namespace Danmaku_no_Kyojin.Entities
         public Enemy(DnK game)
             : base(game)
         {
-            _gameRef = game;
-
-            _position = Vector2.Zero;
+            Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
             _speed = 1;
         }
@@ -56,8 +44,8 @@ namespace Danmaku_no_Kyojin.Entities
         {
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
 
-            _position = new Vector2(
-                _gameRef.Graphics.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
+            Position = new Vector2(
+                Game.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
                 20);
 
             base.LoadContent();
@@ -68,7 +56,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
 
-            if (Position.X > _gameRef.Graphics.GraphicsDevice.Viewport.Width - _sprite.Width - (Speed * dt) ||
+            if (Position.X > Game.GraphicsDevice.Viewport.Width - _sprite.Width - (Speed * dt) ||
                 Position.X < _sprite.Width + (Speed * dt))
                 _motion *= -1;
 
@@ -79,7 +67,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            _gameRef.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
+            Game.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
 
             base.Draw(gameTime);
         }

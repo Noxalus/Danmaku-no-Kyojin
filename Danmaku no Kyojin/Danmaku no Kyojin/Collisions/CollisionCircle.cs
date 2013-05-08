@@ -59,7 +59,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override void Draw()
         {
-            _gameRef.SpriteBatch.Draw(_drawableCircle, Parent.Position, Color.Red);
+            _gameRef.SpriteBatch.Draw(_drawableCircle, Parent.GetPosition(), Color.Red);
         }
 
         public override void DrawDebug(Vector2 position, float rotation, Vector2 entitySize)

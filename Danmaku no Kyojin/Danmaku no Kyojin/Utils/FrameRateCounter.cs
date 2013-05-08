@@ -10,32 +10,32 @@ namespace Danmaku_no_Kyojin.Utils
 {
     public class FrameRateCounter : DrawableGameComponent
     {
-        ContentManager content;
-        SpriteBatch spriteBatch;
-        SpriteFont spriteFont;
+        readonly ContentManager _content;
+        SpriteBatch _spriteBatch;
+        SpriteFont _spriteFont;
 
-        int frameRate = 0;
-        int frameCounter = 0;
-        TimeSpan elapsedTime = TimeSpan.Zero;
+        int _frameRate = 0;
+        int _frameCounter = 0;
+        TimeSpan _elapsedTime = TimeSpan.Zero;
 
 
         public FrameRateCounter(Game game)
             : base(game)
         {
-            content = game.Content;
+            _content = game.Content;
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = content.Load<SpriteFont>(@"Graphics\Fonts\ControlFont");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteFont = _content.Load<SpriteFont>(@"Graphics\Fonts\ControlFont");
 
             base.LoadContent();
         }
 
         protected override void UnloadContent()
         {
-            content.Unload();
+            _content.Unload();
 
             base.UnloadContent();
         }
@@ -43,29 +43,29 @@ namespace Danmaku_no_Kyojin.Utils
 
         public override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime;
+            _elapsedTime += gameTime.ElapsedGameTime;
 
-            if (elapsedTime > TimeSpan.FromSeconds(1))
+            if (_elapsedTime > TimeSpan.FromSeconds(1))
             {
-                elapsedTime -= TimeSpan.FromSeconds(1);
-                frameRate = frameCounter;
-                frameCounter = 0;
+                _elapsedTime -= TimeSpan.FromSeconds(1);
+                _frameRate = _frameCounter;
+                _frameCounter = 0;
             }
         }
 
 
         public override void Draw(GameTime gameTime)
         {
-            frameCounter++;
+            _frameCounter++;
 
-            string fps = string.Format("FPS: {0}", frameRate);
+            string fps = string.Format("FPS: {0}", _frameRate);
 
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            spriteBatch.DrawString(spriteFont, fps, new Vector2(1, 1), Color.Black);
-            spriteBatch.DrawString(spriteFont, fps, new Vector2(0, 0), Color.White);
+            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.Black);
+            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(0, 0), Color.White);
 
-            spriteBatch.End();
+            _spriteBatch.End();
         }
     }
 }

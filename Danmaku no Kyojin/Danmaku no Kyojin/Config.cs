@@ -7,6 +7,7 @@ namespace Danmaku_no_Kyojin
 {
     public static class Config
     {
+        // Debug
         public static bool DisplayCollisionBoxes = false;
     }
 }

@@ -12,23 +12,21 @@ namespace Danmaku_no_Kyojin.Entities
         #region Fields
 
         protected DnK Game;
-        protected Vector2 _position;
-        protected ColisionElement _boundingElement;
+        protected Vector2 Position;
+        protected ColisionElement BoundingElement;
 
         #endregion
 
         #region Accessors
 
-        public Vector2 Position
+        public Vector2 GetPosition()
         {
-            get { return _position; }
-            set { _position = value; }
+            return Position;
         }
 
-        public ColisionElement BoundingElement
+        public ColisionElement GetBoundingElement()
         {
-            get { return _boundingElement; }
-            set { _boundingElement = value; }
+            return BoundingElement;
         }
 
         #endregion
@@ -57,7 +55,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public bool Intersects(Entity entity)
         {
-            return _boundingElement.Intersects(entity.BoundingElement);
+            return BoundingElement.Intersects(entity.BoundingElement);
         }
     }
 }

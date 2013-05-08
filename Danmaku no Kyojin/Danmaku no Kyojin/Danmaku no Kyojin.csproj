@@ -134,6 +134,9 @@
     <Compile Include="DnK.cs" />
     <Compile Include="Screens\BaseGameState.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
+    <Compile Include="Sprites\AnimatedSprite.cs" />
+    <Compile Include="Sprites\Animation.cs" />
+    <Compile Include="Sprites\BaseSprite.cs" />
     <Compile Include="Utils\FrameRateCounter.cs" />
   </ItemGroup>
   <ItemGroup>

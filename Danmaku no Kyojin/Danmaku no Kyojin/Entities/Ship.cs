@@ -16,8 +16,6 @@ namespace Danmaku_no_Kyojin.Entities
     {
         #region Fields
 
-        DnK _gameRef;
-
         // Specific to the sprite
         private Texture2D _sprite;
         private Vector2 _center;
@@ -40,17 +38,15 @@ namespace Danmaku_no_Kyojin.Entities
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(
-                (int)_position.X - _sprite.Width / 8, 
-                (int)_position.Y - _sprite.Height / 8, 
+                (int)Position.X - _sprite.Width / 8,
+                (int)Position.Y - _sprite.Height / 8, 
                 _sprite.Width / 4, _sprite.Height / 4);
         }
 
         public Ship(DnK game, Vector2 position)
             : base(game)
         {
-            _gameRef = game;
-
-            _position = position;
+            Position = position;
             _velocity = 400f;
             _velocitySlowMode = 125f;
             _rotation = 0f;
@@ -58,7 +54,7 @@ namespace Danmaku_no_Kyojin.Entities
             _distance = Vector2.Zero;
 
             _lives = 5;
-            IsInvincible = true;
+            IsInvincible = false;
             _invicibleMaxTime = new TimeSpan(5 * 10000000);
             _invincibleTime = _invicibleMaxTime;
         }
@@ -74,7 +70,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
-            _boundingElement = new CollisionCircle((DnK)this.Game, this, 20);
+            BoundingElement = new CollisionCircle((DnK)this.Game, this, 20);
         }
 
         public override void Update(GameTime gameTime)
@@ -116,8 +112,8 @@ namespace Danmaku_no_Kyojin.Entities
             SlowMode = InputHandler.KeyDown(Keys.LeftShift) ? true : false;
 
             // Mouse
-            _distance.X = _position.X - InputHandler.MouseState.X;
-            _distance.Y = _position.Y - InputHandler.MouseState.Y;
+            _distance.X = Position.X - InputHandler.MouseState.X;
+            _distance.Y = Position.Y - InputHandler.MouseState.Y;
 
             _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
@@ -128,13 +124,13 @@ namespace Danmaku_no_Kyojin.Entities
         {
             if (SlowMode)
             {
-                _position.X += motion.X * _velocitySlowMode * dt;
-                _position.Y += motion.Y * _velocitySlowMode * dt;
+                Position.X += motion.X * _velocitySlowMode * dt;
+                Position.Y += motion.Y * _velocitySlowMode * dt;
             }
             else
             {
-                _position.X += motion.X * _velocity * dt;
-                _position.Y += motion.Y * _velocity * dt;
+                Position.X += motion.X * _velocity * dt;
+                Position.Y += motion.Y * _velocity * dt;
             }
 
             _center.X = _sprite.Width / 2;
@@ -144,19 +140,19 @@ namespace Danmaku_no_Kyojin.Entities
         public override void Draw(GameTime gameTime)
         {
             if (IsInvincible)
-                _gameRef.Graphics.GraphicsDevice.Clear(Color.Red);
+                Game.Graphics.GraphicsDevice.Clear(Color.Red);
 
-            _gameRef.SpriteBatch.Draw(_sprite, _position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
+            Game.SpriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
             
             if (Config.DisplayCollisionBoxes)
-                _gameRef.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
+                Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
 
             //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
-            //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
-            //_gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
+            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
+            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
-            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(0, 40), Color.Black);
-            _gameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(1, 41), Color.White);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(0, 40), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(1, 41), Color.White);
 
             base.Draw(gameTime);
         }

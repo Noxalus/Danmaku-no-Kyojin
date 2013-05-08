@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    abstract class BaseBullet : DrawableGameComponent
+    abstract class BaseBullet : Entity
     {
-        private Vector2 _direction;
-        private float _velocity;
+        protected Vector2 Direction;
+        protected float Velocity;
 
         protected BaseBullet(DnK game)
             : base(game)
