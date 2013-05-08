@@ -22,6 +22,8 @@ namespace Danmaku_no_Kyojin.Utils
         public FrameRateCounter(Game game)
             : base(game)
         {
+            // Draw after Screens's Draw method
+            DrawOrder = 5000;
             _content = game.Content;
         }
 
@@ -60,7 +62,7 @@ namespace Danmaku_no_Kyojin.Utils
 
             string fps = string.Format("FPS: {0}", _frameRate);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null);
 
             _spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.Black);
             _spriteBatch.DrawString(_spriteFont, fps, new Vector2(0, 0), Color.White);

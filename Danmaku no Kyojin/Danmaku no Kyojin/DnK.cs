@@ -34,20 +34,15 @@ namespace Danmaku_no_Kyojin
 
         public DnK()
         {
-            Point resolution = new Point(800, 600);
-            bool isFullScreen = false;
-
-            this.IsMouseVisible = true;
-
             Graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = resolution.X,
-                PreferredBackBufferHeight = resolution.Y
+                PreferredBackBufferWidth = Config.Resolution.X,
+                PreferredBackBufferHeight = Config.Resolution.Y
             };
 
-            ScreenRectangle = new Rectangle(0, 0, resolution.X, resolution.Y);
+            ScreenRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
 
-            Graphics.IsFullScreen = isFullScreen;
+            Graphics.IsFullScreen = Config.FullScreen;
 
             Graphics.ApplyChanges();
 

@@ -12,13 +12,14 @@ using System.Diagnostics;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    public class Ship : Entity
+    public class Ship : BulletLauncherEntity
     {
         #region Fields
 
         // Specific to the sprite
         private Texture2D _sprite;
         private Vector2 _center;
+        private Texture2D _bulletSprite;
 
         private float _velocity;
         public bool SlowMode { get; set; }
@@ -26,11 +27,15 @@ namespace Danmaku_no_Kyojin.Entities
         private float _rotation;
         private Vector2 _distance;
 
+        // Bullet Time
+        public bool BulletTime { get; set; }
 
         private int _lives;
         public bool IsInvincible { get; set; }
         private TimeSpan _invincibleTime;
         private TimeSpan _invicibleMaxTime;
+
+        private TimeSpan _bulletFrequence;
 
         #endregion
 
@@ -43,8 +48,8 @@ namespace Danmaku_no_Kyojin.Entities
                 _sprite.Width / 4, _sprite.Height / 4);
         }
 
-        public Ship(DnK game, Vector2 position)
-            : base(game)
+        public Ship(DnK game, ref List<BaseBullet> bullets, Vector2 position)
+            : base(game, ref bullets)
         {
             Position = position;
             _velocity = 400f;
@@ -57,11 +62,10 @@ namespace Danmaku_no_Kyojin.Entities
             IsInvincible = false;
             _invicibleMaxTime = new TimeSpan(5 * 10000000);
             _invincibleTime = _invicibleMaxTime;
-        }
 
-        public override void Initialize()
-        {
-            base.Initialize();
+            BulletTime = false;
+
+            _bulletFrequence = new TimeSpan(0);
         }
 
         protected override void LoadContent()
@@ -69,6 +73,7 @@ namespace Danmaku_no_Kyojin.Entities
             base.LoadContent();
 
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
+            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
             BoundingElement = new CollisionCircle((DnK)this.Game, this, 20);
         }
@@ -90,9 +95,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Point motion = Point.Zero;
-
-            Debug.Print(gameTime.ElapsedGameTime.TotalSeconds.ToString());
+            Vector2 motion = Vector2.Zero;
 
             // Keyboard
             if (InputHandler.KeyDown(Keys.D))
@@ -104,12 +107,9 @@ namespace Danmaku_no_Kyojin.Entities
             if (InputHandler.KeyDown(Keys.S))
                 motion.Y = 1;
 
-            if (InputHandler.KeyPressed(Keys.PageUp))
-                _rotation += MathHelper.ToRadians(45);
-            if (InputHandler.KeyPressed(Keys.PageDown))
-                _rotation -= MathHelper.ToRadians(45);
+            SlowMode = (InputHandler.KeyDown(Keys.LeftShift)) ? true : false;
 
-            SlowMode = InputHandler.KeyDown(Keys.LeftShift) ? true : false;
+            BulletTime = (InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
 
             // Mouse
             _distance.X = Position.X - InputHandler.MouseState.X;
@@ -117,10 +117,25 @@ namespace Danmaku_no_Kyojin.Entities
 
             _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
+
+            if (_bulletFrequence.TotalMilliseconds > 0)
+                _bulletFrequence -= gameTime.ElapsedGameTime;
+            else
+            {
+                if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _bulletFrequence = Config.PlayerBulletFrequence;
+
+                    Vector2 direction = new Vector2((float) Math.Sin(_rotation), (float) Math.Cos(_rotation)*-1);
+                    Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
+                    AddBullet(bullet);
+                }
+            }
+
             UpdatePosition(motion, dt);
         }
 
-        private void UpdatePosition(Point motion, float dt)
+        private void UpdatePosition(Vector2 motion, float dt)
         {
             if (SlowMode)
             {
@@ -148,11 +163,13 @@ namespace Danmaku_no_Kyojin.Entities
                 Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
 
             //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
-            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation.ToString(), Vector2.Zero, Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(0, 40), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, "Lives: " + _lives.ToString(), new Vector2(1, 41), Color.White);
+            string lives = string.Format("Lives: {0}", _lives);
+
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 41), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 40), Color.White);
 
             base.Draw(gameTime);
         }

@@ -37,10 +37,15 @@ namespace Danmaku_no_Kyojin.Screens
         int timer = 0;
         Mover mover;
 
+        // Bullet
+        private List<BaseBullet> _bullets; 
+
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            Ship = new Ship(GameRef, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            _bullets = new List<BaseBullet>();
+
+            Ship = new Ship(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
             _enemy = new Enemy(GameRef);
         }
 
@@ -66,9 +71,9 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
-            //parser.ParseXML(@"Content/XML/sample.xml");
+            parser.ParseXML(@"Content/XML/sample.xml");
             //parser.ParseXML(@"Content/XML/3way.xml");
-            parser.ParseXML(@"Content/XML/test.xml");
+            //parser.ParseXML(@"Content/XML/test.xml");
 
             BulletMLManager.Init(new BulletFunctions());
 
@@ -111,12 +116,10 @@ namespace Danmaku_no_Kyojin.Screens
                 mover.SetBullet(parser.tree);
             }
 
-            if (Ship.SlowMode)
+            if (Ship.BulletTime)
             {
-                float DESIRED_TIME_MODIFIER = 5f;
-
                 GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
-                    new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / DESIRED_TIME_MODIFIER)));
+                    new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
                 gameTime = newGameTime;
             }
 
@@ -129,6 +132,11 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     Ship.CheckCollision(mover.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
                 }
+            }
+
+            foreach (var bullet in _bullets)
+            {
+                bullet.Update(gameTime);
             }
 
             // Adjust zoom if the mouse wheel has moved
@@ -160,9 +168,13 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Draw(GameRef.SpriteBatch);
 
-            GameRef.SpriteBatch.Begin(SpriteSortMode.FrontToBack,
-                    null, null, null, null, null,
-                    GameRef.Camera.GetTransformation());
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp,
+                null,
+                null,
+                null,
+                GameRef.Camera.GetTransformation());
 
             /*
             Random rand = new Random();
@@ -180,8 +192,13 @@ namespace Danmaku_no_Kyojin.Screens
                     0), Color.White);
             */
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
+            _enemy.Draw(gameTime);
+            Ship.Draw(gameTime);
+
+            foreach (var bullet in _bullets)
+            {
+                bullet.Draw(gameTime);
+            }
 
             foreach (Mover mover in MoverManager.movers)
             {
@@ -202,8 +219,9 @@ namespace Danmaku_no_Kyojin.Screens
                 }
             }
 
-            _enemy.Draw(gameTime);
-            Ship.Draw(gameTime);
+            // Text
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
             GameRef.SpriteBatch.End();
 

@@ -31,8 +31,8 @@ namespace Danmaku_no_Kyojin.BulletEngine
                 if (bulletRoot)
                     used = false;
 
-            if (X < 0 || X > 800 ||
-                Y < 0 || Y > 600)
+            if (X < 0 || X > Config.Resolution.X ||
+                Y < 0 || Y > Config.Resolution.Y)
                 used = false;
 
         }
