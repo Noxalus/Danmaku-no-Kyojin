@@ -11,7 +11,8 @@ namespace Danmaku_no_Kyojin.Entities
     {
         protected Vector2 Direction;
         protected float Velocity;
-        protected Texture2D Sprite;
+        public Texture2D Sprite { get; set; }
+        public float Power { get; set; }
 
         protected BaseBullet(DnK game, Texture2D sprite, Vector2 position, Vector2 direction, float velocity)
             : base(game)

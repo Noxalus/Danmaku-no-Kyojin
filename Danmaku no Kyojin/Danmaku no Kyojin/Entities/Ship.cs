@@ -38,7 +38,6 @@ namespace Danmaku_no_Kyojin.Entities
         private TimeSpan _bulletFrequence;
 
         #endregion
-
         
         private Rectangle GetCollisionBox()
         {
@@ -66,6 +65,8 @@ namespace Danmaku_no_Kyojin.Entities
             BulletTime = false;
 
             _bulletFrequence = new TimeSpan(0);
+
+            IsAlive = true;
         }
 
         protected override void LoadContent()
@@ -81,6 +82,9 @@ namespace Danmaku_no_Kyojin.Entities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (_lives <= 0)
+                IsAlive = false;
 
             if (IsInvincible)
             {
@@ -128,6 +132,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                     Vector2 direction = new Vector2((float) Math.Sin(_rotation), (float) Math.Cos(_rotation)*-1);
                     Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
+                    bullet.Power = 0.1f;
                     AddBullet(bullet);
                 }
             }
@@ -163,7 +168,7 @@ namespace Danmaku_no_Kyojin.Entities
                 Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
 
             //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);
+            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
             string lives = string.Format("Lives: {0}", _lives);

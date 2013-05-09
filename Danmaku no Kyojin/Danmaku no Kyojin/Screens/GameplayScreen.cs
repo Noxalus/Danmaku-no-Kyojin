@@ -28,6 +28,7 @@ namespace Danmaku_no_Kyojin.Screens
         SoundBank _soundBank;
 
         Cue music = null;
+        private SoundEffect hit = null;
 
         // Random
         public static Random Rand = new Random();
@@ -38,7 +39,7 @@ namespace Danmaku_no_Kyojin.Screens
         Mover mover;
 
         // Bullet
-        private List<BaseBullet> _bullets; 
+        private List<BaseBullet> _bullets;
 
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
@@ -80,8 +81,17 @@ namespace Danmaku_no_Kyojin.Screens
             if (music == null)
             {
                 music = _soundBank.GetCue("Background");
-                //music.Play();
+                music.Play();
             }
+
+            if (hit == null)
+            {
+                hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hit");
+            }
+
+            mover = MoverManager.CreateMover();
+            mover.pos = new Vector2(401, 82);
+            mover.SetBullet(parser.tree);
 
             base.LoadContent();
         }
@@ -95,48 +105,62 @@ namespace Danmaku_no_Kyojin.Screens
         {
             base.Update(gameTime);
 
-            /*
-            timer++;
-            if (timer > 1)
+            if (Ship.IsAlive)
             {
-                timer = 0;
+                for (int i = 0; i < _bullets.Count; i++)
+                {
+                    _bullets[i].Update(gameTime);
+
+                    if (_enemy.CheckCollision(_bullets[i].GetPosition(), new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
+                    {
+                        _enemy.TakeDamage(_bullets[i].Power);
+                        _bullets.Remove(_bullets[i]);
+                        hit.Play();
+                    }
+                }
+
+                Ship.Update(gameTime);
+            }
+
+            if (_enemy.IsAlive)
+            {
+                /*
                 if (mover.used == false)
                 {
                     mover = MoverManager.CreateMover();
-                    mover.pos = new Vector2(40 + (800 * (float)Rand.NextDouble()), 40 + (600 * (float)Rand.NextDouble()));
+                    mover.pos = new Vector2(401, 82);
                     mover.SetBullet(parser.tree);
                 }
-            }
-            */
+                */
 
-            if (MoverManager.movers.Count < 1)
-            {
-                mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(401, 82);
-                mover.SetBullet(parser.tree);
-            }
+                if (MoverManager.movers.Count < 1)
+                {
+                    mover = MoverManager.CreateMover();
+                    mover.pos = new Vector2(401, 82);
+                    mover.SetBullet(parser.tree);
+                }
 
-            if (Ship.BulletTime)
-            {
-                GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
-                    new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
-                gameTime = newGameTime;
-            }
+                if (Ship.BulletTime)
+                {
+                    GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
+                                                        new TimeSpan(
+                                                            (long)
+                                                            (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
+                    gameTime = newGameTime;
+                }
 
-            MoverManager.Update(gameTime);
-            MoverManager.FreeMovers();
+                MoverManager.Update(gameTime);
+                MoverManager.FreeMovers();
+
+                _enemy.Update(gameTime);
+            }
 
             if (!Ship.IsInvincible)
             {
-                foreach (Mover mover in MoverManager.movers)
+                foreach (Mover m in MoverManager.movers)
                 {
-                    Ship.CheckCollision(mover.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
+                    Ship.CheckCollision(m.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
                 }
-            }
-
-            foreach (var bullet in _bullets)
-            {
-                bullet.Update(gameTime);
             }
 
             // Adjust zoom if the mouse wheel has moved
@@ -159,9 +183,6 @@ namespace Danmaku_no_Kyojin.Screens
                 movement.Y += 0.1f;
 
             GameRef.Camera.Pos += movement * 20;
-
-            Ship.Update(gameTime);
-            _enemy.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -176,46 +197,38 @@ namespace Danmaku_no_Kyojin.Screens
                 null,
                 GameRef.Camera.GetTransformation());
 
-            /*
-            Random rand = new Random();
-
-            foreach (Texture2D texture in _logos)
+            if (Ship.IsAlive)
             {
-                GameRef.SpriteBatch.Draw(texture, new Vector2(
-                    rand.Next(50, (GameRef.Graphics.GraphicsDevice.Viewport.Width) - (texture.Width / 2)),
-                    rand.Next(50, (GameRef.Graphics.GraphicsDevice.Viewport.Height) - (texture.Height / 2))), Color.White);
-            }
-            */
-            /*
-            GameRef.SpriteBatch.Draw(_logos[0], new Vector2(
-                    (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logos[0].Width / 2),
-                    0), Color.White);
-            */
-
-            _enemy.Draw(gameTime);
-            Ship.Draw(gameTime);
-
-            foreach (var bullet in _bullets)
-            {
-                bullet.Draw(gameTime);
-            }
-
-            foreach (Mover mover in MoverManager.movers)
-            {
-                GameRef.SpriteBatch.Draw(_bulletSprite,
-                    new Vector2(
-                        mover.pos.X - _bulletSprite.Width / 2,
-                        mover.pos.Y - _bulletSprite.Height / 2),
-                        Color.White);
-
-                if (Config.DisplayCollisionBoxes)
+                foreach (var bullet in _bullets)
                 {
-                    Rectangle bulletRectangle = new Rectangle(
-                        (int)mover.pos.X - _bulletSprite.Width / 2,
-                        (int)mover.pos.Y - _bulletSprite.Height / 2,
-                        _bulletSprite.Width,
-                        _bulletSprite.Height);
-                    GameRef.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
+                    bullet.Draw(gameTime);
+                }
+
+                Ship.Draw(gameTime);
+            }
+
+            if (_enemy.IsAlive)
+            {
+                _enemy.Draw(gameTime);
+
+
+                foreach (Mover mover in MoverManager.movers)
+                {
+                    GameRef.SpriteBatch.Draw(_bulletSprite,
+                                             new Vector2(
+                                                 mover.pos.X - _bulletSprite.Width / 2,
+                                                 mover.pos.Y - _bulletSprite.Height / 2),
+                                             Color.White);
+
+                    if (Config.DisplayCollisionBoxes)
+                    {
+                        Rectangle bulletRectangle = new Rectangle(
+                            (int)mover.pos.X - _bulletSprite.Width / 2,
+                            (int)mover.pos.Y - _bulletSprite.Height / 2,
+                            _bulletSprite.Width,
+                            _bulletSprite.Height);
+                        GameRef.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
+                    }
                 }
             }
 

@@ -15,6 +15,10 @@ namespace Danmaku_no_Kyojin.Entities
 
         private Vector2 _motion;
 
+        private const float _totalHealth = 500f;
+        private float _health;
+        private Texture2D _healthBar;
+
         public float Speed
         {
             get { return _speed; }
@@ -27,12 +31,24 @@ namespace Danmaku_no_Kyojin.Entities
             set { _sprite = value; }
         }
 
+        private Rectangle GetCollisionBox()
+        {
+            return new Rectangle(
+                (int)Position.X,
+                (int)Position.Y,
+                _sprite.Width, _sprite.Height);
+        }
+
         public Enemy(DnK game)
             : base(game)
         {
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
             _speed = 1;
+
+            _health = _totalHealth;
+
+            IsAlive = true;
         }
 
         public override void Initialize()
@@ -42,14 +58,14 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected override void LoadContent()
         {
-            _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
+            _sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
+            _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
                 20);
 
             base.LoadContent();
-
         }
 
         public override void Update(GameTime gameTime)
@@ -62,14 +78,43 @@ namespace Danmaku_no_Kyojin.Entities
 
             //Position += _motion * Speed * dt;
 
+            if (_health <= 0)
+            {
+                IsAlive = false;
+            }
+
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             Game.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
+            Game.SpriteBatch.Draw(_healthBar, new Rectangle(
+                (int)Position.X, (int)Position.Y + _sprite.Height + 20, 
+                (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
 
             base.Draw(gameTime);
+        }
+
+        public bool CheckCollision(Vector2 position, Point size)
+        {
+            Rectangle bullet = new Rectangle(
+                    (int)position.X - size.X / 2, (int)position.Y - size.Y / 2,
+                    size.X, size.Y);
+
+            Rectangle collisionBox = GetCollisionBox();
+
+            if (collisionBox.Intersects(bullet))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
+        public void TakeDamage(float damage)
+        {
+            _health -= damage;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Danmaku_no_Kyojin.Entities
         protected Vector2 Position;
         protected ColisionElement BoundingElement;
 
+        public bool IsAlive { get; set; }
+
         #endregion
 
         #region Accessors
