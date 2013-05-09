@@ -23,8 +23,10 @@ namespace Danmaku_no_Kyojin.Utils
             : base(game)
         {
             // Draw after Screens's Draw method
-            DrawOrder = 5000;
+            /*
+            DrawOrder = 6000;
             _content = game.Content;
+            */
         }
 
         protected override void LoadContent()

@@ -2,6 +2,7 @@
 using Danmaku_no_Kyojin.BulletML;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -107,7 +108,7 @@ namespace Danmaku_no_Kyojin.Entities
             }
             */
 
-            if (MoverManager.movers.Count < 1)
+            if (MoverManager.movers.Count < 10000)
             {
                 mover = MoverManager.CreateMover();
                 mover.pos = new Vector2(401, 82);

@@ -45,6 +45,12 @@ namespace Danmaku_no_Kyojin
 
             Graphics.IsFullScreen = Config.FullScreen;
 
+            Graphics.SynchronizeWithVerticalRetrace = true;
+
+            // Pass through the FPS capping (60 FPS)
+            IsFixedTimeStep = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;
+
             Graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
