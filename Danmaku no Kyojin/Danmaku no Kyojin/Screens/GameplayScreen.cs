@@ -1,6 +1,5 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.BulletML;
-using Danmaku_no_Kyojin.Camera;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;
@@ -9,16 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Danmaku_no_Kyojin.Screens
 {
     public class GameplayScreen : BaseGameState
     {
-        private Texture2D _bulletSprite;
-
-        public static Player Ship;
+        public static Player Player;
         private Boss _enemy;
 
         // Audio
@@ -32,12 +27,8 @@ namespace Danmaku_no_Kyojin.Screens
         // Random
         public static Random Rand = new Random();
 
-        // Bullet engine
-        static public BulletMLParser parser = new BulletMLParser();
-        int timer = 0;
-        Mover mover;
-
-        // Bullet
+        // Bullets
+        private List<Mover> _opponentBullets;
         private List<BaseBullet> _bullets;
 
         public GameplayScreen(Game game, GameStateManager manager)
@@ -45,13 +36,13 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _bullets = new List<BaseBullet>();
 
-            Ship = new Player(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            Player = new Player(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
             _enemy = new Boss(GameRef);
         }
 
         public override void Initialize()
         {
-            Ship.Initialize();
+            Player.Initialize();
             _enemy.Initialize();
 
             _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
@@ -63,13 +54,6 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
-            parser.ParseXML(@"Content/XML/sample.xml");
-            //parser.ParseXML(@"Content/XML/3way.xml");
-            //parser.ParseXML(@"Content/XML/test.xml");
-
-            BulletMLManager.Init(new BulletFunctions());
-
             if (music == null)
             {
                 music = _soundBank.GetCue("Background");
@@ -80,10 +64,6 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hit");
             }
-
-            mover = MoverManager.CreateMover();
-            mover.pos = new Vector2(401, 82);
-            mover.SetBullet(parser.tree);
 
             base.LoadContent();
         }
@@ -97,7 +77,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             base.Update(gameTime);
 
-            if (Ship.IsAlive)
+            if (Player.IsAlive)
             {
                 for (int i = 0; i < _bullets.Count; i++)
                 {
@@ -120,47 +100,28 @@ namespace Danmaku_no_Kyojin.Screens
                     }
                 }
 
-                Ship.Update(gameTime);
+                Player.Update(gameTime);
+            }
+
+            if (Player.BulletTime)
+            {
+                GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
+                                                    new TimeSpan(
+                                                        (long)
+                                                        (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
+                gameTime = newGameTime;
             }
 
             if (_enemy.IsAlive)
             {
-                /*
-                if (mover.used == false)
-                {
-                    mover = MoverManager.CreateMover();
-                    mover.pos = new Vector2(401, 82);
-                    mover.SetBullet(parser.tree);
-                }
-                */
-
-                if (MoverManager.movers.Count < 1)
-                {
-                    mover = MoverManager.CreateMover();
-                    mover.pos = new Vector2(401, 82);
-                    mover.SetBullet(parser.tree);
-                }
-
-                if (Ship.BulletTime)
-                {
-                    GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
-                                                        new TimeSpan(
-                                                            (long)
-                                                            (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
-                    gameTime = newGameTime;
-                }
-
-                MoverManager.Update(gameTime);
-                MoverManager.FreeMovers();
-
                 _enemy.Update(gameTime);
             }
 
-            if (!Ship.IsInvincible)
+            if (!Player.IsInvincible)
             {
                 foreach (Mover m in MoverManager.movers)
                 {
-                    Ship.CheckCollision(m.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
+                    //Player.CheckCollision(m.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
                 }
             }
 
@@ -198,47 +159,27 @@ namespace Danmaku_no_Kyojin.Screens
                 null,
                 GameRef.Camera.GetTransformation());
 
-            if (Ship.IsAlive)
+            if (Player.IsAlive)
             {
                 foreach (var bullet in _bullets)
                 {
                     bullet.Draw(gameTime);
                 }
 
-                Ship.Draw(gameTime);
+                Player.Draw(gameTime);
             }
 
             if (_enemy.IsAlive)
             {
                 _enemy.Draw(gameTime);
-
-
-                foreach (Mover mover in MoverManager.movers)
-                {
-                    GameRef.SpriteBatch.Draw(_bulletSprite,
-                                             new Vector2(
-                                                 mover.pos.X - _bulletSprite.Width / 2,
-                                                 mover.pos.Y - _bulletSprite.Height / 2),
-                                             Color.White);
-
-                    if (Config.DisplayCollisionBoxes)
-                    {
-                        Rectangle bulletRectangle = new Rectangle(
-                            (int)mover.pos.X - _bulletSprite.Width / 2,
-                            (int)mover.pos.Y - _bulletSprite.Height / 2,
-                            _bulletSprite.Width,
-                            _bulletSprite.Height);
-                        GameRef.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
-                    }
-                }
             }
 
             // Text
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Ship bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Ship bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);
 
             GameRef.SpriteBatch.End();
 

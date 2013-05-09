@@ -208,7 +208,7 @@ namespace Danmaku_no_Kyojin.BulletML
 
         public float GetAimDir()
         {
-            float val = (float)Math.Atan2((BulletMLManager.GetShipPosX() - X), -(BulletMLManager.GetShipPosY() - Y));
+            float val = (float)Math.Atan2((BulletMLManager.GetPlayerPosX() - X), -(BulletMLManager.GetPlayerPosY() - Y));
             ////Debug.WriteLine("SetAimDir : {0}" , val / Math.PI * 180);
             return val;
         }

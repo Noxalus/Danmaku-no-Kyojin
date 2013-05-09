@@ -16,8 +16,8 @@ namespace Danmaku_no_Kyojin
 
         public float GetRank() { return 0.5f; }
 
-        public float GetShipPosX() { return GameplayScreen.Ship.GetPosition().X; } //自機の座標を返す
+        public float GetPlayerPosX() { return GameplayScreen.Player.GetPosition().X; } //自機の座標を返す
 
-        public float GetShipPosY() { return GameplayScreen.Ship.GetPosition().Y; } //自機の座標を返す
+        public float GetPlayerPosY() { return GameplayScreen.Player.GetPosition().Y; } //自機の座標を返す
     }
 }

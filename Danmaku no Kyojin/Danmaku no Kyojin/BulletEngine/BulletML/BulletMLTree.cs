@@ -35,9 +35,9 @@ namespace Danmaku_no_Kyojin.BulletML
 
         float GetRank();
 
-        float GetShipPosX();
+        float GetPlayerPosX();
 
-        float GetShipPosY();
+        float GetPlayerPosY();
     }
 
     public static class BulletMLManager
@@ -52,9 +52,9 @@ namespace Danmaku_no_Kyojin.BulletML
 
         static public float GetRank() { return ib.GetRank(); }
 
-        static public float GetShipPosX() { return ib.GetShipPosX(); }
+        static public float GetPlayerPosX() { return ib.GetPlayerPosX(); }
 
-        static public float GetShipPosY() { return ib.GetShipPosY(); }
+        static public float GetPlayerPosY() { return ib.GetPlayerPosY(); }
 
     }
 

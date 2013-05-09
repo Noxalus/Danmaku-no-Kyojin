@@ -1,14 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Danmaku_no_Kyojin.BulletEngine;
+using Danmaku_no_Kyojin.BulletML;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
     class Boss : Entity
     {
+        // Bullet engine
+        private Texture2D _bulletSprite;
+        static public BulletMLParser parser = new BulletMLParser();
+        int timer = 0;
+        Mover mover;
+
         private float _speed;
 
         private Texture2D _sprite;
@@ -58,12 +62,23 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected override void LoadContent()
         {
+            _bulletSprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
             _sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
             _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
+
+            parser.ParseXML(@"Content/XML/sample.xml");
+            //parser.ParseXML(@"Content/XML/3way.xml");
+            //parser.ParseXML(@"Content/XML/test.xml");
+
+            BulletMLManager.Init(new BulletFunctions());
 
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
                 20);
+
+            mover = MoverManager.CreateMover();
+            mover.pos = new Vector2(401, 82);
+            mover.SetBullet(parser.tree);
 
             base.LoadContent();
         }
@@ -83,6 +98,25 @@ namespace Danmaku_no_Kyojin.Entities
                 IsAlive = false;
             }
 
+            /*
+            if (mover.used == false)
+            {
+                mover = MoverManager.CreateMover();
+                mover.pos = new Vector2(401, 82);
+                mover.SetBullet(parser.tree);
+            }
+            */
+
+            if (MoverManager.movers.Count < 1)
+            {
+                mover = MoverManager.CreateMover();
+                mover.pos = new Vector2(401, 82);
+                mover.SetBullet(parser.tree);
+            }
+
+            MoverManager.Update(gameTime);
+            MoverManager.FreeMovers();
+
             base.Update(gameTime);
         }
 
@@ -90,8 +124,27 @@ namespace Danmaku_no_Kyojin.Entities
         {
             Game.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
-                (int)Position.X, (int)Position.Y + _sprite.Height + 20, 
+                (int)Position.X, (int)Position.Y + _sprite.Height + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
+
+            foreach (Mover mover in MoverManager.movers)
+            {
+                Game.SpriteBatch.Draw(_bulletSprite,
+                                         new Vector2(
+                                             mover.pos.X - _bulletSprite.Width / 2,
+                                             mover.pos.Y - _bulletSprite.Height / 2),
+                                         Color.White);
+
+                if (Config.DisplayCollisionBoxes)
+                {
+                    Rectangle bulletRectangle = new Rectangle(
+                        (int)mover.pos.X - _bulletSprite.Width / 2,
+                        (int)mover.pos.Y - _bulletSprite.Height / 2,
+                        _bulletSprite.Width,
+                        _bulletSprite.Height);
+                    Game.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
+                }
+            }
 
             base.Draw(gameTime);
         }
@@ -111,7 +164,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             return false;
         }
-        
+
         public void TakeDamage(float damage)
         {
             _health -= damage;
