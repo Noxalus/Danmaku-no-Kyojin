@@ -108,7 +108,7 @@ namespace Danmaku_no_Kyojin.Entities
             }
             */
 
-            if (MoverManager.movers.Count < 10000)
+            if (MoverManager.movers.Count < 1)
             {
                 mover = MoverManager.CreateMover();
                 mover.pos = new Vector2(401, 82);

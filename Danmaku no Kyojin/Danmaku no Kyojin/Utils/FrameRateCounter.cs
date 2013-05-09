@@ -10,7 +10,6 @@ namespace Danmaku_no_Kyojin.Utils
 {
     public class FrameRateCounter : DrawableGameComponent
     {
-        readonly ContentManager _content;
         SpriteBatch _spriteBatch;
         SpriteFont _spriteFont;
 
@@ -23,23 +22,20 @@ namespace Danmaku_no_Kyojin.Utils
             : base(game)
         {
             // Draw after Screens's Draw method
-            /*
             DrawOrder = 6000;
-            _content = game.Content;
-            */
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _spriteFont = _content.Load<SpriteFont>(@"Graphics\Fonts\ControlFont");
+            _spriteFont = Game.Content.Load<SpriteFont>(@"Graphics\Fonts\ControlFont");
 
             base.LoadContent();
         }
 
         protected override void UnloadContent()
         {
-            _content.Unload();
+            Game.Content.Unload();
 
             base.UnloadContent();
         }
