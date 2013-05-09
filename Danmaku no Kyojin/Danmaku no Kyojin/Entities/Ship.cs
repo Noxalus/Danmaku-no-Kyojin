@@ -130,10 +130,36 @@ namespace Danmaku_no_Kyojin.Entities
                 {
                     _bulletFrequence = Config.PlayerBulletFrequence;
 
-                    Vector2 direction = new Vector2((float) Math.Sin(_rotation), (float) Math.Cos(_rotation)*-1);
+                    Vector2 direction = new Vector2((float)Math.Sin(_rotation), (float)Math.Cos(_rotation) * -1);
                     Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
-                    bullet.Power = 0.1f;
+                    bullet.Power = 1f;
+
+                    Vector2 directionLeft = direction;
+                    Vector2 positionLeft = Position;
+                    Vector2 directionRight = direction;
+                    Vector2 positionRight = Position;
+
+                    if (!SlowMode)
+                    {
+                        directionLeft = new Vector2((float)Math.Sin(_rotation - Math.PI / 4), (float)Math.Cos(_rotation - Math.PI / 4) * -1);
+                        directionRight = new Vector2((float)Math.Sin(_rotation + Math.PI / 4), (float)Math.Cos(_rotation + Math.PI / 4) * -1);
+                    }
+                    else
+                    {
+                        positionLeft.X -= 50f;
+                        positionRight.X += 50f;
+                    }
+
+                    Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, _velocity * 3);
+                    bulletLeft.Power = 0.5f;
+
+
+                    Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, _velocity * 3);
+                    bulletRight.Power = 0.5f;
+
                     AddBullet(bullet);
+                    AddBullet(bulletLeft);
+                    AddBullet(bulletRight);
                 }
             }
 
@@ -173,8 +199,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             string lives = string.Format("Lives: {0}", _lives);
 
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 41), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 40), Color.White);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 61), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 60), Color.White);
 
             base.Draw(gameTime);
         }

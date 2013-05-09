@@ -111,11 +111,20 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     _bullets[i].Update(gameTime);
 
-                    if (_enemy.CheckCollision(_bullets[i].GetPosition(), new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
+                    if (_enemy.IsAlive && _enemy.CheckCollision(_bullets[i].GetPosition(),
+                                              new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
                     {
                         _enemy.TakeDamage(_bullets[i].Power);
                         _bullets.Remove(_bullets[i]);
                         hit.Play();
+                    }
+                    else
+                    {
+                        if (_bullets[i].GetPosition().X < 0 || _bullets[i].GetPosition().X > Config.Resolution.X ||
+                            _bullets[i].GetPosition().Y < 0 || _bullets[i].GetPosition().Y > Config.Resolution.Y)
+                        {
+                            _bullets.Remove(_bullets[i]);
+                        }
                     }
                 }
 
@@ -233,8 +242,11 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             // Text
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Ship bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Ship bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);
 
             GameRef.SpriteBatch.End();
 
