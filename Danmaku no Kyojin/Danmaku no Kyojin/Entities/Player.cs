@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    public class Ship : BulletLauncherEntity
+    public class Player : BulletLauncherEntity
     {
         #region Fields
 
@@ -33,7 +33,6 @@ namespace Danmaku_no_Kyojin.Entities
         private int _lives;
         public bool IsInvincible { get; set; }
         private TimeSpan _invincibleTime;
-        private TimeSpan _invicibleMaxTime;
 
         private TimeSpan _bulletFrequence;
 
@@ -47,7 +46,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _sprite.Width / 4, _sprite.Height / 4);
         }
 
-        public Ship(DnK game, ref List<BaseBullet> bullets, Vector2 position)
+        public Player(DnK game, ref List<BaseBullet> bullets, Vector2 position)
             : base(game, ref bullets)
         {
             Position = position;
@@ -59,8 +58,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             _lives = 5;
             IsInvincible = false;
-            _invicibleMaxTime = new TimeSpan(5 * 10000000);
-            _invincibleTime = _invicibleMaxTime;
+            _invincibleTime = Config.PlayerInvicibleTimer;
 
             BulletTime = false;
 
@@ -92,7 +90,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                 if (_invincibleTime.Seconds <= 0)
                 {
-                    _invincibleTime = _invicibleMaxTime;
+                    _invincibleTime = Config.PlayerInvicibleTimer;
                     IsInvincible = false;
                 }
             }
@@ -133,6 +131,7 @@ namespace Danmaku_no_Kyojin.Entities
                     Vector2 direction = new Vector2((float)Math.Sin(_rotation), (float)Math.Cos(_rotation) * -1);
                     Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
                     bullet.Power = 1f;
+                    bullet.WaveMode = false;
 
                     Vector2 directionLeft = direction;
                     Vector2 positionLeft = Position;
@@ -152,7 +151,6 @@ namespace Danmaku_no_Kyojin.Entities
 
                     Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, _velocity * 3);
                     bulletLeft.Power = 0.5f;
-
 
                     Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, _velocity * 3);
                     bulletRight.Power = 0.5f;

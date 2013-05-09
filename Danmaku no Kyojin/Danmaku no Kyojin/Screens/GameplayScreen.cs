@@ -16,11 +16,10 @@ namespace Danmaku_no_Kyojin.Screens
 {
     public class GameplayScreen : BaseGameState
     {
-        private List<Texture2D> _logos;
         private Texture2D _bulletSprite;
 
-        public static Ship Ship;
-        private Enemy _enemy;
+        public static Player Ship;
+        private Boss _enemy;
 
         // Audio
         AudioEngine _audioEngine;
@@ -46,8 +45,8 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _bullets = new List<BaseBullet>();
 
-            Ship = new Ship(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
-            _enemy = new Enemy(GameRef);
+            Ship = new Player(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            _enemy = new Boss(GameRef);
         }
 
         public override void Initialize()
@@ -64,13 +63,6 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            _logos = new List<Texture2D>();
-
-            for (int i = 0; i < 1; i++)
-            {
-                _logos.Add(GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo"));
-            }
-
             _bulletSprite = GameRef.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
             parser.ParseXML(@"Content/XML/sample.xml");
             //parser.ParseXML(@"Content/XML/3way.xml");
@@ -81,7 +73,7 @@ namespace Danmaku_no_Kyojin.Screens
             if (music == null)
             {
                 music = _soundBank.GetCue("Background");
-                music.Play();
+                //music.Play();
             }
 
             if (hit == null)
@@ -116,7 +108,7 @@ namespace Danmaku_no_Kyojin.Screens
                     {
                         _enemy.TakeDamage(_bullets[i].Power);
                         _bullets.Remove(_bullets[i]);
-                        hit.Play();
+                        //hit.Play();
                     }
                     else
                     {

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    class Enemy : Entity
+    class Boss : Entity
     {
         private float _speed;
 
@@ -15,7 +15,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         private Vector2 _motion;
 
-        private const float _totalHealth = 500f;
+        private const float TotalHealth = 500f;
         private float _health;
         private Texture2D _healthBar;
 
@@ -39,14 +39,14 @@ namespace Danmaku_no_Kyojin.Entities
                 _sprite.Width, _sprite.Height);
         }
 
-        public Enemy(DnK game)
+        public Boss(DnK game)
             : base(game)
         {
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
             _speed = 1;
 
-            _health = _totalHealth;
+            _health = TotalHealth;
 
             IsAlive = true;
         }
@@ -91,7 +91,7 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X, (int)Position.Y + _sprite.Height + 20, 
-                (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
+                (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
 
             base.Draw(gameTime);
         }

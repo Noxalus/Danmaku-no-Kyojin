@@ -11,7 +11,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         #region Fields
 
-        protected DnK Game;
+        protected readonly DnK Game;
         protected Vector2 Position;
         protected ColisionElement BoundingElement;
 

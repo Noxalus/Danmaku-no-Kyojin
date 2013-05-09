@@ -15,6 +15,7 @@ namespace Danmaku_no_Kyojin
         // Bullet Time
         public const float DesiredTimeModifier = 5f;
 
+        public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 0, 3);
         public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 0, 50);
     }
 }

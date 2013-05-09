@@ -23,6 +23,7 @@ namespace Danmaku_no_Kyojin
         GameStateManager stateManager;
 
         // Screens
+        public TitleScreen TitleScreen;
         public GameplayScreen GameplayScreen;
 
         public Rectangle ScreenRectangle;
@@ -54,9 +55,10 @@ namespace Danmaku_no_Kyojin
             Components.Add(stateManager);
 
             // Screens
+            TitleScreen = new TitleScreen(this, stateManager);
             GameplayScreen = new GameplayScreen(this, stateManager);
 
-            stateManager.ChangeState(GameplayScreen);
+            stateManager.ChangeState(TitleScreen);
 
             // FPS
             Components.Add(new FrameRateCounter(this));
