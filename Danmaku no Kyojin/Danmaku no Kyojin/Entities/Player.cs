@@ -37,7 +37,7 @@ namespace Danmaku_no_Kyojin.Entities
         private TimeSpan _bulletFrequence;
 
         #endregion
-        
+
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(

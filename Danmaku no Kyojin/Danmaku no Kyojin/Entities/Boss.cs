@@ -1,8 +1,11 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
-using Danmaku_no_Kyojin.BulletML;
+using Danmaku_no_Kyojin.Controls;
+using Danmaku_no_Kyojin.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -10,15 +13,32 @@ namespace Danmaku_no_Kyojin.Entities
     {
         // Bullet engine
         private Texture2D _bulletSprite;
-        static public BulletMLParser parser = new BulletMLParser();
         int timer = 0;
-        Mover mover;
+        Mover _mover;
+        public MoverManager MoverManager { get; set; }
+
+        /// <summary>
+        /// A list of all the bulletml samples we have loaded
+        /// </summary>
+        private List<BulletPattern> _myPatterns = new List<BulletPattern>();
+
+        /// <summary>
+        /// The names of all the bulletml patterns that are loaded, stored so we can display what is being fired
+        /// </summary>
+        private List<string> _patternNames = new List<string>();
+
+        /// <summary>
+        /// The current Bullet ML pattern to use to shoot bullets
+        /// </summary>
+        private int _CurrentPattern = 0;
 
         private float _speed;
 
         private Texture2D _sprite;
 
         private Vector2 _motion;
+
+        public float GetRank() { return 0; }
 
         private const float TotalHealth = 500f;
         private float _health;
@@ -58,6 +78,8 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Initialize()
         {
+            MoverManager = new MoverManager(Game.GameplayScreen.Player.GetPosition);
+
             base.Initialize();
         }
 
@@ -67,19 +89,25 @@ namespace Danmaku_no_Kyojin.Entities
             _sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
             _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
-            parser.ParseXML(@"Content/XML/sample.xml");
-            //parser.ParseXML(@"Content/XML/3way.xml");
-            //parser.ParseXML(@"Content/XML/test.xml");
-
-            BulletMLManager.Init(new BulletFunctions());
-
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
                 20);
 
-            mover = MoverManager.CreateMover();
-            mover.pos = new Vector2(401, 82);
-            mover.SetBullet(parser.tree);
+            //Get all the xml files
+            foreach (var source in Directory.GetFiles(@"Content\XML\", "*.xml", SearchOption.AllDirectories))
+            {
+                //store the name
+                _patternNames.Add(source);
+
+                //load the pattern
+                BulletPattern pattern = new BulletPattern();
+                pattern.ParseXML(source);
+                _myPatterns.Add(pattern);
+            }
+
+            GameManager.GameDifficulty = this.GetRank;
+
+            AddBullet(true);
 
             base.LoadContent();
         }
@@ -99,23 +127,54 @@ namespace Danmaku_no_Kyojin.Entities
                 IsAlive = false;
             }
 
-            /*
-            if (mover.used == false)
-            {
-                mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(401, 82);
-                mover.SetBullet(parser.tree);
-            }
-            */
 
-            if (MoverManager.movers.Count < 1)
+            //check input to increment/decrement the current bullet pattern
+            if (InputHandler.KeyPressed(Keys.A))
             {
-                mover = MoverManager.CreateMover();
-                mover.pos = new Vector2(401, 82);
-                mover.SetBullet(parser.tree);
+                //decrement the pattern
+                if (0 >= _CurrentPattern)
+                {
+                    //if it is at the beginning, move to the end
+                    _CurrentPattern = _myPatterns.Count - 1;
+                }
+                else
+                {
+                    _CurrentPattern--;
+                }
+
+                AddBullet(true);
+            }
+            else if (InputHandler.KeyPressed(Keys.X))
+            {
+                //increment the pattern
+                if ((_myPatterns.Count - 1) <= _CurrentPattern)
+                {
+                    //if it is at the beginning, move to the end
+                    _CurrentPattern = 0;
+                }
+                else
+                {
+                    _CurrentPattern++;
+                }
+
+                AddBullet(true);
+            }
+            else if (InputHandler.KeyPressed(Keys.LeftControl))
+            {
+                AddBullet(false);
             }
 
-            MoverManager.Update(gameTime);
+            timer++;
+            if (timer > 60)
+            {
+                timer = 0;
+                if (_mover.used == false)
+                {
+                    AddBullet(true);
+                }
+            }
+
+            MoverManager.Update();
             MoverManager.FreeMovers();
 
             base.Update(gameTime);
@@ -127,6 +186,9 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X, (int)Position.Y + _sprite.Height + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
+
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_CurrentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_CurrentPattern], new Vector2(0, Game.GraphicsDevice.Viewport.Height - 25), Color.White);
 
             foreach (Mover mover in MoverManager.movers)
             {
@@ -169,6 +231,20 @@ namespace Danmaku_no_Kyojin.Entities
         public void TakeDamage(float damage)
         {
             _health -= damage;
+        }
+
+        private void AddBullet(bool clear)
+        {
+            if (clear)
+            {
+                //clear out all the bulelts
+                MoverManager.movers.Clear();
+            }
+
+            //add a new bullet in the center of the screen
+            _mover = (Mover)MoverManager.CreateBullet();
+            _mover.pos = new Vector2(Position.X + _sprite.Width / 2, Position.Y + _sprite.Height / 2 - 5);
+            _mover.SetBullet(_myPatterns[_CurrentPattern].RootNode);
         }
     }
 }

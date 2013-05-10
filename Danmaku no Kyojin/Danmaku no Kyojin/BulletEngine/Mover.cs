@@ -1,84 +1,69 @@
-﻿using Danmaku_no_Kyojin.BulletML;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
 
 namespace Danmaku_no_Kyojin.BulletEngine
 {
-    /// <summary>
-    /// 弾や敵オブジェクト（自身が弾源になる場合も、弾源から呼び出される場合もあります）
-    /// </summary>
-    class Mover : IBulletMLBulletInterface
-    {
-        public BulletMLBullet mlBullet;
-        public bool used;
-        public bool bulletRoot;
-        public Vector2 pos;
+	/// <summary>
+	/// 弾や敵オブジェクト（自身が弾源になる場合も、弾源から呼び出される場合もあります）
+	/// </summary>
+	class Mover : Bullet
+	{
+		#region Members
 
-        public void Init()
-        {
-            used = true;
-            bulletRoot = false;
-            mlBullet = new BulletMLBullet(this);
-        }
+		public bool used;
+		public bool bulletRoot;
+		public Vector2 pos;
 
-        public void Update(GameTime gameTime)
-        {
-            //BulletMLで自分を動かす
-            if (mlBullet.Run(gameTime)) //自分が弾の発信源なら、処理終了後に自動的に消える
-                if (bulletRoot)
-                    used = false;
+		#endregion //Members
 
-            if (X < 0 || X > Config.Resolution.X ||
-                Y < 0 || Y > Config.Resolution.Y)
-                used = false;
+		#region Properties
 
-        }
+		public override float X
+		{
+			get { return pos.X; }
+			set { pos.X = value; }
+		}
+		
+		public override float Y
+		{
+			get { return pos.Y; }
+			set { pos.Y = value; }
+		}
+		
+		#endregion //Properties
 
-        /// BulletMLの弾幕定義を自分にセット
-        public void SetBullet(BulletMLTree tree)
-        {
-            mlBullet.InitTop(tree);
-        }
+		#region Methods
 
-        ///以下、BulletMLLibに必要なインターフェイスを実装します
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BulletMLSample.Mover"/> class.
+		/// </summary>
+		/// <param name="myBulletManager">My bullet manager.</param>
+		public Mover(IBulletManager myBulletManager) : base(myBulletManager)
+		{
+		}
 
-        /// <summary>
-        /// 新しい弾(Mover)を作成するときライブラリから呼ばれる
-        /// </summary>
-        public BulletMLBullet GetNewBullet()
-        {
-            bulletRoot = true;
-            Mover mover = MoverManager.CreateMover();
-            return mover.mlBullet;
-        }
+		public void Init()
+		{
+			used = true;
+			bulletRoot = false;
+		}
 
-        /// <summary>
-        /// 弾が消えたときにライブラリから呼び出される
-        /// </summary>
-        public void Vanish()
-        {
-            used = false;
-        }
+		public override void Update()
+		{
+			//BulletMLで自分を動かす
+			base.Update();
 
-        // 座標、向き、速度のプロパティを実装します。
-        public float X
-        {
-            get { return pos.X; }
-            set { pos.X = value; }
-        }
+            if (X < 0 || X > Config.Resolution.X || Y < 0 || Y > Config.Resolution.Y)
+			{
+				used = false;
+			}
+		}
 
-        public float Y
-        {
-            get { return pos.Y; }
-            set { pos.Y = value; }
-        }
+		/// BulletMLの弾幕定義を自分にセット
+		public void SetBullet(BulletMLNode tree)
+		{
+			InitTop(tree);
+		}
 
-        public float Dir { get; set; }
-        public float Speed { get; set; }
-
-
-    }
+		#endregion //Methods
+	}
 }

@@ -1,5 +1,4 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
-using Danmaku_no_Kyojin.BulletML;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;
@@ -13,7 +12,7 @@ namespace Danmaku_no_Kyojin.Screens
 {
     public class GameplayScreen : BaseGameState
     {
-        public static Player Player;
+        public Player Player { get; set; }
         private Boss _enemy;
 
         // Audio
@@ -119,7 +118,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             if (!Player.IsInvincible)
             {
-                foreach (Mover m in MoverManager.movers)
+                foreach (Mover m in _enemy.MoverManager.movers)
                 {
                     //Player.CheckCollision(m.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
                 }
@@ -175,8 +174,8 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             // Text
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);

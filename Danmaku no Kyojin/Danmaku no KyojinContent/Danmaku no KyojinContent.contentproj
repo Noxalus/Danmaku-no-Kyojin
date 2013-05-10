@@ -174,6 +174,1167 @@
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="XML\Samples\[1943]_rolling_fire.xml">
+      <Name>[1943]_rolling_fire</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_1.xml">
+      <Name>[Bulletsmorph]_aba_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_2.xml">
+      <Name>[Bulletsmorph]_aba_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_3.xml">
+      <Name>[Bulletsmorph]_aba_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_4.xml">
+      <Name>[Bulletsmorph]_aba_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_5.xml">
+      <Name>[Bulletsmorph]_aba_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_6.xml">
+      <Name>[Bulletsmorph]_aba_6</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_aba_7.xml">
+      <Name>[Bulletsmorph]_aba_7</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_convergent.xml">
+      <Name>[Bulletsmorph]_convergent</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_double_seduction.xml">
+      <Name>[Bulletsmorph]_double_seduction</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_fallen_string.xml">
+      <Name>[Bulletsmorph]_fallen_string</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_kunekune_plus_homing.xml">
+      <Name>[Bulletsmorph]_kunekune_plus_homing</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Bulletsmorph]_satoru4.xml">
+      <Name>[Bulletsmorph]_satoru4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ChaosSeed]_big_monkey_boss.xml">
+      <Name>[ChaosSeed]_big_monkey_boss</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_1.xml">
+      <Name>[Daiouzyou]_hibachi_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_2.xml">
+      <Name>[Daiouzyou]_hibachi_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_3.xml">
+      <Name>[Daiouzyou]_hibachi_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_4.xml">
+      <Name>[Daiouzyou]_hibachi_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_image.xml">
+      <Name>[Daiouzyou]_hibachi_image</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_hibachi_maybe.xml">
+      <Name>[Daiouzyou]_hibachi_maybe</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_1_boss.xml">
+      <Name>[Daiouzyou]_round_1_boss</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_1_boss_hakkyou.xml">
+      <Name>[Daiouzyou]_round_1_boss_hakkyou</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_3_boss.xml">
+      <Name>[Daiouzyou]_round_3_boss</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_3_boss_2.xml">
+      <Name>[Daiouzyou]_round_3_boss_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_3_boss_last.xml">
+      <Name>[Daiouzyou]_round_3_boss_last</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_4_boss.xml">
+      <Name>[Daiouzyou]_round_4_boss</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_4_boss_1.xml">
+      <Name>[Daiouzyou]_round_4_boss_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_4_boss_2.xml">
+      <Name>[Daiouzyou]_round_4_boss_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_4_boss_4.xml">
+      <Name>[Daiouzyou]_round_4_boss_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_4_boss_5.xml">
+      <Name>[Daiouzyou]_round_4_boss_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_5_boss_1.xml">
+      <Name>[Daiouzyou]_round_5_boss_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_5_boss_2.xml">
+      <Name>[Daiouzyou]_round_5_boss_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_1.xml">
+      <Name>[Daiouzyou]_round_6_boss_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_2.xml">
+      <Name>[Daiouzyou]_round_6_boss_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_3.xml">
+      <Name>[Daiouzyou]_round_6_boss_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_4.xml">
+      <Name>[Daiouzyou]_round_6_boss_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_5.xml">
+      <Name>[Daiouzyou]_round_6_boss_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Dodonpachi]_hibachi.xml">
+      <Name>[Dodonpachi]_hibachi</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Dodonpachi]_kitiku_1.xml">
+      <Name>[Dodonpachi]_kitiku_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Dodonpachi]_kitiku_2.xml">
+      <Name>[Dodonpachi]_kitiku_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Dodonpachi]_kitiku_3.xml">
+      <Name>[Dodonpachi]_kitiku_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Dodonpachi]_kitiku_5.xml">
+      <Name>[Dodonpachi]_kitiku_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[DragonBlaze]_nebyurosu_2.xml">
+      <Name>[DragonBlaze]_nebyurosu_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_123_boss_izuna_hakkyou.xml">
+      <Name>[ESP_RADE]_round_123_boss_izuna_hakkyou</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_123_boss_pelaboy_hakkyou.xml">
+      <Name>[ESP_RADE]_round_123_boss_pelaboy_hakkyou</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_123_boss_satoru_5way.xml">
+      <Name>[ESP_RADE]_round_123_boss_satoru_5way</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_alice_clone.xml">
+      <Name>[ESP_RADE]_round_5_alice_clone</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_ares_2.xml">
+      <Name>[ESP_RADE]_round_5_boss_ares_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_1_a.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_1_a</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_1_b.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_1_b</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_2.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_3.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_4.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_gara_5.xml">
+      <Name>[ESP_RADE]_round_5_boss_gara_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_kakusi_hakkyou.xml">
+      <Name>[ESP_RADE]_round_5_boss_kakusi_hakkyou</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[G-Wange]_roll_gara.xml">
+      <Name>[G-Wange]_roll_gara</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[G-Wange]_round_trip_bit.xml">
+      <Name>[G-Wange]_round_trip_bit</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Garegga]_black_heart_mk2_winder.xml">
+      <Name>[Garegga]_black_heart_mk2_winder</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[GigaWing2]_akurimi.xml">
+      <Name>[GigaWing2]_akurimi</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Guwange]_round_2_boss_circle_fire.xml">
+      <Name>[Guwange]_round_2_boss_circle_fire</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Guwange]_round_3_boss_fast_3way.xml">
+      <Name>[Guwange]_round_3_boss_fast_3way</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Guwange]_round_4_boss_eye_ball.xml">
+      <Name>[Guwange]_round_4_boss_eye_ball</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[G_DARIUS]_homing_laser.xml">
+      <Name>[G_DARIUS]_homing_laser</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Ketui_LT]_1boss_bit.xml">
+      <Name>[Ketui_LT]_1boss_bit</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Ketui_LT]_2boss_winder_crash.xml">
+      <Name>[Ketui_LT]_2boss_winder_crash</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Ketui_LT]_3boss_kunekune.xml">
+      <Name>[Ketui_LT]_3boss_kunekune</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Ketui_LT]_3boss_roll_and_aim.xml">
+      <Name>[Ketui_LT]_3boss_roll_and_aim</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_10flower_2.xml">
+      <Name>[MDA]_10flower_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_14b_2-3w.xml">
+      <Name>[MDA]_14b_2-3w</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_2f.xml">
+      <Name>[MDA]_2f</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_75l-42.xml">
+      <Name>[MDA]_75l-42</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_acc_n_dec.xml">
+      <Name>[MDA]_acc_n_dec</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_circular.xml">
+      <Name>[MDA]_circular</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_circular_model.xml">
+      <Name>[MDA]_circular_model</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_circular_sun.xml">
+      <Name>[MDA]_circular_sun</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_double_w.xml">
+      <Name>[MDA]_double_w</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_fukuro.xml">
+      <Name>[MDA]_fukuro</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_gnnnyari.xml">
+      <Name>[MDA]_gnnnyari</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_mojya.xml">
+      <Name>[MDA]_mojya</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_mossari.xml">
+      <Name>[MDA]_mossari</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[MDA]_wind_cl.xml">
+      <Name>[MDA]_wind_cl</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Noiz2sa]_5_players.xml">
+      <Name>[Noiz2sa]_5_players</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Noiz2sa]_88way.xml">
+      <Name>[Noiz2sa]_88way</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Noiz2sa]_bit.xml">
+      <Name>[Noiz2sa]_bit</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Noiz2sa]_rollbar.xml">
+      <Name>[Noiz2sa]_rollbar</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_accusation.xml">
+      <Name>[Original]_accusation</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_air_elemental.xml">
+      <Name>[Original]_air_elemental</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_backfire.xml">
+      <Name>[Original]_backfire</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_balloon_bomb.xml">
+      <Name>[Original]_balloon_bomb</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_1.xml">
+      <Name>[Original]_btb_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_2.xml">
+      <Name>[Original]_btb_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_3.xml">
+      <Name>[Original]_btb_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_4.xml">
+      <Name>[Original]_btb_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_5.xml">
+      <Name>[Original]_btb_5</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_btb_6.xml">
+      <Name>[Original]_btb_6</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_censored.xml">
+      <Name>[Original]_censored</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_chimera.xml">
+      <Name>[Original]_chimera</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_circle.xml">
+      <Name>[Original]_circle</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_cont_circle.xml">
+      <Name>[Original]_cont_circle</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_dokkaan.xml">
+      <Name>[Original]_dokkaan</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_ellipse_bomb.xml">
+      <Name>[Original]_ellipse_bomb</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_entangled_space.xml">
+      <Name>[Original]_entangled_space</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_evil_eye.xml">
+      <Name>[Original]_evil_eye</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_extinction.xml">
+      <Name>[Original]_extinction</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_fujin_ranbu_fake.xml">
+      <Name>[Original]_fujin_ranbu_fake</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_fujin_ranbu_true.xml">
+      <Name>[Original]_fujin_ranbu_true</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_guruguru.xml">
+      <Name>[Original]_guruguru</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_gurutyo.xml">
+      <Name>[Original]_gurutyo</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_gyakuhunsya.xml">
+      <Name>[Original]_gyakuhunsya</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_hajike.xml">
+      <Name>[Original]_hajike</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_hasami.xml">
+      <Name>[Original]_hasami</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_hirahira.xml">
+      <Name>[Original]_hirahira</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_housya.xml">
+      <Name>[Original]_housya</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_kagome.xml">
+      <Name>[Original]_kagome</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_kedama.xml">
+      <Name>[Original]_kedama</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_knight_1.xml">
+      <Name>[Original]_knight_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_knight_2.xml">
+      <Name>[Original]_knight_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_knight_3.xml">
+      <Name>[Original]_knight_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_knight_4.xml">
+      <Name>[Original]_knight_4</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_kotai.xml">
+      <Name>[Original]_kotai</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_kujira.xml">
+      <Name>[Original]_kujira</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_kunekune.xml">
+      <Name>[Original]_kunekune</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_light_lv10.xml">
+      <Name>[Original]_light_lv10</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_light_lv25.xml">
+      <Name>[Original]_light_lv25</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_light_max.xml">
+      <Name>[Original]_light_max</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_oogi_hutatsu.xml">
+      <Name>[Original]_oogi_hutatsu</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_optic_seeker.xml">
+      <Name>[Original]_optic_seeker</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_pan.xml">
+      <Name>[Original]_pan</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_progear_cheap_fake.xml">
+      <Name>[Original]_progear_cheap_fake</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_sakuretudan.xml">
+      <Name>[Original]_sakuretudan</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_shooting_star.xml">
+      <Name>[Original]_shooting_star</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_star_in_the_sky.xml">
+      <Name>[Original]_star_in_the_sky</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_stone6.xml">
+      <Name>[Original]_stone6</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_stop_and_run.xml">
+      <Name>[Original]_stop_and_run</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_time_twist.xml">
+      <Name>[Original]_time_twist</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_tsunami.xml">
+      <Name>[Original]_tsunami</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_two_cross.xml">
+      <Name>[Original]_two_cross</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_uneri.xml">
+      <Name>[Original]_uneri</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_wana.xml">
+      <Name>[Original]_wana</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_water_lv10.xml">
+      <Name>[Original]_water_lv10</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_water_lv25.xml">
+      <Name>[Original]_water_lv25</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_water_max.xml">
+      <Name>[Original]_water_max</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_yokokasoku.xml">
+      <Name>[Original]_yokokasoku</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Original]_zako_atack.xml">
+      <Name>[Original]_zako_atack</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_accel_jump.xml">
+      <Name>[OtakuTwo]_accel_jump</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_circle_fireworks.xml">
+      <Name>[OtakuTwo]_circle_fireworks</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_circle_fireworks2.xml">
+      <Name>[OtakuTwo]_circle_fireworks2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_circle_roll.xml">
+      <Name>[OtakuTwo]_circle_roll</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_circle_trap.xml">
+      <Name>[OtakuTwo]_circle_trap</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_dis_bee_1.xml">
+      <Name>[OtakuTwo]_dis_bee_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_dis_bee_2.xml">
+      <Name>[OtakuTwo]_dis_bee_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_dis_bee_3.xml">
+      <Name>[OtakuTwo]_dis_bee_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_dis_bee_hakkyou.xml">
+      <Name>[OtakuTwo]_dis_bee_hakkyou</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_restriction_stasis.xml">
+      <Name>[OtakuTwo]_restriction_stasis</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_roll_misago.xml">
+      <Name>[OtakuTwo]_roll_misago</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0012.xml">
+      <Name>[OtakuTwo]_self-0012</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0034.xml">
+      <Name>[OtakuTwo]_self-0034</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0036.xml">
+      <Name>[OtakuTwo]_self-0036</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0062.xml">
+      <Name>[OtakuTwo]_self-0062</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0063.xml">
+      <Name>[OtakuTwo]_self-0063</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0071.xml">
+      <Name>[OtakuTwo]_self-0071</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-0081.xml">
+      <Name>[OtakuTwo]_self-0081</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-1010.xml">
+      <Name>[OtakuTwo]_self-1010</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-1011.xml">
+      <Name>[OtakuTwo]_self-1011</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-1020.xml">
+      <Name>[OtakuTwo]_self-1020</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-1021.xml">
+      <Name>[OtakuTwo]_self-1021</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-2010.xml">
+      <Name>[OtakuTwo]_self-2010</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-2011.xml">
+      <Name>[OtakuTwo]_self-2011</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_self-2020.xml">
+      <Name>[OtakuTwo]_self-2020</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[OtakuTwo]_slow_move.xml">
+      <Name>[OtakuTwo]_slow_move</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_10_boss_before_final.xml">
+      <Name>[Progear]_round_10_boss_before_final</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_1_boss_grow_bullets.xml">
+      <Name>[Progear]_round_1_boss_grow_bullets</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_2_boss_struggling.xml">
+      <Name>[Progear]_round_2_boss_struggling</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_3_boss_back_burst.xml">
+      <Name>[Progear]_round_3_boss_back_burst</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_3_boss_wave_bullets.xml">
+      <Name>[Progear]_round_3_boss_wave_bullets</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_4_boss_fast_rocket.xml">
+      <Name>[Progear]_round_4_boss_fast_rocket</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_5_boss_last_round_wave.xml">
+      <Name>[Progear]_round_5_boss_last_round_wave</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_5_middle_boss_rockets.xml">
+      <Name>[Progear]_round_5_middle_boss_rockets</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_6_boss_parabola_shot.xml">
+      <Name>[Progear]_round_6_boss_parabola_shot</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Progear]_round_9_boss.xml">
+      <Name>[Progear]_round_9_boss</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Psyvariar]_4-D_boss_MZIQ.xml">
+      <Name>[Psyvariar]_4-D_boss_MZIQ</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Psyvariar]_X-A_boss_opening.xml">
+      <Name>[Psyvariar]_X-A_boss_opening</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Psyvariar]_X-A_boss_winder.xml">
+      <Name>[Psyvariar]_X-A_boss_winder</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Psyvariar]_X-B_colony_shape_satellite.xml">
+      <Name>[Psyvariar]_X-B_colony_shape_satellite</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[SilverGun]_4D_boss_PENTA.xml">
+      <Name>[SilverGun]_4D_boss_PENTA</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[STORM_CALIBAR]_last_boss_double_roll_bullets.xml">
+      <Name>[STORM_CALIBAR]_last_boss_double_roll_bullets</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[Strikers1999]_hanabi.xml">
+      <Name>[Strikers1999]_hanabi</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[tenmado]_3_boss_2.xml">
+      <Name>[tenmado]_3_boss_2</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[tenmado]_5_boss_1.xml">
+      <Name>[tenmado]_5_boss_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[tenmado]_5_boss_3.xml">
+      <Name>[tenmado]_5_boss_3</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[XEVIOUS]_garu_zakato.xml">
+      <Name>[XEVIOUS]_garu_zakato</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[XII_STAG]_3b.xml">
+      <Name>[XII_STAG]_3b</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="XML\Samples\[xsoldier]_8_boss_main.xml">
+      <Name>[xsoldier]_8_boss_main</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
