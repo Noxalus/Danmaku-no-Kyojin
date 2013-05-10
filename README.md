@@ -23,3 +23,15 @@ Danmaku no Kyojin (弾幕の巨人) is a 2D danmaku developed in C# with XNA.
 ![Warning Forever](http://mandarth.files.wordpress.com/2008/09/warningforevernq0.jpg)
 ### Geometry Wars
 ![Geometry Wars](http://www.maths.tcd.ie/~rshort/games/geometrywars/geowars.jpg)
+
+## TODO
+
+* Functionnal 2D camera
+* Menu screens
+* Sprites classes (use)
+* Quad tree implementation
+* Player's ship shoot (improvment)
+* Boss real implementation
+* Multiplayer
+* Shaders
+* Real collision detection
