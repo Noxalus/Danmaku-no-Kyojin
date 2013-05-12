@@ -224,7 +224,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
 		/// <summary>
 		/// Update this bullet.  Called once every 1/60th of a second during runtime
 		/// </summary>
-		public virtual void Update()
+        public virtual void Update(GameTime gameTime)
 		{
 			//Flag to tell whether or not this bullet has finished all its tasks
 			for (int i = 0; i < _tasks.Count; i++)
@@ -234,8 +234,8 @@ namespace Danmaku_no_Kyojin.BulletEngine
 			}
 
 			//only do this stuff if the bullet isn't done, cuz sin/cosin are expensive
-			X += Acceleration.X + (float)(Math.Sin(Direction) * Velocity);
-			Y += Acceleration.Y + (float)(-Math.Cos(Direction) * Velocity);
+			X += Acceleration.X + (float)(Math.Sin(Direction) * Velocity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 150));
+            Y += Acceleration.Y + (float)(-Math.Cos(Direction) * Velocity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 150));
 		}
 
 		/// <summary>

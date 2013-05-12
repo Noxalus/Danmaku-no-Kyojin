@@ -41,8 +41,8 @@ namespace Danmaku_no_Kyojin.Entities
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(
-                (int)Position.X - _sprite.Width / 8,
-                (int)Position.Y - _sprite.Height / 8, 
+                (int)(Position.X - _sprite.Width / 8 + ((_sprite.Width / 7.6f) * Math.Sin(_rotation)) * -1),
+                (int)(Position.Y - _sprite.Height / 8 + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))), 
                 _sprite.Width / 4, _sprite.Height / 4);
         }
 

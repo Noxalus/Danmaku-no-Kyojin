@@ -125,6 +125,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (_health <= 0)
             {
                 IsAlive = false;
+                MoverManager.movers.Clear();
             }
 
 
@@ -174,7 +175,7 @@ namespace Danmaku_no_Kyojin.Entities
                 }
             }
 
-            MoverManager.Update();
+            MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
 
             base.Update(gameTime);

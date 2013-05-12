@@ -27,7 +27,6 @@ namespace Danmaku_no_Kyojin.Screens
         public static Random Rand = new Random();
 
         // Bullets
-        private List<Mover> _opponentBullets;
         private List<BaseBullet> _bullets;
 
         public GameplayScreen(Game game, GameStateManager manager)
@@ -44,9 +43,9 @@ namespace Danmaku_no_Kyojin.Screens
             Player.Initialize();
             _enemy.Initialize();
 
-            _audioEngine = new AudioEngine("Content\\Audio\\DnK.xgs");
-            _waveBank = new WaveBank(_audioEngine, "Content\\Audio\\Wave Bank.xwb");
-            _soundBank = new SoundBank(_audioEngine, "Content\\Audio\\Sound Bank.xsb");
+            _audioEngine = new AudioEngine(@"Content/Audio/DnK.xgs");
+            _waveBank = new WaveBank(_audioEngine, @"Content/Audio/Wave Bank.xwb");
+            _soundBank = new SoundBank(_audioEngine, @"Content/Audio/Sound Bank.xsb");
 
             base.Initialize();
         }
@@ -120,7 +119,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 foreach (Mover m in _enemy.MoverManager.movers)
                 {
-                    //Player.CheckCollision(m.pos, new Point(_bulletSprite.Width, _bulletSprite.Height));
+                    Player.CheckCollision(m.pos, new Point(18, 18));
                 }
             }
 

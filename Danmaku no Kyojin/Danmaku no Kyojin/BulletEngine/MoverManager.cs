@@ -58,11 +58,11 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// <summary>
         /// すべてのMoverの行動を実行する
         /// </summary>
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             for (int i = 0; i < movers.Count; i++)
             {
-                movers[i].Update();
+                movers[i].Update(gameTime);
             }
         }
 

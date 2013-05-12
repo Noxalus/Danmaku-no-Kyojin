@@ -47,10 +47,10 @@ namespace Danmaku_no_Kyojin.BulletEngine
 			bulletRoot = false;
 		}
 
-		public override void Update()
+        public override void Update(GameTime gameTime)
 		{
 			//BulletMLで自分を動かす
-			base.Update();
+			base.Update(gameTime);
 
             if (X < 0 || X > Config.Resolution.X || Y < 0 || Y > Config.Resolution.Y)
 			{
