@@ -12,7 +12,7 @@ namespace Danmaku_no_Kyojin.Screens
 {
     public class GameplayScreen : BaseGameState
     {
-        public Player Player { get; set; }
+        public List<Player> Players { get; set; }
         private Boss _enemy;
 
         // Audio
@@ -34,13 +34,20 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _bullets = new List<BaseBullet>();
 
-            Player = new Player(GameRef, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+            Players = new List<Player>() 
+            {
+                new Player(GameRef, 1, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150)),
+                new Player(GameRef, 2, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150))
+            };
+
             _enemy = new Boss(GameRef);
         }
 
         public override void Initialize()
         {
-            Player.Initialize();
+            foreach (Player p in Players)
+                p.Initialize();
+
             _enemy.Initialize();
 
             _audioEngine = new AudioEngine(@"Content/Audio/DnK.xgs");
@@ -75,54 +82,58 @@ namespace Danmaku_no_Kyojin.Screens
         {
             base.Update(gameTime);
 
-            if (Player.IsAlive)
+            foreach (Player p in Players)
             {
-                for (int i = 0; i < _bullets.Count; i++)
+                if (p.IsAlive)
                 {
-                    _bullets[i].Update(gameTime);
+                    for (int i = 0; i < _bullets.Count; i++)
+                    {
+                        _bullets[i].Update(gameTime);
 
-                    if (_enemy.IsAlive && _enemy.CheckCollision(_bullets[i].GetPosition(),
-                                              new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
-                    {
-                        _enemy.TakeDamage(_bullets[i].Power);
-                        _bullets.Remove(_bullets[i]);
-                        //hit.Play();
-                    }
-                    else
-                    {
-                        if (_bullets[i].GetPosition().X < 0 || _bullets[i].GetPosition().X > Config.Resolution.X ||
-                            _bullets[i].GetPosition().Y < 0 || _bullets[i].GetPosition().Y > Config.Resolution.Y)
+                        if (_enemy.IsAlive && _enemy.CheckCollision(_bullets[i].GetPosition(),
+                                                  new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
                         {
+                            _enemy.TakeDamage(_bullets[i].Power);
                             _bullets.Remove(_bullets[i]);
+                            //hit.Play();
+                        }
+                        else
+                        {
+                            if (_bullets[i].GetPosition().X < 0 || _bullets[i].GetPosition().X > Config.Resolution.X ||
+                                _bullets[i].GetPosition().Y < 0 || _bullets[i].GetPosition().Y > Config.Resolution.Y)
+                            {
+                                _bullets.Remove(_bullets[i]);
+                            }
                         }
                     }
+
+                    p.Update(gameTime);
                 }
 
-                Player.Update(gameTime);
-            }
 
-            if (Player.BulletTime)
-            {
-                GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
-                                                    new TimeSpan(
-                                                        (long)
-                                                        (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
-                gameTime = newGameTime;
+                if (p.BulletTime)
+                {
+                    GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
+                                                        new TimeSpan(
+                                                            (long)
+                                                            (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
+                    gameTime = newGameTime;
+                }
+
+                if (!p.IsInvincible)
+                {
+                    foreach (Mover m in _enemy.MoverManager.movers)
+                    {
+                        p.CheckCollision(m.pos, new Point(18, 18));
+                    }
+                }
             }
 
             if (_enemy.IsAlive)
             {
                 _enemy.Update(gameTime);
             }
-
-            if (!Player.IsInvincible)
-            {
-                foreach (Mover m in _enemy.MoverManager.movers)
-                {
-                    Player.CheckCollision(m.pos, new Point(18, 18));
-                }
-            }
-
+            
             // Adjust zoom if the mouse wheel has moved
             if (InputHandler.ScrollUp())
                 GameRef.Camera.Zoom += 0.1f;
@@ -157,14 +168,17 @@ namespace Danmaku_no_Kyojin.Screens
                 null,
                 GameRef.Camera.GetTransformation());
 
-            if (Player.IsAlive)
+            foreach (Player p in Players)
             {
-                foreach (var bullet in _bullets)
+                if (p.IsAlive)
                 {
-                    bullet.Draw(gameTime);
-                }
+                    foreach (var bullet in _bullets)
+                    {
+                        bullet.Draw(gameTime);
+                    }
 
-                Player.Draw(gameTime);
+                    p.Draw(gameTime);
+                }
             }
 
             if (_enemy.IsAlive)

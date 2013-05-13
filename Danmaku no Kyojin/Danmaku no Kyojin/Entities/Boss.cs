@@ -78,7 +78,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Initialize()
         {
-            MoverManager = new MoverManager(Game.GameplayScreen.Player.GetPosition);
+            MoverManager = new MoverManager(Game.GameplayScreen.Players[0].GetPosition);
 
             base.Initialize();
         }

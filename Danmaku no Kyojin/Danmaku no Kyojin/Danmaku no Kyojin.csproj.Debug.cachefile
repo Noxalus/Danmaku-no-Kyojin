@@ -1,13 +1,13 @@
 Content\Graphics\Pictures\logo.xnb
-Content\Graphics\Fonts\ControlFont.xnb
 Content\Graphics\Entities\ship.xnb
 Content\Graphics\Entities\ship2.xnb
+Content\Graphics\Fonts\ControlFont.xnb
 Content\Graphics\Pictures\pixel.xnb
 Content\Graphics\Fonts\FPS.xnb
-Content\Graphics\Sprites\bullet.xnb
 Content\Graphics\Sprites\ball.xnb
-Content\Graphics\Sprites\bullet_bill.xnb
+Content\Graphics\Sprites\bullet.xnb
 Content\Graphics\Sprites\konata.xnb
+Content\Graphics\Sprites\bullet_bill.xnb
 Content\Graphics\Entities\enemy.xnb
 Content\Graphics\Entities\ship_bullet.xnb
 Content\Audio\SE\hit.xnb
