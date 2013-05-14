@@ -145,8 +145,8 @@ namespace Danmaku_no_Kyojin.Entities
                 _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
                 _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
 
-                SlowMode = (InputHandler.ButtonDown(Buttons.LeftTrigger, PlayerIndex.One)) ? true : false;
-                BulletTime = (InputHandler.ButtonDown(Buttons.RightTrigger, PlayerIndex.One)) ? true : false;
+                SlowMode = (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One)) ? true : false;
+                BulletTime = (InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One)) ? true : false;
 
                 if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
                 {
@@ -193,13 +193,11 @@ namespace Danmaku_no_Kyojin.Entities
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
-            string lives = string.Format("Lives: {0}", _lives);
+            // Text
+            string lives = string.Format("P{0}'s lives: {1}", ID, _lives);
 
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 61), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 60), Color.White);
-
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, InputHandler.GamePadStates[0].ThumbSticks.Right.Length().ToString(), new Vector2(1, 101), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, InputHandler.GamePadStates[0].ThumbSticks.Right.Length().ToString(), new Vector2(0, 100), Color.White);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 61 + 20 * (ID - 1)), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 60 + 20 * (ID - 1)), Color.White);
 
             base.Draw(gameTime);
         }

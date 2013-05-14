@@ -160,13 +160,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Draw(GameRef.SpriteBatch);
 
-            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.PointClamp,
-                null,
-                null,
-                null,
-                GameRef.Camera.GetTransformation());
+            GameRef.SpriteBatch.Begin();
 
             foreach (Player p in Players)
             {

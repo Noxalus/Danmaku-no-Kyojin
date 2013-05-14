@@ -7,12 +7,12 @@ namespace Danmaku_no_Kyojin
     public static class Config
     {
         // Debug
-        public const bool DisplayCollisionBoxes = false;
+        public static bool DisplayCollisionBoxes = false;
         public const bool FPSCapping = true;
 
         // Screen
         public const bool FullScreen = false;
-        public static readonly Point Resolution = new Point(800, 600);
+        public static readonly Point Resolution = new Point(1920, 1080);
 
         // Bullet Time
         public const float DesiredTimeModifier = 5f;
@@ -21,6 +21,11 @@ namespace Danmaku_no_Kyojin
         public static readonly Keys[] PlayerKeyboardInput = new Keys[]
         {
             Keys.Z, Keys.D, Keys.S, Keys.Q, Keys.LeftShift
+        };
+
+        public static readonly Buttons[] PlayerGamepadInput = new Buttons[]
+        {
+            Buttons.LeftTrigger, Buttons.RightTrigger
         };
 
         public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 0, 3);
