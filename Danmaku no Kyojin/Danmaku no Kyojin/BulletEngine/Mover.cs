@@ -34,7 +34,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
 		#region Methods
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BulletMLSample.Mover"/> class.
+        /// Initializes a new instance of the <see cref="Danmaku_no_Kyojin.BulletEngine.Mover"/> class.
 		/// </summary>
 		/// <param name="myBulletManager">My bullet manager.</param>
 		public Mover(IBulletManager myBulletManager) : base(myBulletManager)

@@ -24,6 +24,7 @@ namespace Danmaku_no_Kyojin
 
         // Screens
         public TitleScreen TitleScreen;
+        public TestScreen TestScreen;
         public GameplayScreen GameplayScreen;
 
         public Rectangle ScreenRectangle;
@@ -66,6 +67,7 @@ namespace Danmaku_no_Kyojin
             // Screens
             TitleScreen = new TitleScreen(this, stateManager);
             GameplayScreen = new GameplayScreen(this, stateManager);
+            TestScreen = new TestScreen(this, stateManager);
 
             stateManager.ChangeState(TitleScreen);
 

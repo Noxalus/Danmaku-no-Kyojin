@@ -23,6 +23,7 @@ namespace Danmaku_no_Kyojin.Entities
         private Texture2D _bulletSprite;
 
         private float _velocity;
+        private Vector2 _direction;
         public bool SlowMode { get; set; }
         private float _velocitySlowMode;
         private float _rotation;
@@ -43,7 +44,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             return new Rectangle(
                 (int)(Position.X - _sprite.Width / 8 + ((_sprite.Width / 7.6f) * Math.Sin(_rotation)) * -1),
-                (int)(Position.Y - _sprite.Height / 8 + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))), 
+                (int)(Position.Y - _sprite.Height / 8 + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))),
                 _sprite.Width / 4, _sprite.Height / 4);
         }
 
@@ -54,6 +55,7 @@ namespace Danmaku_no_Kyojin.Entities
             Position = position;
             _velocity = Config.PlayerMaxVelocity;
             _velocitySlowMode = Config.PlayerMaxSlowVelocity;
+            _direction = Vector2.Zero;
             _rotation = 0f;
             _center = Vector2.Zero;
             _distance = Vector2.Zero;
@@ -99,102 +101,78 @@ namespace Danmaku_no_Kyojin.Entities
 
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Vector2 motion = Vector2.Zero;
+            _direction = Vector2.Zero;
 
             if (ID == 1)
             {
                 // Keyboard
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[0]))
-                    motion.Y = -1;
+                    _direction.Y = -1;
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[1]))
-                    motion.X = 1;
+                    _direction.X = 1;
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[2]))
-                    motion.Y = 1;
+                    _direction.Y = 1;
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[3]))
-                    motion.X = -1;
+                    _direction.X = -1;
 
                 SlowMode = (InputHandler.KeyDown(Config.PlayerKeyboardInput[4])) ? true : false;
-            }
-            else if (ID == 2)
-            {
-                motion.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
-                motion.Y = InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
-            }
+                BulletTime = (InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
 
-            if (motion.X != 0 && motion.Y != 0)
-            {
-                _velocitySlowMode = Config.PlayerMaxSlowVelocity / 2;
-                _velocity = Config.PlayerMaxVelocity / 2;
-            }
+                if (_direction.X != 0 && _direction.Y != 0)
+                {
+                    _velocitySlowMode = Config.PlayerMaxSlowVelocity / 2;
+                    _velocity = Config.PlayerMaxVelocity / 2;
+                }
+                else
+                {
+                    _velocitySlowMode = Config.PlayerMaxSlowVelocity;
+                    _velocity = Config.PlayerMaxVelocity;
+                }
 
-
-            BulletTime = (InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
-
-            if (ID == 1)
-            {
                 // Mouse
                 _distance.X = Position.X - InputHandler.MouseState.X;
                 _distance.Y = Position.Y - InputHandler.MouseState.Y;
 
                 _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
-
-                if (_bulletFrequence.TotalMilliseconds > 0)
-                    _bulletFrequence -= gameTime.ElapsedGameTime;
-                else
+                if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        _bulletFrequence = Config.PlayerBulletFrequence;
+                    Fire(gameTime);
+                }
+            }
+            else if (ID == 2)
+            {
+                _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
+                _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
 
-                        Vector2 direction = new Vector2((float)Math.Sin(_rotation), (float)Math.Cos(_rotation) * -1);
-                        Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
-                        bullet.Power = 1f;
-                        bullet.WaveMode = false;
+                SlowMode = (InputHandler.ButtonDown(Buttons.LeftTrigger, PlayerIndex.One)) ? true : false;
+                BulletTime = (InputHandler.ButtonDown(Buttons.RightTrigger, PlayerIndex.One)) ? true : false;
 
-                        Vector2 directionLeft = direction;
-                        Vector2 positionLeft = Position;
-                        Vector2 directionRight = direction;
-                        Vector2 positionRight = Position;
+                if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
+                {
+                    _rotation =
+                        (float)
+                        Math.Atan2(InputHandler.GamePadStates[0].ThumbSticks.Right.Y * (-1),
+                                   InputHandler.GamePadStates[0].ThumbSticks.Right.X) + MathHelper.PiOver2;
 
-                        if (!SlowMode)
-                        {
-                            directionLeft = new Vector2((float)Math.Sin(_rotation - Math.PI / 4), (float)Math.Cos(_rotation - Math.PI / 4) * -1);
-                            directionRight = new Vector2((float)Math.Sin(_rotation + Math.PI / 4), (float)Math.Cos(_rotation + Math.PI / 4) * -1);
-                        }
-                        else
-                        {
-                            positionLeft.X -= 50f;
-                            positionRight.X += 50f;
-                        }
-
-                        Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, _velocity * 3);
-                        bulletLeft.Power = 0.5f;
-
-                        Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, _velocity * 3);
-                        bulletRight.Power = 0.5f;
-
-                        AddBullet(bullet);
-                        AddBullet(bulletLeft);
-                        AddBullet(bulletRight);
-                    }
+                    Fire(gameTime);
                 }
             }
 
-            UpdatePosition(motion, dt);
+            UpdatePosition(dt);
         }
 
-        private void UpdatePosition(Vector2 motion, float dt)
+        private void UpdatePosition(float dt)
         {
             if (SlowMode)
             {
-                Position.X += motion.X * _velocitySlowMode * dt;
-                Position.Y += motion.Y * _velocitySlowMode * dt;
+                Position.X += _direction.X * _velocitySlowMode * dt;
+                Position.Y += _direction.Y * _velocitySlowMode * dt;
             }
             else
             {
-                Position.X += motion.X * _velocity * dt;
-                Position.Y += motion.Y * _velocity * dt;
+                Position.X += _direction.X * _velocity * dt;
+                Position.Y += _direction.Y * _velocity * dt;
             }
 
             _center.X = _sprite.Width / 2;
@@ -207,7 +185,7 @@ namespace Danmaku_no_Kyojin.Entities
                 Game.Graphics.GraphicsDevice.Clear(Color.Red);
 
             Game.SpriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
-            
+
             if (Config.DisplayCollisionBoxes)
                 Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
 
@@ -219,6 +197,9 @@ namespace Danmaku_no_Kyojin.Entities
 
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 61), Color.Black);
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 60), Color.White);
+
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, InputHandler.GamePadStates[0].ThumbSticks.Right.Length().ToString(), new Vector2(1, 101), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, InputHandler.GamePadStates[0].ThumbSticks.Right.Length().ToString(), new Vector2(0, 100), Color.White);
 
             base.Draw(gameTime);
         }
@@ -242,6 +223,49 @@ namespace Danmaku_no_Kyojin.Entities
             }
 
             return false;
+        }
+
+        private void Fire(GameTime gameTime)
+        {
+            if (_bulletFrequence.TotalMilliseconds > 0)
+                _bulletFrequence -= gameTime.ElapsedGameTime;
+            else
+            {
+                _bulletFrequence = Config.PlayerBulletFrequence;
+
+                Vector2 direction = new Vector2((float)Math.Sin(_rotation), (float)Math.Cos(_rotation) * -1);
+                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
+                bullet.Power = 1f;
+                bullet.WaveMode = false;
+
+                Vector2 directionLeft = direction;
+                Vector2 positionLeft = Position;
+                Vector2 directionRight = direction;
+                Vector2 positionRight = Position;
+
+                if (!SlowMode)
+                {
+                    directionLeft = new Vector2((float)Math.Sin(_rotation - Math.PI / 4),
+                                                (float)Math.Cos(_rotation - Math.PI / 4) * -1);
+                    directionRight = new Vector2((float)Math.Sin(_rotation + Math.PI / 4),
+                                                 (float)Math.Cos(_rotation + Math.PI / 4) * -1);
+                }
+                else
+                {
+                    positionLeft.X -= 50f;
+                    positionRight.X += 50f;
+                }
+
+                Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, _velocity * 3);
+                bulletLeft.Power = 0.5f;
+
+                Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, _velocity * 3);
+                bulletRight.Power = 0.5f;
+
+                AddBullet(bullet);
+                AddBullet(bulletLeft);
+                AddBullet(bulletRight);
+            }
         }
     }
 }

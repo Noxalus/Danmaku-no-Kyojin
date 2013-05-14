@@ -8,7 +8,7 @@ namespace Danmaku_no_Kyojin
     {
         // Debug
         public const bool DisplayCollisionBoxes = false;
-        public const bool FPSCapping = false;
+        public const bool FPSCapping = true;
 
         // Screen
         public const bool FullScreen = false;
@@ -18,7 +18,6 @@ namespace Danmaku_no_Kyojin
         public const float DesiredTimeModifier = 5f;
 
         // Player
-
         public static readonly Keys[] PlayerKeyboardInput = new Keys[]
         {
             Keys.Z, Keys.D, Keys.S, Keys.Q, Keys.LeftShift

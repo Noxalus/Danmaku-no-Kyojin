@@ -30,7 +30,7 @@ namespace Danmaku_no_Kyojin.Entities
         /// <summary>
         /// The current Bullet ML pattern to use to shoot bullets
         /// </summary>
-        private int _CurrentPattern = 0;
+        private int _currentPattern = 0;
 
         private float _speed;
 
@@ -133,14 +133,14 @@ namespace Danmaku_no_Kyojin.Entities
             if (InputHandler.KeyPressed(Keys.A))
             {
                 //decrement the pattern
-                if (0 >= _CurrentPattern)
+                if (0 >= _currentPattern)
                 {
                     //if it is at the beginning, move to the end
-                    _CurrentPattern = _myPatterns.Count - 1;
+                    _currentPattern = _myPatterns.Count - 1;
                 }
                 else
                 {
-                    _CurrentPattern--;
+                    _currentPattern--;
                 }
 
                 AddBullet(true);
@@ -148,14 +148,14 @@ namespace Danmaku_no_Kyojin.Entities
             else if (InputHandler.KeyPressed(Keys.X))
             {
                 //increment the pattern
-                if ((_myPatterns.Count - 1) <= _CurrentPattern)
+                if ((_myPatterns.Count - 1) <= _currentPattern)
                 {
                     //if it is at the beginning, move to the end
-                    _CurrentPattern = 0;
+                    _currentPattern = 0;
                 }
                 else
                 {
-                    _CurrentPattern++;
+                    _currentPattern++;
                 }
 
                 AddBullet(true);
@@ -188,8 +188,8 @@ namespace Danmaku_no_Kyojin.Entities
                 (int)Position.X, (int)Position.Y + _sprite.Height + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
 
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_CurrentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_CurrentPattern], new Vector2(0, Game.GraphicsDevice.Viewport.Height - 25), Color.White);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
+            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(0, Game.GraphicsDevice.Viewport.Height - 25), Color.White);
 
             foreach (Mover mover in MoverManager.movers)
             {
@@ -236,7 +236,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         private void AddBullet(bool clear)
         {
-            if (clear)
+            if (true)
             {
                 //clear out all the bulelts
                 MoverManager.movers.Clear();
@@ -245,7 +245,7 @@ namespace Danmaku_no_Kyojin.Entities
             //add a new bullet in the center of the screen
             _mover = (Mover)MoverManager.CreateBullet();
             _mover.pos = new Vector2(Position.X + _sprite.Width / 2, Position.Y + _sprite.Height / 2 - 5);
-            _mover.SetBullet(_myPatterns[_CurrentPattern].RootNode);
+            _mover.SetBullet(_myPatterns[_currentPattern].RootNode);
         }
     }
 }

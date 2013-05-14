@@ -164,6 +164,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="DnK.cs" />
     <Compile Include="Screens\BaseGameState.cs" />
+    <Compile Include="Screens\TestScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\TitleScreen.cs" />
     <Compile Include="Sprites\AnimatedSprite.cs" />
