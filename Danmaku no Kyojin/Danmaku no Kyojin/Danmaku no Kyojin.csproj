@@ -171,6 +171,7 @@
     <Compile Include="Sprites\Animation.cs" />
     <Compile Include="Sprites\BaseSprite.cs" />
     <Compile Include="Utils\FrameRateCounter.cs" />
+    <Compile Include="Utils\Primitives2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

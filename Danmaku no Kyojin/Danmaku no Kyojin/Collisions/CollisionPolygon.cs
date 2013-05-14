@@ -43,5 +43,10 @@ namespace Danmaku_no_Kyojin.Collisions
         {
             return false;
         }
+
+        public override void Draw(SpriteBatch sp, Vector2 position)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

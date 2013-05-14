@@ -1,10 +1,7 @@
 ﻿using Danmaku_no_Kyojin.Entities;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Danmaku_no_Kyojin.Utils;
+using Microsoft.Xna.Framework;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
@@ -40,6 +37,11 @@ namespace Danmaku_no_Kyojin.Collisions
         private bool Intersects(CollisionCircle boundingCircle)
         {
             return false;
+        }
+
+        public override void Draw(SpriteBatch sp, Vector2 position)
+        {
+            sp.DrawCircle(position.X, position.Y, Radius, 10, Color.White);
         }
     }
 }

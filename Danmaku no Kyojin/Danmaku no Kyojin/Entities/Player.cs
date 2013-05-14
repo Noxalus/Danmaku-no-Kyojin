@@ -43,9 +43,9 @@ namespace Danmaku_no_Kyojin.Entities
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(
-                (int)(Position.X - _sprite.Width / 8 + ((_sprite.Width / 7.6f) * Math.Sin(_rotation)) * -1),
-                (int)(Position.Y - _sprite.Height / 8 + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))),
-                _sprite.Width / 4, _sprite.Height / 4);
+                (int)(Position.X - (int)(_sprite.Width / 8) + ((_sprite.Width / 7.6f) * Math.Sin(_rotation)) * -1),
+                (int)(Position.Y - (int)(_sprite.Height / 8) + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))),
+                10, 10);
         }
 
         public Player(DnK game, int id, ref List<BaseBullet> bullets, Vector2 position)
@@ -77,8 +77,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
-            _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
-            BoundingElement = new CollisionCircle(this, 20);
+            _center = new Vector2(_sprite.Width / 2f, _sprite.Height / 2f);
+            BoundingElement = new CollisionCircle(this, 5);
         }
 
         public override void Update(GameTime gameTime)
@@ -135,6 +135,11 @@ namespace Danmaku_no_Kyojin.Entities
 
                 _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
+
+                // Debug
+                if (InputHandler.KeyDown(Keys.R))
+                    _rotation = 0;
+
                 if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
                 {
                     Fire(gameTime);
@@ -174,9 +179,6 @@ namespace Danmaku_no_Kyojin.Entities
                 Position.X += _direction.X * _velocity * dt;
                 Position.Y += _direction.Y * _velocity * dt;
             }
-
-            _center.X = _sprite.Width / 2;
-            _center.Y = _sprite.Height / 2;
         }
 
         public override void Draw(GameTime gameTime)
@@ -188,6 +190,10 @@ namespace Danmaku_no_Kyojin.Entities
 
             if (Config.DisplayCollisionBoxes)
                 Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
+
+            BoundingElement.Draw(Game.SpriteBatch, new Vector2(
+                Position.X + _sprite.Height / 6f * (float)(Math.Sin(_rotation) * -1),
+                Position.Y + _sprite.Height / 6f * (float)(Math.Cos(_rotation))));
 
             //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);

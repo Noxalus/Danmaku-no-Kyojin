@@ -190,9 +190,9 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);
 
-            GameRef.SpriteBatch.End();
-
             base.Draw(gameTime);
+
+            GameRef.SpriteBatch.End();
         }
     }
 }
