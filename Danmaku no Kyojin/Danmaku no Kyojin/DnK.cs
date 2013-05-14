@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin
             Graphics.SynchronizeWithVerticalRetrace = true;
 
             // Pass through the FPS capping (60 FPS)
-            if (!Config.FPSCapping)
+            if (!Config.FpsCapping)
             {
                 IsFixedTimeStep = false;
                 Graphics.SynchronizeWithVerticalRetrace = false;

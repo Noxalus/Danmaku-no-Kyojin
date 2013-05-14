@@ -78,7 +78,7 @@ namespace Danmaku_no_Kyojin.Entities
             _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             _center = new Vector2(_sprite.Width / 2, _sprite.Height / 2);
-            BoundingElement = new CollisionCircle((DnK)this.Game, this, 20);
+            BoundingElement = new CollisionCircle(this, 20);
         }
 
         public override void Update(GameTime gameTime)

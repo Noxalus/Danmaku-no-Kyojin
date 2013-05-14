@@ -13,7 +13,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected readonly DnK Game;
         protected Vector2 Position;
-        protected ColisionElement BoundingElement;
+        protected CollisionElement BoundingElement;
 
         public bool IsAlive { get; set; }
 
@@ -26,7 +26,7 @@ namespace Danmaku_no_Kyojin.Entities
             return Position;
         }
 
-        public ColisionElement GetBoundingElement()
+        public CollisionElement GetBoundingElement()
         {
             return BoundingElement;
         }

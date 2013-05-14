@@ -8,16 +8,18 @@ namespace Danmaku_no_Kyojin
     {
         // Debug
         public static bool DisplayCollisionBoxes = false;
-        public const bool FPSCapping = true;
+        public const bool FpsCapping = true;
 
         // Screen
         public const bool FullScreen = false;
-        public static readonly Point Resolution = new Point(1920, 1080);
+        public static readonly Point Resolution = new Point(800, 600);
 
         // Bullet Time
         public const float DesiredTimeModifier = 5f;
 
         // Player
+        public const int PlayersNumber = 1;
+
         public static readonly Keys[] PlayerKeyboardInput = new Keys[]
         {
             Keys.Z, Keys.D, Keys.S, Keys.Q, Keys.LeftShift

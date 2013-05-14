@@ -34,10 +34,13 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _bullets = new List<BaseBullet>();
 
-            Players = new List<Player>() 
+            Players = new List<Player>();
+
+            for (int i = 1; i <= Config.PlayersNumber; i++)
             {
-                new Player(GameRef, 1, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150)),
-                new Player(GameRef, 2, ref _bullets, new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2, GameRef.Graphics.GraphicsDevice.Viewport.Height - 150))
+                Players.Add(new Player(GameRef, i, ref _bullets,
+                           new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width/2,
+                                       GameRef.Graphics.GraphicsDevice.Viewport.Height - 150)));
             };
 
             _enemy = new Boss(GameRef);
