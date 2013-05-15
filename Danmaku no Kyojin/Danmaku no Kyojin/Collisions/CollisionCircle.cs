@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.Entities;
+﻿using System;
+using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework.Graphics;
 using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #endregion
 
-        public CollisionCircle(Entity parent, float radius) : base(parent)
+        public CollisionCircle(Entity parent, Vector2 relativePosition, float radius) : base(parent, relativePosition)
         {
             Radius = radius;
         }
@@ -39,9 +40,16 @@ namespace Danmaku_no_Kyojin.Collisions
             return false;
         }
 
-        public override void Draw(SpriteBatch sp, Vector2 position)
+        public override void Draw(SpriteBatch sp)
         {
-            sp.DrawCircle(position.X, position.Y, Radius, 10, Color.White);
+            sp.DrawCircle(GetCenter().X, GetCenter().Y, Radius, 10, Color.White);
+        }
+
+        private Vector2 GetCenter()
+        {
+            return new Vector2(
+                Parent.GetPosition().X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),
+                Parent.GetPosition().Y + RelativePosition.Y * (float)(Math.Cos(Parent.GetRotation())));
         }
     }
 }

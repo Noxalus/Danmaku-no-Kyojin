@@ -1,4 +1,5 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
+using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 using Microsoft.Xna.Framework;
@@ -34,8 +35,6 @@ namespace Danmaku_no_Kyojin.Entities
 
         private float _speed;
 
-        private Texture2D _sprite;
-
         private Vector2 _motion;
 
         public float GetRank() { return 0; }
@@ -50,18 +49,12 @@ namespace Danmaku_no_Kyojin.Entities
             set { _speed = value; }
         }
 
-        public Texture2D Sprite
-        {
-            get { return _sprite; }
-            set { _sprite = value; }
-        }
-
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(
                 (int)Position.X,
                 (int)Position.Y,
-                _sprite.Width, _sprite.Height);
+                Sprite.Width, Sprite.Height);
         }
 
         public Boss(DnK game)
@@ -86,11 +79,21 @@ namespace Danmaku_no_Kyojin.Entities
         protected override void LoadContent()
         {
             _bulletSprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
-            _sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
+            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
             _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
+            List<Point> vertices = new List<Point>()
+                {
+                    new Point(0, (int)(Sprite.Height / 2.74)),
+                    new Point(Sprite.Width / 2, 0),
+                    new Point(Sprite.Width, (int)(Sprite.Height / 2.74)),
+                    new Point(Sprite.Width / 2, Sprite.Height)
+                };
+
+            CollisionBox = new CollisionPolygon(this, Vector2.Zero, vertices);
+
             Position = new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2 - _sprite.Width / 2,
+                Game.GraphicsDevice.Viewport.Width / 2 - Sprite.Width / 2,
                 20);
 
             //Get all the xml files
@@ -116,8 +119,8 @@ namespace Danmaku_no_Kyojin.Entities
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
 
-            if (Position.X > Game.GraphicsDevice.Viewport.Width - _sprite.Width - (Speed * dt) ||
-                Position.X < _sprite.Width + (Speed * dt))
+            if (Position.X > Game.GraphicsDevice.Viewport.Width - Sprite.Width - (Speed * dt) ||
+                Position.X < Sprite.Width + (Speed * dt))
                 _motion *= -1;
 
             //Position += _motion * Speed * dt;
@@ -183,9 +186,10 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(_sprite, new Rectangle((int)Position.X, (int)Position.Y, _sprite.Width, _sprite.Height), Color.White);
+            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
-                (int)Position.X, (int)Position.Y + _sprite.Height + 20,
+                (int)Position.X, (int)Position.Y + Sprite.Height + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
 
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
@@ -244,7 +248,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             //add a new bullet in the center of the screen
             _mover = (Mover)MoverManager.CreateBullet();
-            _mover.pos = new Vector2(Position.X + _sprite.Width / 2, Position.Y + _sprite.Height / 2 - 5);
+            _mover.pos = new Vector2(Position.X + Sprite.Width / 2, Position.Y + Sprite.Height / 2 - 5);
             _mover.SetBullet(_myPatterns[_currentPattern].RootNode);
         }
     }

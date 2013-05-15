@@ -93,8 +93,8 @@ namespace Danmaku_no_Kyojin.Screens
                     {
                         _bullets[i].Update(gameTime);
 
-                        if (_enemy.IsAlive && _enemy.CheckCollision(_bullets[i].GetPosition(),
-                                                  new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height)))
+                        if (false /*_enemy.IsAlive && _enemy.CheckCollision(_bullets[i].GetPosition(),
+                                                  new Point(_bullets[i].Sprite.Width, _bullets[i].Sprite.Height))*/)
                         {
                             _enemy.TakeDamage(_bullets[i].Power);
                             _bullets.Remove(_bullets[i]);

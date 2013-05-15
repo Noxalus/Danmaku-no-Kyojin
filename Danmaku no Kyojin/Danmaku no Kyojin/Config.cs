@@ -31,7 +31,7 @@ namespace Danmaku_no_Kyojin
         };
 
         public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 0, 3);
-        public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 0, 50);
+        public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 50, 50);
         public const float PlayerMaxVelocity = 400f;
         public const float PlayerMaxSlowVelocity = 125f;
     }

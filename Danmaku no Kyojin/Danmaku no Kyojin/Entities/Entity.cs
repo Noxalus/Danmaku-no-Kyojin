@@ -1,9 +1,6 @@
 ﻿using Danmaku_no_Kyojin.Collisions;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -13,7 +10,11 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected readonly DnK Game;
         protected Vector2 Position;
-        protected CollisionElement BoundingElement;
+        protected float Rotation;
+        protected CollisionElement CollisionBox;
+        protected Vector2 Center;
+        protected Texture2D Sprite;
+        protected Point Size;
 
         public bool IsAlive { get; set; }
 
@@ -26,9 +27,24 @@ namespace Danmaku_no_Kyojin.Entities
             return Position;
         }
 
+        public float GetRotation()
+        {
+            return Rotation;
+        }
+
         public CollisionElement GetBoundingElement()
         {
-            return BoundingElement;
+            return CollisionBox;
+        }
+
+        public Vector2 GetOrigin()
+        {
+            return new Vector2(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2);
+        }
+
+        public Point GetSize()
+        {
+            return new Point(Sprite.Width, Sprite.Height);
         }
 
         #endregion
@@ -53,11 +69,13 @@ namespace Danmaku_no_Kyojin.Entities
 
         public virtual void Draw(GameTime gameTime)
         {
+            if (Config.DisplayCollisionBoxes)
+                CollisionBox.Draw(Game.SpriteBatch);
         }
 
         public bool Intersects(Entity entity)
         {
-            return BoundingElement.Intersects(entity.BoundingElement);
+            return CollisionBox.Intersects(entity.CollisionBox);
         }
     }
 }

@@ -17,16 +17,12 @@ namespace Danmaku_no_Kyojin.Entities
         #region Fields
         public int ID { get; set; }
 
-        // Specific to the sprite
-        private Texture2D _sprite;
-        private Vector2 _center;
         private Texture2D _bulletSprite;
 
         private float _velocity;
         private Vector2 _direction;
         public bool SlowMode { get; set; }
         private float _velocitySlowMode;
-        private float _rotation;
         private Vector2 _distance;
 
         // Bullet Time
@@ -43,8 +39,8 @@ namespace Danmaku_no_Kyojin.Entities
         private Rectangle GetCollisionBox()
         {
             return new Rectangle(
-                (int)(Position.X - (int)(_sprite.Width / 8) + ((_sprite.Width / 7.6f) * Math.Sin(_rotation)) * -1),
-                (int)(Position.Y - (int)(_sprite.Height / 8) + ((_sprite.Height / 6.6f) * Math.Cos(_rotation))),
+                (int)(Position.X - (int)(Sprite.Width / 8) + ((Sprite.Width / 7.6f) * Math.Sin(Rotation)) * -1),
+                (int)(Position.Y - (int)(Sprite.Height / 8) + ((Sprite.Height / 6.6f) * Math.Cos(Rotation))),
                 10, 10);
         }
 
@@ -56,8 +52,8 @@ namespace Danmaku_no_Kyojin.Entities
             _velocity = Config.PlayerMaxVelocity;
             _velocitySlowMode = Config.PlayerMaxSlowVelocity;
             _direction = Vector2.Zero;
-            _rotation = 0f;
-            _center = Vector2.Zero;
+            Rotation = 0f;
+            Center = Vector2.Zero;
             _distance = Vector2.Zero;
 
             _lives = 5;
@@ -75,10 +71,10 @@ namespace Danmaku_no_Kyojin.Entities
         {
             base.LoadContent();
 
-            _sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
+            Sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
-            _center = new Vector2(_sprite.Width / 2f, _sprite.Height / 2f);
-            BoundingElement = new CollisionCircle(this, 5);
+            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), 5);
         }
 
         public override void Update(GameTime gameTime)
@@ -133,12 +129,11 @@ namespace Danmaku_no_Kyojin.Entities
                 _distance.X = Position.X - InputHandler.MouseState.X;
                 _distance.Y = Position.Y - InputHandler.MouseState.Y;
 
-                _rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
-
+                Rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
                 // Debug
                 if (InputHandler.KeyDown(Keys.R))
-                    _rotation = 0;
+                    Rotation = 0;
 
                 if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -155,7 +150,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                 if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
                 {
-                    _rotation =
+                    Rotation =
                         (float)
                         Math.Atan2(InputHandler.GamePadStates[0].ThumbSticks.Right.Y * (-1),
                                    InputHandler.GamePadStates[0].ThumbSticks.Right.X) + MathHelper.PiOver2;
@@ -186,17 +181,9 @@ namespace Danmaku_no_Kyojin.Entities
             if (IsInvincible)
                 Game.Graphics.GraphicsDevice.Clear(Color.Red);
 
-            Game.SpriteBatch.Draw(_sprite, Position, null, Color.White, _rotation, _center, 1f, SpriteEffects.None, 0f);
+            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
 
-            if (Config.DisplayCollisionBoxes)
-                Game.SpriteBatch.Draw(DnK._pixel, GetCollisionBox(), Color.White);
-
-            BoundingElement.Draw(Game.SpriteBatch, new Vector2(
-                Position.X + _sprite.Height / 6f * (float)(Math.Sin(_rotation) * -1),
-                Position.Y + _sprite.Height / 6f * (float)(Math.Cos(_rotation))));
-
-            //_boundingElement.DrawDebug(_position, _rotation, new Vector2(_sprite.Width, _sprite.Height));
-            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _rotation + " (X" + Math.Cos(_rotation) + "|Y: " + Math.Sin(_rotation) + ")", new Vector2(0, 300), Color.Black);
+            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, Rotation + " (X" + Math.Cos(Rotation) + "|Y: " + Math.Sin(Rotation) + ")", new Vector2(0, 300), Color.Black);
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
             // Text
@@ -237,8 +224,8 @@ namespace Danmaku_no_Kyojin.Entities
             {
                 _bulletFrequence = Config.PlayerBulletFrequence;
 
-                Vector2 direction = new Vector2((float)Math.Sin(_rotation), (float)Math.Cos(_rotation) * -1);
-                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
+                Vector2 direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
+                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, 20);
                 bullet.Power = 1f;
                 bullet.WaveMode = false;
 
@@ -249,10 +236,10 @@ namespace Danmaku_no_Kyojin.Entities
 
                 if (!SlowMode)
                 {
-                    directionLeft = new Vector2((float)Math.Sin(_rotation - Math.PI / 4),
-                                                (float)Math.Cos(_rotation - Math.PI / 4) * -1);
-                    directionRight = new Vector2((float)Math.Sin(_rotation + Math.PI / 4),
-                                                 (float)Math.Cos(_rotation + Math.PI / 4) * -1);
+                    directionLeft = new Vector2((float)Math.Sin(Rotation - Math.PI / 4),
+                                                (float)Math.Cos(Rotation - Math.PI / 4) * -1);
+                    directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 4),
+                                                 (float)Math.Cos(Rotation + Math.PI / 4) * -1);
                 }
                 else
                 {
