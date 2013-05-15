@@ -82,19 +82,21 @@ namespace Danmaku_no_Kyojin.Entities
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
             _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
+            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+
             List<Point> vertices = new List<Point>()
                 {
-                    new Point(0, (int)(Sprite.Height / 2.74)),
+                    new Point(0, (int)(Sprite.Height / 2.74f)),
                     new Point(Sprite.Width / 2, 0),
-                    new Point(Sprite.Width, (int)(Sprite.Height / 2.74)),
+                    new Point(Sprite.Width, (int)(Sprite.Height / 2.74f)),
                     new Point(Sprite.Width / 2, Sprite.Height)
                 };
 
             CollisionBox = new CollisionPolygon(this, Vector2.Zero, vertices);
 
             Position = new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2 - Sprite.Width / 2,
-                20);
+                Game.GraphicsDevice.Viewport.Width / 2f,
+                20 + Sprite.Height / 2f);
 
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML\", "*.xml", SearchOption.AllDirectories))
@@ -189,7 +191,7 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
 
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
-                (int)Position.X, (int)Position.Y + Sprite.Height + 20,
+                (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
 
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
@@ -199,8 +201,8 @@ namespace Danmaku_no_Kyojin.Entities
             {
                 Game.SpriteBatch.Draw(_bulletSprite,
                                          new Vector2(
-                                             mover.pos.X - _bulletSprite.Width / 2,
-                                             mover.pos.Y - _bulletSprite.Height / 2),
+                                             mover.pos.X - _bulletSprite.Width / 2f,
+                                             mover.pos.Y - _bulletSprite.Height / 2f),
                                          Color.White);
 
                 if (Config.DisplayCollisionBoxes)
@@ -248,7 +250,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             //add a new bullet in the center of the screen
             _mover = (Mover)MoverManager.CreateBullet();
-            _mover.pos = new Vector2(Position.X + Sprite.Width / 2, Position.Y + Sprite.Height / 2 - 5);
+            _mover.pos = new Vector2(Position.X, Position.Y - 5);
             _mover.SetBullet(_myPatterns[_currentPattern].RootNode);
         }
     }
