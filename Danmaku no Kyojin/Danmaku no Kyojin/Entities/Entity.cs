@@ -27,6 +27,18 @@ namespace Danmaku_no_Kyojin.Entities
             return Position;
         }
 
+        public float X
+        {
+            get { return Position.X; }
+            set { Position.X = value; }
+        }
+
+        public float Y
+        {
+            get { return Position.Y; }
+            set { Position.Y = value; }
+        }
+
         public float GetRotation()
         {
             return Rotation;

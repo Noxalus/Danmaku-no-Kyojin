@@ -51,7 +51,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             _player = new Player(GameRef, 2, ref _bullets, new Vector2(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 4));
 
-			_moverManager = new MoverManager(_player.GetPosition);
+			_moverManager = new MoverManager(GameRef, _player.GetPosition);
 		}
 
 		public override void Initialize()
@@ -165,7 +165,7 @@ namespace Danmaku_no_Kyojin.Screens
 			//_text.Write(_moverManager.movers.Count.ToString(), position, Justify.Left, 1.0f, Color.White, spriteBatch);
 
 			foreach (Mover mover in _moverManager.movers)
-                GameRef.SpriteBatch.Draw(texture, mover.pos, Color.White);
+                GameRef.SpriteBatch.Draw(texture, mover.GetPosition(), Color.White);
 
 			_player.Draw(gameTime);
 
@@ -181,8 +181,9 @@ namespace Danmaku_no_Kyojin.Screens
 
 			//add a new bullet in the center of the screen
 			mover = (Mover)_moverManager.CreateBullet();
-            mover.pos = new Vector2(GameRef.Graphics.PreferredBackBufferWidth / 2, GameRef.Graphics.PreferredBackBufferHeight / 2);
-			mover.SetBullet(_myPatterns[_currentPattern].RootNode); //BulletML??????????????????
+            mover.X = GameRef.Graphics.PreferredBackBufferWidth / 2;
+		    mover.Y = GameRef.Graphics.PreferredBackBufferHeight/2;
+			mover.SetBullet(_myPatterns[_currentPattern].RootNode); //BulletML
         }
 
         #endregion

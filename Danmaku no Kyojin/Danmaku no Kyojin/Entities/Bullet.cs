@@ -28,7 +28,7 @@ namespace Danmaku_no_Kyojin.Entities
                     new Point(0, sprite.Height),
                 };
 
-            CollisionBox = new CollisionPolygon(this, Vector2.Zero, vertices);
+            CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
         }
 
         public override void Update(GameTime gameTime)

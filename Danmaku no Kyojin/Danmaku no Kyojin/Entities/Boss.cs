@@ -71,14 +71,13 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Initialize()
         {
-            MoverManager = new MoverManager(Game.GameplayScreen.Players[0].GetPosition);
+            MoverManager = new MoverManager(Game, Game.GameplayScreen.Players[0].GetPosition);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _bulletSprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
             _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
@@ -92,7 +91,7 @@ namespace Danmaku_no_Kyojin.Entities
                     new Point(Sprite.Width / 2, Sprite.Height)
                 };
 
-            CollisionBox = new CollisionPolygon(this, Vector2.Zero, vertices);
+            CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
 
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2f,
@@ -199,21 +198,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             foreach (Mover mover in MoverManager.movers)
             {
-                Game.SpriteBatch.Draw(_bulletSprite,
-                                         new Vector2(
-                                             mover.pos.X - _bulletSprite.Width / 2f,
-                                             mover.pos.Y - _bulletSprite.Height / 2f),
-                                         Color.White);
-
-                if (Config.DisplayCollisionBoxes)
-                {
-                    Rectangle bulletRectangle = new Rectangle(
-                        (int)mover.pos.X - _bulletSprite.Width / 2,
-                        (int)mover.pos.Y - _bulletSprite.Height / 2,
-                        _bulletSprite.Width,
-                        _bulletSprite.Height);
-                    Game.SpriteBatch.Draw(DnK._pixel, bulletRectangle, Color.White);
-                }
+                mover.Draw(gameTime);
             }
 
             base.Draw(gameTime);
@@ -250,7 +235,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             //add a new bullet in the center of the screen
             _mover = (Mover)MoverManager.CreateBullet();
-            _mover.pos = new Vector2(Position.X, Position.Y - 5);
+            _mover.X = Position.X;
+            _mover.Y = Position.Y - 5;
             _mover.SetBullet(_myPatterns[_currentPattern].RootNode);
         }
     }

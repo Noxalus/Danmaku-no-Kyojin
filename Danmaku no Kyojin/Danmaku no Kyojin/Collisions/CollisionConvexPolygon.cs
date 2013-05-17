@@ -7,7 +7,7 @@ using Danmaku_no_Kyojin.Utils;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
-    class CollisionPolygon : CollisionElement
+    class CollisionConvexPolygon : CollisionElement
     {
         #region Fields
 
@@ -16,7 +16,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #endregion
 
-        public CollisionPolygon(Entity parent, Vector2 relativePosition, List<Point> vertices)
+        public CollisionConvexPolygon(Entity parent, Vector2 relativePosition, List<Point> vertices)
             : base(parent, relativePosition)
         {
             Parent = parent;
@@ -25,8 +25,8 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override bool Intersects(CollisionElement collisionElement)
         {
-            if (collisionElement is CollisionPolygon)
-                return Intersects(collisionElement as CollisionPolygon);
+            if (collisionElement is CollisionConvexPolygon)
+                return Intersects(collisionElement as CollisionConvexPolygon);
 
             if (collisionElement is CollisionCircle)
                 return Intersects(collisionElement as CollisionCircle);
@@ -34,12 +34,12 @@ namespace Danmaku_no_Kyojin.Collisions
             return collisionElement.Intersects(this);
         }
 
-        private bool Intersects(CollisionPolygon boundingSquare)
+        private bool Intersects(CollisionConvexPolygon element)
         {
             return false;
         }
 
-        private bool Intersects(CollisionCircle boundingCircle)
+        private bool Intersects(CollisionCircle element)
         {
             return false;
         }

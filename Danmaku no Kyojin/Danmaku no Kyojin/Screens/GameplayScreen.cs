@@ -102,8 +102,8 @@ namespace Danmaku_no_Kyojin.Screens
                         }
                         else
                         {
-                            if (_bullets[i].GetPosition().X < 0 || _bullets[i].GetPosition().X > Config.Resolution.X ||
-                                _bullets[i].GetPosition().Y < 0 || _bullets[i].GetPosition().Y > Config.Resolution.Y)
+                            if (_bullets[i].X < 0 || _bullets[i].X > Config.GameArea.X ||
+                                _bullets[i].Y < 0 || _bullets[i].Y > Config.GameArea.Y)
                             {
                                 _bullets.Remove(_bullets[i]);
                             }
@@ -127,7 +127,7 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     foreach (Mover m in _enemy.MoverManager.movers)
                     {
-                        p.CheckCollision(m.pos, new Point(18, 18));
+                        p.CheckCollision(m.GetPosition(), new Point(18, 18));
                     }
                 }
             }

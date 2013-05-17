@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Danmaku_no_Kyojin.Collisions;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Danmaku_no_Kyojin.BulletEngine
 {
@@ -11,23 +13,10 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 		public bool used;
 		public bool bulletRoot;
-		public Vector2 pos;
 
 		#endregion //Members
 
 		#region Properties
-
-		public override float X
-		{
-			get { return pos.X; }
-			set { pos.X = value; }
-		}
-		
-		public override float Y
-		{
-			get { return pos.Y; }
-			set { pos.Y = value; }
-		}
 		
 		#endregion //Properties
 
@@ -37,17 +26,34 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// Initializes a new instance of the <see cref="Danmaku_no_Kyojin.BulletEngine.Mover"/> class.
 		/// </summary>
 		/// <param name="myBulletManager">My bullet manager.</param>
-		public Mover(IBulletManager myBulletManager) : base(myBulletManager)
+		public Mover(DnK game, IBulletManager myBulletManager) : base(game, myBulletManager)
 		{
+            Position = Vector2.Zero;
+            Rotation = 0f;
+
+            IsAlive = true;
 		}
 
-		public void Init()
-		{
+        public override void Initialize()
+        {
 			used = true;
 			bulletRoot = false;
+
+            base.Initialize();
 		}
 
-        public override void Update(GameTime gameTime)
+	    protected override void LoadContent()
+	    {
+            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
+
+            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+
+            CollisionBox = new CollisionCircle(this, Vector2.Zero, Sprite.Width / 2f);
+
+            base.LoadContent();
+	    }
+
+	    public override void Update(GameTime gameTime)
 		{
 			//BulletMLで自分を動かす
 			base.Update(gameTime);
@@ -63,6 +69,18 @@ namespace Danmaku_no_Kyojin.BulletEngine
 		{
 			InitTop(tree);
 		}
+
+        public override void Draw(GameTime gameTime)
+        {
+            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+
+            if (Config.DisplayCollisionBoxes)
+            {
+                CollisionBox.Draw(Game.SpriteBatch);
+            }
+
+            base.Draw(gameTime);
+        }
 
 		#endregion //Methods
 	}

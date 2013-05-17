@@ -56,7 +56,7 @@ namespace Danmaku_no_Kyojin.Entities
             Center = Vector2.Zero;
             _distance = Vector2.Zero;
 
-            _lives = 5;
+            _lives = Config.PlayerLives;
             IsInvincible = false;
             _invincibleTime = Config.PlayerInvicibleTimer;
 
@@ -225,7 +225,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _bulletFrequence = Config.PlayerBulletFrequence;
 
                 Vector2 direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
-                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, 20);
+                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
                 bullet.Power = 1f;
                 bullet.WaveMode = false;
 

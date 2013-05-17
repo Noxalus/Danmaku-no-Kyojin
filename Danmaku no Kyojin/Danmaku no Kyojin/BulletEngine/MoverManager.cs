@@ -13,8 +13,12 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 		public PositionDelegate GetPlayerPosition;
 
-		public MoverManager(PositionDelegate playerDelegate)
+        private DnK _gameRef;
+
+		public MoverManager(DnK game, PositionDelegate playerDelegate)
 		{
+		    _gameRef = game;
+
 			Debug.Assert(null != playerDelegate);
 			GetPlayerPosition = playerDelegate;
 		}
@@ -37,9 +41,9 @@ namespace Danmaku_no_Kyojin.BulletEngine
 		/// </summary>
 		public Bullet CreateBullet()
 		{
-			Mover mover = new Mover(this);
+			Mover mover = new Mover(_gameRef, this);
 			movers.Add(mover); //Moverを登録
-			mover.Init(); //初期化
+            mover.Initialize(); //初期化
 			return mover;
 		}
 		

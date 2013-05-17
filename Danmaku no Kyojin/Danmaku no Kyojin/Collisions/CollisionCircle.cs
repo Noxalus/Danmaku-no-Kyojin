@@ -21,8 +21,8 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override bool Intersects(CollisionElement collisionElement)
         {
-            if (collisionElement is CollisionPolygon)
-                return Intersects(collisionElement as CollisionPolygon);
+            if (collisionElement is CollisionConvexPolygon)
+                return Intersects(collisionElement as CollisionConvexPolygon);
 
             if (collisionElement is CollisionCircle)
                 return Intersects(collisionElement as CollisionCircle);
@@ -30,12 +30,12 @@ namespace Danmaku_no_Kyojin.Collisions
             return collisionElement.Intersects(this);
         }
 
-        private bool Intersects(CollisionPolygon collisionPolygon)
+        private bool Intersects(CollisionConvexPolygon element)
         {
             return false;
         }
 
-        private bool Intersects(CollisionCircle boundingCircle)
+        private bool Intersects(CollisionCircle element)
         {
             return false;
         }
@@ -48,8 +48,8 @@ namespace Danmaku_no_Kyojin.Collisions
         private Vector2 GetCenter()
         {
             return new Vector2(
-                Parent.GetPosition().X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),
-                Parent.GetPosition().Y + RelativePosition.Y * (float)(Math.Cos(Parent.GetRotation())));
+                Parent.X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),
+                Parent.Y + RelativePosition.Y * (float)(Math.Cos(Parent.GetRotation())));
         }
     }
 }
