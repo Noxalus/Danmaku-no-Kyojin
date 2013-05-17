@@ -127,7 +127,8 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     foreach (Mover m in _enemy.MoverManager.movers)
                     {
-                        p.CheckCollision(m.GetPosition(), new Point(18, 18));
+                        if (p.Intersects(m))
+                            p.Hit();
                     }
                 }
             }

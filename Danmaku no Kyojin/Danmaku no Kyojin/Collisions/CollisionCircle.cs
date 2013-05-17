@@ -37,6 +37,15 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private bool Intersects(CollisionCircle element)
         {
+            float dx = element.GetCenter().X - GetCenter().X;
+            float dy = element.GetCenter().Y - GetCenter().Y;
+            float radii = Radius + element.Radius;
+
+            if ((dx * dx) + (dy * dy) < radii * radii)
+            {
+                return true;
+            }
+
             return false;
         }
 

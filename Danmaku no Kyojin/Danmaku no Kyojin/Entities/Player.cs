@@ -195,27 +195,6 @@ namespace Danmaku_no_Kyojin.Entities
             base.Draw(gameTime);
         }
 
-        public bool CheckCollision(Vector2 position, Point size)
-        {
-            Rectangle bullet = new Rectangle(
-                    (int)position.X - size.X / 2, (int)position.Y - size.Y / 2,
-                    size.X, size.Y);
-
-            Rectangle ship = GetCollisionBox();
-
-            if (ship.Intersects(bullet))
-            {
-                Debug.Print("Collision !");
-                _lives--;
-
-                IsInvincible = true;
-
-                return true;
-            }
-
-            return false;
-        }
-
         private void Fire(GameTime gameTime)
         {
             if (_bulletFrequence.TotalMilliseconds > 0)
@@ -257,6 +236,13 @@ namespace Danmaku_no_Kyojin.Entities
                 AddBullet(bulletLeft);
                 AddBullet(bulletRight);
             }
+        }
+
+        public void Hit()
+        {
+            _lives--;
+
+            IsInvincible = true;
         }
     }
 }
