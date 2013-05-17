@@ -46,30 +46,41 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override void Draw(SpriteBatch sp)
         {
-            Point previousVertex = Vertices[0];
-            Vector2 previousPosition = GetPosition(previousVertex);
+            Vector2 previousPosition = GetPosition(Vertices[0]);
             Vector2 position;
 
-            for (int i = 1; i < Vertices.Count; i++)
+            for (int i = 1; i <= Vertices.Count; i++)
             {
-                position = GetPosition(Vertices[i]);
+                if (i == Vertices.Count)
+                    position = GetPosition(Vertices[0]);
+                else
+                    position = GetPosition(Vertices[i]);
+
                 sp.DrawLine(
                     previousPosition.X,
                     previousPosition.Y,
                     position.X,
                     position.Y, Color.White);
 
-                previousVertex = Vertices[i];
+                if (i >= 0)
+                {
+                    float a = (position.Y - previousPosition.Y) / (position.X - previousPosition.X);
+                    Vector2 Q = Vector2.Normalize(position - previousPosition);
+                    
+                    /*
+                    sp.DrawLine(
+                        previousPosition.X - 2000 * Q.X, previousPosition.Y - Q.Y * 2000,
+                        previousPosition.X + 2000 * Q.X, previousPosition.Y + Q.Y * 2000,
+                        Color.Red);
+                    */
+                    sp.DrawLine(
+                        previousPosition.X, previousPosition.Y,
+                        (previousPosition.X) + Q.Y * 2000, (previousPosition.Y) - Q.X * 2000,
+                        Color.Red);
+                }
+
                 previousPosition = position;
             }
-
-            position = GetPosition(Vertices[0]);
-
-            sp.DrawLine(
-                previousPosition.X,
-                previousPosition.Y,
-                position.X,
-                position.Y, Color.White);
         }
 
         private Vector2 GetPosition(Point vertex)
