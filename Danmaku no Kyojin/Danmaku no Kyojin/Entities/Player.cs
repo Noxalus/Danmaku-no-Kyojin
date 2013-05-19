@@ -36,14 +36,6 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        private Rectangle GetCollisionBox()
-        {
-            return new Rectangle(
-                (int)(Position.X - (int)(Sprite.Width / 8) + ((Sprite.Width / 7.6f) * Math.Sin(Rotation)) * -1),
-                (int)(Position.Y - (int)(Sprite.Height / 8) + ((Sprite.Height / 6.6f) * Math.Cos(Rotation))),
-                10, 10);
-        }
-
         public Player(DnK game, int id, ref List<BaseBullet> bullets, Vector2 position)
             : base(game, ref bullets)
         {

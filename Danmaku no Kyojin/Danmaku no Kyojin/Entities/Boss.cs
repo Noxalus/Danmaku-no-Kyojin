@@ -49,14 +49,6 @@ namespace Danmaku_no_Kyojin.Entities
             set { _speed = value; }
         }
 
-        private Rectangle GetCollisionBox()
-        {
-            return new Rectangle(
-                (int)Position.X,
-                (int)Position.Y,
-                Sprite.Width, Sprite.Height);
-        }
-
         public Boss(DnK game)
             : base(game)
         {
@@ -202,22 +194,6 @@ namespace Danmaku_no_Kyojin.Entities
             }
 
             base.Draw(gameTime);
-        }
-
-        public bool CheckCollision(Vector2 position, Point size)
-        {
-            Rectangle bullet = new Rectangle(
-                    (int)position.X - size.X / 2, (int)position.Y - size.Y / 2,
-                    size.X, size.Y);
-
-            Rectangle collisionBox = GetCollisionBox();
-
-            if (collisionBox.Intersects(bullet))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public void TakeDamage(float damage)
