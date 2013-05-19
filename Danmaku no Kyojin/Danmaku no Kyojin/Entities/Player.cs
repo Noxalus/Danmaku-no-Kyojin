@@ -74,7 +74,7 @@ namespace Danmaku_no_Kyojin.Entities
             Sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
-            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), 5);
+            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI);
         }
 
         public override void Update(GameTime gameTime)
@@ -174,6 +174,9 @@ namespace Danmaku_no_Kyojin.Entities
                 Position.X += _direction.X * _velocity * dt;
                 Position.Y += _direction.Y * _velocity * dt;
             }
+
+            Position.X = MathHelper.Clamp(Position.X, Sprite.Width / 2f, Config.Resolution.X - Sprite.Width / 2f);
+            Position.Y = MathHelper.Clamp(Position.Y, Sprite.Height / 2f, Config.Resolution.Y - Sprite.Height / 2f);
         }
 
         public override void Draw(GameTime gameTime)
@@ -204,7 +207,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _bulletFrequence = Config.PlayerBulletFrequence;
 
                 Vector2 direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
-                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, _velocity * 3);
+                Bullet bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
                 bullet.Power = 1f;
                 bullet.WaveMode = false;
 
@@ -226,10 +229,10 @@ namespace Danmaku_no_Kyojin.Entities
                     positionRight.X += 50f;
                 }
 
-                Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, _velocity * 3);
+                Bullet bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
                 bulletLeft.Power = 0.5f;
 
-                Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, _velocity * 3);
+                Bullet bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
                 bulletRight.Power = 0.5f;
 
                 AddBullet(bullet);
