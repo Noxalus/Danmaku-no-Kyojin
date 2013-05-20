@@ -161,7 +161,7 @@ namespace Danmaku_no_Kyojin.Collisions
         public bool Overlap(Vector2 p1, Vector2 p2)
         {
             // P = (X, Y) with X = min and Y = max
-            if (p1.Y < p2.X || p2.Y > p1.X)
+            if (!((p1.Y > p2.X && p1.X < p2.Y) || (p2.Y > p1.X && p2.Y < p1.X)))
                 return false;
 
             return true;
@@ -169,12 +169,12 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public Vector2 Project(Vector2 axis)
         {
-            float min = Vector2.Dot(axis, new Vector2(GetPosition(Vertices[0]).X, GetPosition(Vertices[0]).Y));
+            float min = Vector2.Dot(new Vector2(GetPosition(Vertices[0]).X, GetPosition(Vertices[0]).Y), axis);
             float max = min;
             for (int i = 1; i < Vertices.Count; i++)
             {
                 // NOTE: the axis must be normalized to get accurate projections
-                float p = Vector2.Dot(axis, new Vector2(GetPosition(Vertices[i]).X, GetPosition(Vertices[i]).Y));
+                float p = Vector2.Dot(new Vector2(GetPosition(Vertices[i]).X, GetPosition(Vertices[i]).Y), axis);
                 if (p < min)
                 {
                     min = p;

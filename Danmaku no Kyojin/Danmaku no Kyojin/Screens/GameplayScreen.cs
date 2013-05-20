@@ -124,6 +124,11 @@ namespace Danmaku_no_Kyojin.Screens
 
                 if (!p.IsInvincible)
                 {
+                    if (p.Intersects(_enemy))
+                    {
+                        p.Hit();
+                    }
+
                     foreach (Mover m in _enemy.MoverManager.movers)
                     {
                         if (p.Intersects(m))
