@@ -15,6 +15,8 @@ namespace Danmaku_no_Kyojin.Collisions
         public bool IsFilled { get; set; }
         private List<Vector2> _axes;
 
+        private List<Vector2> _circleAxes;
+
         #endregion
 
         #region Accessors
@@ -33,7 +35,9 @@ namespace Danmaku_no_Kyojin.Collisions
             Vertices = vertices;
             _axes = new List<Vector2>();
 
-            ComputeAxis();
+            _circleAxes = new List<Vector2>();
+
+            ComputeAxes();
         }
 
         public override bool Intersects(CollisionElement collisionElement)
@@ -49,7 +53,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private bool Intersects(CollisionConvexPolygon element)
         {
-            ComputeAxis();
+            ComputeAxes();
 
             // loop over the axes of this polygon
             for (int i = 0; i < _axes.Count; i++)
@@ -87,7 +91,26 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private bool Intersects(CollisionCircle element)
         {
-            return false;
+            ComputeCircleAxes(element);
+
+            // loop over the axes of this polygon
+            for (int i = 0; i < _axes.Count; i++)
+            {
+                Vector2 axis = _axes[i];
+                // project both shapes onto the axis
+                Vector2 p1 = this.Project(axis);
+                Vector2 p2 = element.Project(axis);
+                // do the projections overlap?
+                if (!Overlap(p1, p2))
+                {
+                    // then we can guarantee that the shapes do not overlap
+                    return false;
+                }
+            }
+
+            // if we get here then we know that every axis had overlap on it
+            // so we can guarantee an intersection
+            return true;
         }
 
         public override void Draw(SpriteBatch sp)
@@ -104,28 +127,17 @@ namespace Danmaku_no_Kyojin.Collisions
                     position.X,
                     position.Y, Color.White);
 
-                if (i >= 0)
-                {
-                    Vector2 axis = Vector2.Normalize(position - previousPosition);
-                    
-                    /*
-                    sp.DrawLine(
-                        previousPosition.X - 2000 * Q.X, previousPosition.Y - Q.Y * 2000,
-                        previousPosition.X + 2000 * Q.X, previousPosition.Y + Q.Y * 2000,
-                        Color.Red);
-                    */
+                Vector2 axis = Vector2.Normalize(position - previousPosition);
 
-                    sp.DrawLine(
-                        previousPosition.X - ((previousPosition.X - position.X) / 2), previousPosition.Y - ((previousPosition.Y - position.Y) / 2),
-                        (previousPosition.X) + axis.Y * 2000, (previousPosition.Y) - axis.X * 2000,
-                        Color.Red);
-                    /*
-                    sp.DrawLine(
-                        50, 50,
-                        Q.Y * 2000 + 50, -Q.X * 2000 + 50,
-                        Color.Red);
-                    */
-                }
+                sp.DrawLine(
+                    previousPosition.X - ((previousPosition.X - position.X) / 2), previousPosition.Y - ((previousPosition.Y - position.Y) / 2),
+                    (previousPosition.X) + axis.Y * 2000, (previousPosition.Y) - axis.X * 2000,
+                    Color.Red);
+
+                sp.DrawLine(
+                    previousPosition.X, previousPosition.Y,
+                    (previousPosition.X) + _circleAxes[i - 1].X * 2000, (previousPosition.Y) - _circleAxes[i - 1].Y * 2000,
+                    Color.Red);
 
                 previousPosition = position;
             }
@@ -139,7 +151,7 @@ namespace Danmaku_no_Kyojin.Collisions
             );
         }
 
-        private void ComputeAxis()
+        private void ComputeAxes()
         {
             // We start by deleting former axis
             _axes.Clear();
@@ -155,6 +167,20 @@ namespace Danmaku_no_Kyojin.Collisions
                 _axes.Add(normal);
 
                 previousPosition = position;
+            }
+        }
+
+        private void ComputeCircleAxes(CollisionCircle element)
+        {
+            _circleAxes.Clear();
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vector2 position = GetPosition(Vertices[i]);
+
+                Vector2 edge = position - element.GetCenter();
+                var normal = new Vector2(edge.Y, -edge.X);
+                _circleAxes.Add(edge);
             }
         }
 

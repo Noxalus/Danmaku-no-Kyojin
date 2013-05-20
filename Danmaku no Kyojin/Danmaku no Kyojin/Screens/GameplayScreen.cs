@@ -1,4 +1,5 @@
 ﻿using Danmaku_no_Kyojin.BulletEngine;
+using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework;

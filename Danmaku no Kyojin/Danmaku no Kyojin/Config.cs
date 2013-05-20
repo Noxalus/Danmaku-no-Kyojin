@@ -34,7 +34,7 @@ namespace Danmaku_no_Kyojin
         public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 0, 50);
         public const float PlayerMaxVelocity = 400f;
         public const float PlayerMaxSlowVelocity = 125f;
-        public const float PlayerBulletVelocity = 600f;
+        public const float PlayerBulletVelocity = 800f;
         public const int PlayerLives = 10;
 
         // Game

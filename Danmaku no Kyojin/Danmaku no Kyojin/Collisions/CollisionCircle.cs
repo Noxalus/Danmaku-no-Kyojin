@@ -3,6 +3,7 @@ using Danmaku_no_Kyojin.Entities;
 using Microsoft.Xna.Framework.Graphics;
 using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
@@ -32,7 +33,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private bool Intersects(CollisionConvexPolygon element)
         {
-            return false;
+            return element.Intersects(this);
         }
 
         private bool Intersects(CollisionCircle element)
@@ -54,11 +55,21 @@ namespace Danmaku_no_Kyojin.Collisions
             sp.DrawCircle(GetCenter().X, GetCenter().Y, Radius, 10, Color.White);
         }
 
-        private Vector2 GetCenter()
+        public Vector2 GetCenter()
         {
             return new Vector2(
                 Parent.X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),
                 Parent.Y + RelativePosition.Y * (float)(Math.Cos(Parent.GetRotation())));
+        }
+
+        public Vector2 Project(Vector2 axis)
+        {
+            float a = axis.Y / axis.X;
+
+            float min = Vector2.Dot(new Vector2(GetCenter().X - (float)(Radius * Math.Cos(a)), GetCenter().Y - (float)(Radius * Math.Sin(a))), axis);
+            float max = Vector2.Dot(new Vector2(GetCenter().X + (float)(Radius * Math.Cos(a)), GetCenter().Y + (float)(Radius * Math.Sin(a))), axis);
+
+            return new Vector2(min, max);
         }
     }
 }
