@@ -84,6 +84,11 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
+            if (InputHandler.KeyDown(Keys.Escape))
+            {
+                StateManager.ChangeState(GameRef.TitleScreen);
+            }
+
             base.Update(gameTime);
 
             foreach (Player p in Players)
@@ -163,6 +168,9 @@ namespace Danmaku_no_Kyojin.Screens
                 movement.Y += 0.1f;
 
             GameRef.Camera.Pos += movement * 20;
+
+            if (InputHandler.KeyPressed(Keys.C))
+                Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
         }
 
         public override void Draw(GameTime gameTime)

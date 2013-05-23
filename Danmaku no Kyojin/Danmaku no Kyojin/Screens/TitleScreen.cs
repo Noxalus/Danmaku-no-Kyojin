@@ -14,8 +14,9 @@ namespace Danmaku_no_Kyojin.Screens
         #region Field region
 
         private Texture2D _logo;
-        private string[] menuString;
-        private int indexMenu;
+        private string[] menuText;
+        private string[] menuDescription;
+        private int menuIndex;
         private Vector2 menuPosition;
         private bool enableMenu;
 
@@ -26,8 +27,15 @@ namespace Danmaku_no_Kyojin.Screens
         public TitleScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            menuString = new string[] {"Jouer", "Options", "Crédits", "Quitter"};
-            indexMenu = 0;
+            menuText = new string[] { "1 Player", "2 Players", "Leaderboard", "Options", "Exit" };
+            menuDescription = new string[] { 
+                "Playing game with only one player", 
+                "Playing game with your best friend", 
+                "A list of scores to know who have the biggest one", 
+                "You can change inputs here", 
+                "Warning: I've never tested this button !", 
+            };
+            menuIndex = 0;
             enableMenu = false;
         }
 
@@ -37,7 +45,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
-            menuPosition = new Vector2(Config.Resolution.X / 2, 3*Config.Resolution.Y / 4 - 40);
+            menuPosition = new Vector2(Config.Resolution.X / 2, 3 * Config.Resolution.Y / 4 - 40);
             base.Initialize();
         }
 
@@ -52,9 +60,42 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
+            if (InputHandler.PressedUp())
+            {
+                menuIndex--;
+
+                if (menuIndex < 0)
+                    menuIndex = menuText.Length - 1;
+            }
+
+            if (InputHandler.PressedDown())
+            {
+                menuIndex = (menuIndex + 1) % menuText.Length;
+            }
+
             if (InputHandler.KeyPressed(Keys.Enter))
             {
-                StateManager.ChangeState(GameRef.GameplayScreen);
+                // 1 Player
+                if (menuIndex == 0)
+                {
+                    Config.PlayersNumber = 1;
+                    StateManager.ChangeState(GameRef.GameplayScreen);
+                }
+                // 2 Players
+                else if (menuIndex == 1)
+                {
+                    Config.PlayersNumber = 2;
+                    StateManager.ChangeState(GameRef.GameplayScreen);
+                }
+                // Leaderbord
+                else if (menuIndex == 2)
+                    StateManager.ChangeState(GameRef.GameplayScreen);
+                // Options
+                else if (menuIndex == 3)
+                    StateManager.ChangeState(GameRef.GameplayScreen);
+                // Exit
+                else if (menuIndex == 4)
+                    Game.Exit();
             }
 
             base.Update(gameTime);
@@ -67,11 +108,23 @@ namespace Danmaku_no_Kyojin.Screens
             base.Draw(gameTime);
 
             GameRef.SpriteBatch.Draw(_logo, new Vector2(
-                                                (GameRef.Graphics.GraphicsDevice.Viewport.Width/2) - (_logo.Width/2),
+                                                (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2),
                                                 0), Color.White);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[Press Enter to start]", new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2 - 125, Game.GraphicsDevice.Viewport.Height - 60), Color.Black);
+            for (int i = 0; i < menuText.Length; i++)
+            {
+                Color textColor = Color.Black;
+
+                if (i == menuIndex)
+                    textColor = Color.Red;
+
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
+                  Game.GraphicsDevice.Viewport.Width / 2 - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f), 
+                  Game.GraphicsDevice.Viewport.Height / 2 - 50 + (20 * i)), textColor);
+            }
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
+                Game.GraphicsDevice.Viewport.Width / 2 - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4, Game.GraphicsDevice.Viewport.Height - 60), Color.Black);
 
             ControlManager.Draw(GameRef.SpriteBatch);
 

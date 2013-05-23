@@ -97,12 +97,6 @@ namespace Danmaku_no_Kyojin
 
         protected override void Update(GameTime gameTime)
         {
-            if (InputHandler.KeyPressed(Keys.Escape))
-                this.Exit();
-
-            if (InputHandler.KeyPressed(Keys.C))
-                Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
-
             base.Update(gameTime);
         }
 

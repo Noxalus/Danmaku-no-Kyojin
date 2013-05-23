@@ -121,6 +121,22 @@ namespace Danmaku_no_Kyojin.Controls
             lastKeyboardState = keyboardState;
         }
 
+        public static bool PressedUp()
+        {
+            return 
+                (KeyPressed(Keys.Up) || 
+                ButtonPressed(Buttons.DPadUp, PlayerIndex.One) || 
+                ButtonPressed(Buttons.LeftThumbstickUp, PlayerIndex.One));
+        }
+
+        public static bool PressedDown()
+        {
+            return
+                (KeyPressed(Keys.Down) ||
+                ButtonPressed(Buttons.DPadDown, PlayerIndex.One) ||
+                ButtonPressed(Buttons.LeftThumbstickDown, PlayerIndex.One));
+        }
+
         #endregion
 
         #region Mouse Region

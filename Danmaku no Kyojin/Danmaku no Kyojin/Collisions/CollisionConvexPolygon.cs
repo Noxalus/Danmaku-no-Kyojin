@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Danmaku_no_Kyojin.Utils;
+using System.Diagnostics;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
@@ -100,6 +101,9 @@ namespace Danmaku_no_Kyojin.Collisions
                 // project both shapes onto the axis
                 Vector2 p1 = this.Project(axis);
                 Vector2 p2 = element.Project(axis);
+
+                Debug.Print("" + p1.X + " - " + p1.Y);
+
                 // do the projections overlap?
                 if (!Overlap(p1, p2))
                 {
@@ -134,10 +138,13 @@ namespace Danmaku_no_Kyojin.Collisions
                     (previousPosition.X) + axis.Y * 2000, (previousPosition.Y) - axis.X * 2000,
                     Color.Red);
 
-                sp.DrawLine(
-                    previousPosition.X, previousPosition.Y,
-                    (previousPosition.X) + _circleAxes[i - 1].X * 2000, (previousPosition.Y) - _circleAxes[i - 1].Y * 2000,
-                    Color.Red);
+                if (_circleAxes.Count > 0)
+                {
+                    sp.DrawLine(
+                        previousPosition.X, previousPosition.Y,
+                        (previousPosition.X) + _circleAxes[i - 1].X * 2000, (previousPosition.Y) - _circleAxes[i - 1].Y * -2000,
+                        Color.Red);
+                }
 
                 previousPosition = position;
             }
@@ -178,9 +185,9 @@ namespace Danmaku_no_Kyojin.Collisions
             {
                 Vector2 position = GetPosition(Vertices[i]);
 
-                Vector2 edge = position - element.GetCenter();
+                Vector2 edge = element.GetCenter() - position;
                 var normal = new Vector2(edge.Y, -edge.X);
-                _circleAxes.Add(edge);
+                _circleAxes.Add(normal);
             }
         }
 

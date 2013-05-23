@@ -18,7 +18,7 @@ namespace Danmaku_no_Kyojin
         public const float DesiredTimeModifier = 5f;
 
         // Player
-        public const int PlayersNumber = 1;
+        public static int PlayersNumber = 1;
 
         public static readonly Keys[] PlayerKeyboardInput = new Keys[]
         {
@@ -35,7 +35,7 @@ namespace Danmaku_no_Kyojin
         public const float PlayerMaxVelocity = 400f;
         public const float PlayerMaxSlowVelocity = 125f;
         public const float PlayerBulletVelocity = 800f;
-        public const int PlayerLives = 10;
+        public const int PlayerLives = 100;
 
         // Game
         public static readonly Point GameArea = new Point(1000, 1000);

@@ -13,11 +13,15 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public float Radius { get; set; }
 
+        private List<Vector2> _axes;
+
         #endregion
 
         public CollisionCircle(Entity parent, Vector2 relativePosition, float radius) : base(parent, relativePosition)
         {
             Radius = radius;
+
+            _axes = new List<Vector2>();
         }
 
         public override bool Intersects(CollisionElement collisionElement)
@@ -53,6 +57,15 @@ namespace Danmaku_no_Kyojin.Collisions
         public override void Draw(SpriteBatch sp)
         {
             sp.DrawCircle(GetCenter().X, GetCenter().Y, Radius, 10, Color.White);
+
+            for (int i = 0; i < _axes.Count; i++)
+            {
+                float a = _axes[i].Y / _axes[i].X;
+                var x = new Vector2(GetCenter().X - (float)(Radius * Math.Cos(a)), GetCenter().Y - (float)(Radius * Math.Sin(a)));
+                var y = new Vector2(GetCenter().X + (float)(Radius * Math.Cos(a)), GetCenter().Y + (float)(Radius * Math.Sin(a)));
+
+                sp.DrawLine(x, y, Color.Red);                
+            }
         }
 
         public Vector2 GetCenter()
@@ -64,10 +77,13 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public Vector2 Project(Vector2 axis)
         {
+            if (!_axes.Contains(axis))
+                _axes.Add(axis);
+
             float a = axis.Y / axis.X;
 
-            float min = Vector2.Dot(new Vector2(GetCenter().X - (float)(Radius * Math.Cos(a)), GetCenter().Y - (float)(Radius * Math.Sin(a))), axis);
-            float max = Vector2.Dot(new Vector2(GetCenter().X + (float)(Radius * Math.Cos(a)), GetCenter().Y + (float)(Radius * Math.Sin(a))), axis);
+            float min = Vector2.Dot(new Vector2(GetCenter().X - (float)(Radius * Math.Sin(a)), GetCenter().Y - (float)(Radius * Math.Cos(a))), axis);
+            float max = Vector2.Dot(new Vector2(GetCenter().X + (float)(Radius * Math.Sin(a)), GetCenter().Y + (float)(Radius * Math.Cos(a))), axis);
 
             return new Vector2(min, max);
         }
