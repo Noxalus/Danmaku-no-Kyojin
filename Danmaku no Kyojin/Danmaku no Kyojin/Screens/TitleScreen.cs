@@ -20,6 +20,10 @@ namespace Danmaku_no_Kyojin.Screens
         private Vector2 menuPosition;
         private bool enableMenu;
 
+        private Texture2D _backgroundImage;
+        private Rectangle _backgroundRectangle1;
+        private Rectangle _backgroundRectangle2;
+
         #endregion
 
         #region Constructor region
@@ -46,12 +50,17 @@ namespace Danmaku_no_Kyojin.Screens
         public override void Initialize()
         {
             menuPosition = new Vector2(Config.Resolution.X / 2, 3 * Config.Resolution.Y / 4 - 40);
+
+            _backgroundRectangle1 = new Rectangle(0, 0, 800, 600);
+            _backgroundRectangle2 = new Rectangle(800, 0, 800, 600);
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _logo = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo");
+            _backgroundImage = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/titleScreenBackground");
 
             base.LoadContent();
         }
@@ -101,6 +110,18 @@ namespace Danmaku_no_Kyojin.Screens
                     Game.Exit();
             }
 
+            if (_backgroundRectangle1.X + _backgroundImage.Width <= 0)
+                    _backgroundRectangle1.X = _backgroundRectangle2.X + _backgroundImage.Width;
+            // You repeat this check for rectangle2.
+            if (_backgroundRectangle2.X + _backgroundImage.Width <= 0)
+                    _backgroundRectangle2.X = _backgroundRectangle1.X + _backgroundImage.Width;
+
+            // 6. Otherwise we incrementally move it to the left. 
+            // You can swap out X for Y if you instead want incremental 
+            // vertical scrolling.
+            _backgroundRectangle1.X -= 5;
+            _backgroundRectangle2.X -= 5;
+
             base.Update(gameTime);
         }
 
@@ -109,6 +130,9 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.Begin();
 
             base.Draw(gameTime);
+
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRectangle1, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRectangle2, Color.White);
 
             GameRef.SpriteBatch.Draw(_logo, new Vector2(
                                                 (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2),

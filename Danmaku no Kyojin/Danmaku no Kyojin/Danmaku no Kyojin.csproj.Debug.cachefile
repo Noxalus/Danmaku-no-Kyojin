@@ -11,6 +11,7 @@ Content\Graphics\Sprites\bullet_bill.xnb
 Content\Graphics\Entities\enemy.xnb
 Content\Graphics\Entities\ship_bullet.xnb
 Content\Audio\SE\hit.xnb
+Content\Graphics\Pictures\titleScreenBackground.xnb
 Content\Audio\DnK.xgs
 Content\Audio\Wave Bank.xwb
 Content\Audio\Sound Bank.xsb
