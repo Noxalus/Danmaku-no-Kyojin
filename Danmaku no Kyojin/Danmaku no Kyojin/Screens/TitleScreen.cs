@@ -60,6 +60,9 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
+            if (InputHandler.KeyPressed(Keys.Escape))
+                Game.Exit();
+
             if (InputHandler.PressedUp())
             {
                 menuIndex--;
@@ -89,10 +92,10 @@ namespace Danmaku_no_Kyojin.Screens
                 }
                 // Leaderbord
                 else if (menuIndex == 2)
-                    StateManager.ChangeState(GameRef.GameplayScreen);
+                    StateManager.ChangeState(GameRef.LeaderboardScreen);
                 // Options
                 else if (menuIndex == 3)
-                    StateManager.ChangeState(GameRef.GameplayScreen);
+                    StateManager.ChangeState(GameRef.OptionsScreen);
                 // Exit
                 else if (menuIndex == 4)
                     Game.Exit();
