@@ -1,20 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Danmaku_no_Kyojin.Entities
 {
     public abstract class BulletLauncherEntity : Entity
     {
-        private List<BaseBullet> _bullets;
+        protected readonly List<BaseBullet> Bullets;
+        protected TimeSpan BulletFrequence;
 
-        protected BulletLauncherEntity(DnK game, ref List<BaseBullet> bullets)
+        public List<BaseBullet> GetBullets()
+        {
+            return Bullets;
+        }
+
+        protected BulletLauncherEntity(DnK game)
             : base(game)
         {
-            _bullets = bullets;
+            Bullets = new List<BaseBullet>();
         }
 
         protected void AddBullet(BaseBullet bullet)
         {
-            _bullets.Add(bullet);
+            Bullets.Add(bullet);
         }
     }
 }

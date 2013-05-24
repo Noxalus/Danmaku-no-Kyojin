@@ -17,12 +17,12 @@ namespace Danmaku_no_Kyojin.Screens
         private string[] menuText;
         private string[] menuDescription;
         private int menuIndex;
-        private Vector2 menuPosition;
-        private bool enableMenu;
 
         private Texture2D _backgroundImage;
-        private Rectangle _backgroundRectangle1;
-        private Rectangle _backgroundRectangle2;
+        private Rectangle _backgroundMainRectangle;
+        private Rectangle _backgroundRightRectangle;
+        private Rectangle _backgroundTopRectangle;
+        private Rectangle _backgroundTopRightRectangle;
 
         #endregion
 
@@ -39,8 +39,8 @@ namespace Danmaku_no_Kyojin.Screens
                 "You can change inputs here", 
                 "Warning: I've never tested this button !", 
             };
+
             menuIndex = 0;
-            enableMenu = false;
         }
 
         #endregion
@@ -49,10 +49,10 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
-            menuPosition = new Vector2(Config.Resolution.X / 2, 3 * Config.Resolution.Y / 4 - 40);
-
-            _backgroundRectangle1 = new Rectangle(0, 0, 800, 600);
-            _backgroundRectangle2 = new Rectangle(800, 0, 800, 600);
+            _backgroundMainRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
+            _backgroundRightRectangle = new Rectangle(Config.Resolution.X, 0, Config.Resolution.X, Config.Resolution.Y);
+            _backgroundTopRectangle = new Rectangle(0, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
+            _backgroundTopRightRectangle = new Rectangle(Config.Resolution.X, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
 
             base.Initialize();
         }
@@ -110,17 +110,29 @@ namespace Danmaku_no_Kyojin.Screens
                     Game.Exit();
             }
 
-            if (_backgroundRectangle1.X + _backgroundImage.Width <= 0)
-                    _backgroundRectangle1.X = _backgroundRectangle2.X + _backgroundImage.Width;
-            // You repeat this check for rectangle2.
-            if (_backgroundRectangle2.X + _backgroundImage.Width <= 0)
-                    _backgroundRectangle2.X = _backgroundRectangle1.X + _backgroundImage.Width;
+            if (_backgroundMainRectangle.X + _backgroundImage.Width <= 0)
+                    _backgroundMainRectangle.X = _backgroundRightRectangle.X + _backgroundImage.Width;
 
-            // 6. Otherwise we incrementally move it to the left. 
-            // You can swap out X for Y if you instead want incremental 
-            // vertical scrolling.
-            _backgroundRectangle1.X -= 5;
-            _backgroundRectangle2.X -= 5;
+            if (_backgroundRightRectangle.X + _backgroundImage.Width <= 0)
+                    _backgroundRightRectangle.X = _backgroundMainRectangle.X + _backgroundImage.Width;
+
+            /*
+            if (_backgroundMainRectangle.Y + _backgroundImage.Height <= 0)
+                _backgroundMainRectangle.Y = _backgroundTopRectangle.Y - _backgroundImage.Height;
+
+            if (_backgroundTopRectangle.Y + _backgroundImage.Height <= 0)
+                _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
+            */
+
+            if (_backgroundMainRectangle.Y > Config.Resolution.Y)
+                _backgroundMainRectangle.Y = _backgroundTopRectangle.Y - _backgroundImage.Height;
+
+            if (_backgroundTopRectangle.Y > Config.Resolution.Y)
+                _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
+
+            
+            _backgroundMainRectangle.X -= 5;
+            _backgroundRightRectangle.X -= 5;
 
             base.Update(gameTime);
         }
@@ -131,8 +143,10 @@ namespace Danmaku_no_Kyojin.Screens
 
             base.Draw(gameTime);
 
-            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRectangle1, Color.White);
-            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRectangle2, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRightRectangle, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRightRectangle, Color.White);
 
             GameRef.SpriteBatch.Draw(_logo, new Vector2(
                                                 (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2),
@@ -146,12 +160,13 @@ namespace Danmaku_no_Kyojin.Screens
                     textColor = Color.Red;
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
-                  Game.GraphicsDevice.Viewport.Width / 2 - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f), 
-                  Game.GraphicsDevice.Viewport.Height / 2 - 50 + (20 * i)), textColor);
+                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f), 
+                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i)), textColor);
             }
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2 - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4, Game.GraphicsDevice.Viewport.Height - 60), Color.Black);
+                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4, 
+                Game.GraphicsDevice.Viewport.Height - 60), Color.Black);
 
             ControlManager.Draw(GameRef.SpriteBatch);
 

@@ -20,37 +20,35 @@ namespace Danmaku_no_Kyojin.Screens
         AudioEngine _audioEngine;
         WaveBank _waveBank;
         SoundBank _soundBank;
+        AudioCategory _musicCategory;
 
-        Cue music = null;
+        Cue _music;
         private SoundEffect hit = null;
 
         // Random
         public static Random Rand = new Random();
 
-        // Bullets
-        private List<BaseBullet> _bullets;
-
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            _bullets = new List<BaseBullet>();
 
             Players = new List<Player>();
-
-            for (int i = 1; i <= Config.PlayersNumber; i++)
-            {
-                Players.Add(new Player(GameRef, i, ref _bullets,
-                           new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width/2,
-                                       GameRef.Graphics.GraphicsDevice.Viewport.Height - 150)));
-            };
 
             _enemy = new Boss(GameRef);
         }
 
         public override void Initialize()
         {
-            foreach (Player p in Players)
-                p.Initialize();
+            Players.Clear();
+
+            for (int i = 1; i <= Config.PlayersNumber; i++)
+            {
+                var player = new Player(GameRef, i,
+                                           new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2f,
+                                                       GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+                player.Initialize();
+                Players.Add(player);
+            };
 
             _enemy.Initialize();
 
@@ -58,17 +56,20 @@ namespace Danmaku_no_Kyojin.Screens
             _waveBank = new WaveBank(_audioEngine, @"Content/Audio/Wave Bank.xwb");
             _soundBank = new SoundBank(_audioEngine, @"Content/Audio/Sound Bank.xsb");
 
+            _musicCategory = _audioEngine.GetCategory("Music");
+
+            _musicCategory.SetVolume(1);
+
+            SoundEffect.MasterVolume = 0.25f;
+
             base.Initialize();
+
+            _music = _soundBank.GetCue("Background");
+            _music.Play();
         }
 
         protected override void LoadContent()
         {
-            if (music == null)
-            {
-                music = _soundBank.GetCue("Background");
-                //music.Play();
-            }
-
             if (hit == null)
             {
                 hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hit");
@@ -79,38 +80,42 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void UnloadContent()
         {
-
+            _music.Stop(AudioStopOptions.AsAuthored);
         }
 
         public override void Update(GameTime gameTime)
         {
             if (InputHandler.KeyDown(Keys.Escape))
             {
+                UnloadContent();
                 StateManager.ChangeState(GameRef.TitleScreen);
             }
 
             base.Update(gameTime);
 
+            _audioEngine.Update();
+
             foreach (Player p in Players)
             {
                 if (p.IsAlive)
                 {
-                    for (int i = 0; i < _bullets.Count; i++)
+                    for (int i = 0; i < p.GetBullets().Count; i++)
                     {
-                        _bullets[i].Update(gameTime);
+                        p.GetBullets()[i].Update(gameTime);
 
-                        if (_enemy.IsAlive && _enemy.GetBoundingElement().Intersects(_bullets[i].GetBoundingElement()))
+                        if (_enemy.IsAlive && _enemy.GetBoundingElement().Intersects(p.GetBullets()[i].GetBoundingElement()))
                         {
-                            _enemy.TakeDamage(_bullets[i].Power);
-                            _bullets.Remove(_bullets[i]);
+                            _enemy.TakeDamage(p.GetBullets()[i].Power);
+                            p.GetBullets().Remove(p.GetBullets()[i]);
                             hit.Play();
+                            p.AddScore(5);
                         }
                         else
                         {
-                            if (_bullets[i].X < 0 || _bullets[i].X > Config.GameArea.X ||
-                                _bullets[i].Y < 0 || _bullets[i].Y > Config.GameArea.Y)
+                            if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
+                                p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.GameArea.Y)
                             {
-                                _bullets.Remove(_bullets[i]);
+                                p.GetBullets().Remove(p.GetBullets()[i]);
                             }
                         }
                     }
@@ -121,10 +126,11 @@ namespace Danmaku_no_Kyojin.Screens
 
                 if (p.BulletTime)
                 {
-                    GameTime newGameTime = new GameTime(gameTime.TotalGameTime,
-                                                        new TimeSpan(
-                                                            (long)
-                                                            (gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier)));
+                    var newGameTime = new GameTime(
+                        gameTime.TotalGameTime,
+                        new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier))
+                    );
+
                     gameTime = newGameTime;
                 }
 
@@ -147,7 +153,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 _enemy.Update(gameTime);
             }
-            
+
             // Adjust zoom if the mouse wheel has moved
             if (InputHandler.ScrollUp())
                 GameRef.Camera.Zoom += 0.1f;
@@ -183,7 +189,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 if (p.IsAlive)
                 {
-                    foreach (var bullet in _bullets)
+                    foreach (var bullet in p.GetBullets())
                     {
                         bullet.Draw(gameTime);
                     }
@@ -201,8 +207,10 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(1, 41), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + _bullets.Count.ToString(), new Vector2(0, 40), Color.White);
+            /*
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(1, 41), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(0, 40), Color.White);
+            */
 
             base.Draw(gameTime);
 

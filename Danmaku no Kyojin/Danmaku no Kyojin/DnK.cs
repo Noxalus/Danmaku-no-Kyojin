@@ -27,7 +27,6 @@ namespace Danmaku_no_Kyojin
         public LeaderboardScreen LeaderboardScreen;
         public OptionsScreen OptionsScreen;
         public GameplayScreen GameplayScreen;
-        public TestScreen TestScreen;
 
         public Rectangle ScreenRectangle;
 
@@ -71,7 +70,6 @@ namespace Danmaku_no_Kyojin
             GameplayScreen = new GameplayScreen(this, stateManager);
             LeaderboardScreen = new LeaderboardScreen(this, stateManager);
             OptionsScreen = new OptionsScreen(this, stateManager);
-            TestScreen = new TestScreen(this, stateManager);
 
             stateManager.ChangeState(TitleScreen);
 

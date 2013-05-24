@@ -185,8 +185,10 @@ namespace Danmaku_no_Kyojin.Entities
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
 
+            /*
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(0, Game.GraphicsDevice.Viewport.Height - 25), Color.White);
+            */
 
             foreach (Mover mover in MoverManager.movers)
             {
