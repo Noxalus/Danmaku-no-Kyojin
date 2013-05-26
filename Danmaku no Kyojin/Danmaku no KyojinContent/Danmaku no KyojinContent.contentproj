@@ -1337,15 +1337,27 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Pictures\titleScreenBackground.jpg">
+    <Compile Include="Graphics\Entities\ship3.png">
+      <Name>ship3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Pictures\titleScreenBackground.png">
       <Name>titleScreenBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Entities\ship3.png">
-      <Name>ship3</Name>
+    <Compile Include="Graphics\Sprites\laserMiddle.png">
+      <Name>laserMiddle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Sprites\laserBorder.png">
+      <Name>laserBorder</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

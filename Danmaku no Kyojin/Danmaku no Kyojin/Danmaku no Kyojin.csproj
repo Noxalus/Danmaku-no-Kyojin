@@ -123,6 +123,7 @@
     <Compile Include="Entities\Boss.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\ICollidable.cs" />
+    <Compile Include="Entities\Laser.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="BulletEngine\Bullet.cs" />
     <Compile Include="BulletEngine\BulletMLNode.cs" />

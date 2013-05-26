@@ -43,6 +43,8 @@ namespace Danmaku_no_Kyojin.Entities
         private float _health;
         private Texture2D _healthBar;
 
+        private Laser _laser;
+
         public float Speed
         {
             get { return _speed; }
@@ -59,11 +61,15 @@ namespace Danmaku_no_Kyojin.Entities
             _health = TotalHealth;
 
             IsAlive = true;
+
+            _laser = new Laser(Game, new Vector2(50, 300), new Vector2(350, 100), 8);
         }
 
         public override void Initialize()
         {
             MoverManager = new MoverManager(Game, Game.GameplayScreen.Players[0].GetPosition);
+
+            _laser.Initialize();
 
             base.Initialize();
         }
@@ -174,6 +180,8 @@ namespace Danmaku_no_Kyojin.Entities
             MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
 
+            _laser.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -195,6 +203,17 @@ namespace Danmaku_no_Kyojin.Entities
                 mover.Draw(gameTime);
             }
 
+            /*
+            Game.SpriteBatch.End();
+            
+            Game.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
+            */
+            _laser.Draw(gameTime);
+            /*
+            Game.SpriteBatch.End();
+
+            Game.SpriteBatch.Begin();
+            */
             base.Draw(gameTime);
         }
 

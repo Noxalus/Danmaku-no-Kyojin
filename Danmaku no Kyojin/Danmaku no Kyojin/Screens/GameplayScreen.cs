@@ -112,8 +112,8 @@ namespace Danmaku_no_Kyojin.Screens
                         }
                         else
                         {
-                            if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
-                                p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.GameArea.Y)
+                            if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.Resolution.X ||
+                                p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.Resolution.Y)
                             {
                                 p.GetBullets().Remove(p.GetBullets()[i]);
                             }

@@ -130,9 +130,9 @@ namespace Danmaku_no_Kyojin.Screens
             if (_backgroundTopRectangle.Y > Config.Resolution.Y)
                 _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
 
-            
-            _backgroundMainRectangle.X -= 5;
-            _backgroundRightRectangle.X -= 5;
+
+            _backgroundMainRectangle.X -= 1;
+            _backgroundRightRectangle.X -= 1;
 
             base.Update(gameTime);
         }
@@ -154,10 +154,10 @@ namespace Danmaku_no_Kyojin.Screens
 
             for (int i = 0; i < menuText.Length; i++)
             {
-                Color textColor = Color.Black;
+                Color textColor = Color.GreenYellow;
 
                 if (i == menuIndex)
-                    textColor = Color.Red;
+                    textColor = Color.OrangeRed;
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f), 
@@ -166,7 +166,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4, 
-                Game.GraphicsDevice.Viewport.Height - 60), Color.Black);
+                Game.GraphicsDevice.Viewport.Height - 60), Color.GreenYellow);
 
             ControlManager.Draw(GameRef.SpriteBatch);
 
