@@ -17,7 +17,6 @@ namespace Danmaku_no_Kyojin.Utils
         int _frameCounter = 0;
         TimeSpan _elapsedTime = TimeSpan.Zero;
 
-
         public FrameRateCounter(Game game)
             : base(game)
         {

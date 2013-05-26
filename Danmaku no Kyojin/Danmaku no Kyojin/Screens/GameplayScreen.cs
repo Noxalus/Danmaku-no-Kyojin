@@ -2,6 +2,7 @@
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
+using Danmaku_no_Kyojin.Shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,6 +29,9 @@ namespace Danmaku_no_Kyojin.Screens
         // Random
         public static Random Rand = new Random();
 
+        // Timer
+        private readonly Timer _timer;
+
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
@@ -35,6 +39,10 @@ namespace Danmaku_no_Kyojin.Screens
             Players = new List<Player>();
 
             _enemy = new Boss(GameRef);
+
+            // Timer
+            _timer = new Timer(Game, 102);
+            Components.Add(_timer);
         }
 
         public override void Initialize()
@@ -61,6 +69,8 @@ namespace Danmaku_no_Kyojin.Screens
             _musicCategory.SetVolume(1);
 
             SoundEffect.MasterVolume = 0.25f;
+
+            _timer.Initialize();
 
             base.Initialize();
 

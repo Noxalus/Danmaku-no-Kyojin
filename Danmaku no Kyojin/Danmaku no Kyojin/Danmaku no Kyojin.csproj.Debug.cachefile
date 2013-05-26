@@ -15,6 +15,15 @@ Content\Graphics\Entities\ship3.xnb
 Content\Graphics\Pictures\titleScreenBackground.xnb
 Content\Graphics\Sprites\laserMiddle.xnb
 Content\Graphics\Sprites\laserBorder.xnb
+Content\Graphics\Shaders\Bloom.xnb
+Content\Graphics\Shaders\BloomExtract.xnb
+Content\Graphics\Shaders\BloomCombine.xnb
+Content\Graphics\Shaders\GaussianBlur.xnb
+Content\Graphics\Fonts\MenuFont.xnb
+Content\Graphics\Pictures\bulletTimeBar.xnb
+Content\Graphics\Pictures\life.xnb
+Content\Graphics\Fonts\TimerSeconds.xnb
+Content\Graphics\Fonts\TimerMilliseconds.xnb
 Content\Audio\DnK.xgs
 Content\Audio\Wave Bank.xwb
 Content\Audio\Sound Bank.xsb
