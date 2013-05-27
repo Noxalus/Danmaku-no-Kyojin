@@ -34,6 +34,8 @@ namespace Danmaku_no_Kyojin.Entities
 
         private int _score;
 
+        private SpriteEffects _bloomEffect;
+
         #endregion
 
         public Player(DnK game, int id, Vector2 position)
@@ -71,10 +73,12 @@ namespace Danmaku_no_Kyojin.Entities
         {
             base.LoadContent();
 
-            Sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship2");
-            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
+            Sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship5");
+            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet2");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
             CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI);
+
+            //_bloomEffect = Game.Content.Load<SpriteEffects>("Graphics/Shaders/Bloom");
         }
 
         public override void Update(GameTime gameTime)

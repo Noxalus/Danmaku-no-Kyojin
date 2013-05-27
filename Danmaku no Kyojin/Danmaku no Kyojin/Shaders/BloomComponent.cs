@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Danmaku_no_Kyojin.Shaders
 {
-    class BloomComponent : DrawableGameComponent
+    public class BloomComponent : DrawableGameComponent
     {
         #region Fields
 

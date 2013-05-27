@@ -24,6 +24,9 @@ Content\Graphics\Pictures\bulletTimeBar.xnb
 Content\Graphics\Pictures\life.xnb
 Content\Graphics\Fonts\TimerSeconds.xnb
 Content\Graphics\Fonts\TimerMilliseconds.xnb
+Content\Graphics\Entities\ship4.xnb
+Content\Graphics\Entities\ship5.xnb
+Content\Graphics\Entities\ship_bullet2.xnb
 Content\Audio\DnK.xgs
 Content\Audio\Wave Bank.xwb
 Content\Audio\Sound Bank.xsb

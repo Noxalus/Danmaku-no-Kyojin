@@ -65,7 +65,7 @@ namespace Danmaku_no_Kyojin.Entities
                 0), Color.White);
             _spriteBatch.DrawString(_millisecondsFont, milliseconds, new Vector2(
                 Config.Resolution.X / 2f + _secondsFont.MeasureString(seconds).X / 2f,
-                -33), Color.White);
+                0), Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);

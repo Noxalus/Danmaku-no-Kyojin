@@ -32,6 +32,10 @@ namespace Danmaku_no_Kyojin.Screens
         // Timer
         private readonly Timer _timer;
 
+        // Bloom
+        private readonly BloomComponent _bloom;
+        private int _bloomSettingsIndex = 0;
+
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
@@ -43,6 +47,11 @@ namespace Danmaku_no_Kyojin.Screens
             // Timer
             _timer = new Timer(Game, 102);
             Components.Add(_timer);
+
+            // Bloom effect
+            _bloom = new BloomComponent(this.Game);
+
+            Components.Add(_bloom);
         }
 
         public override void Initialize()
@@ -76,6 +85,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             _music = _soundBank.GetCue("Background");
             _music.Play();
+
+            _bloom.Initialize();
         }
 
         protected override void LoadContent()
@@ -95,6 +106,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
+            HandleInput();
+
             if (InputHandler.KeyDown(Keys.Escape))
             {
                 UnloadContent();
@@ -191,9 +204,12 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            _bloom.BeginDraw();
+
             ControlManager.Draw(GameRef.SpriteBatch);
 
             GameRef.SpriteBatch.Begin();
+
 
             foreach (Player p in Players)
             {
@@ -213,6 +229,14 @@ namespace Danmaku_no_Kyojin.Screens
                 _enemy.Draw(gameTime);
             }
 
+            GameRef.SpriteBatch.End();
+
+            Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            base.Draw(gameTime);
+
+            GameRef.SpriteBatch.Begin();
+
             // Text
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(1, 21), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(0, 20), Color.White);
@@ -222,9 +246,39 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(0, 40), Color.White);
             */
 
-            base.Draw(gameTime);
-
             GameRef.SpriteBatch.End();
+        }
+
+        /// <summary>
+        /// Handles input for quitting or changing the bloom settings.
+        /// </summary>
+        private void HandleInput()
+        {
+            // Switch to the next bloom settings preset?
+            if (InputHandler.KeyPressed(Keys.NumPad1))
+            {
+                _bloomSettingsIndex = (_bloomSettingsIndex + 1) %
+                                     BloomSettings.PresetSettings.Length;
+
+                _bloom.Settings = BloomSettings.PresetSettings[_bloomSettingsIndex];
+                _bloom.Visible = true;
+            }
+
+            // Toggle bloom on or off?
+            if (InputHandler.KeyPressed(Keys.NumPad2))
+            {
+                _bloom.Visible = !_bloom.Visible;
+            }
+
+            // Cycle through the intermediate buffer debug display modes?
+            if (InputHandler.KeyPressed(Keys.NumPad3))
+            {
+                _bloom.Visible = true;
+                _bloom.ShowBuffer++;
+
+                if (_bloom.ShowBuffer > BloomComponent.IntermediateBuffer.FinalResult)
+                    _bloom.ShowBuffer = 0;
+            }
         }
     }
 }

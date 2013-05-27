@@ -36,16 +36,6 @@ namespace Danmaku_no_Kyojin
         // Camera
         public Camera2D Camera;
 
-        // Bloom
-        BloomComponent bloom;
-        int bloomSettingsIndex = 0;
-
-        // Inputs
-        KeyboardState lastKeyboardState = new KeyboardState();
-        GamePadState lastGamePadState = new GamePadState();
-        KeyboardState currentKeyboardState = new KeyboardState();
-        GamePadState currentGamePadState = new GamePadState();
-
         public DnK()
         {
             Graphics = new GraphicsDeviceManager(this)
@@ -86,11 +76,6 @@ namespace Danmaku_no_Kyojin
 
             // FPS
             Components.Add(new FrameRateCounter(this));
-
-            // Bloom effect
-            bloom = new BloomComponent(this);
-
-            Components.Add(bloom);
         }
 
 
@@ -115,74 +100,14 @@ namespace Danmaku_no_Kyojin
 
         protected override void Update(GameTime gameTime)
         {
-            HandleInput();
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            //bloom.BeginDraw();
-
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //Graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
             base.Draw(gameTime);
-        }
-
-         /// <summary>
-        /// Handles input for quitting or changing the bloom settings.
-        /// </summary>
-        private void HandleInput()
-        {
-            lastKeyboardState = currentKeyboardState;
-            lastGamePadState = currentGamePadState;
-
-            currentKeyboardState = Keyboard.GetState();
-            currentGamePadState = GamePad.GetState(PlayerIndex.One);
-
-            // Check for exit.
-            if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
-                currentGamePadState.Buttons.Back == ButtonState.Pressed)
-            {
-                Exit();
-            }
-            
-            // Switch to the next bloom settings preset?
-            if ((currentGamePadState.Buttons.A == ButtonState.Pressed &&
-                 lastGamePadState.Buttons.A != ButtonState.Pressed) ||
-                (currentKeyboardState.IsKeyDown(Keys.NumPad1) &&
-                 lastKeyboardState.IsKeyUp(Keys.NumPad1)))
-            {
-                bloomSettingsIndex = (bloomSettingsIndex + 1) %
-                                     BloomSettings.PresetSettings.Length;
-             
-                bloom.Settings = BloomSettings.PresetSettings[bloomSettingsIndex];
-                bloom.Visible = true;
-            }
-
-            // Toggle bloom on or off?
-            if ((currentGamePadState.Buttons.B == ButtonState.Pressed &&
-                 lastGamePadState.Buttons.B != ButtonState.Pressed) ||
-                (currentKeyboardState.IsKeyDown(Keys.NumPad2) &&
-                 lastKeyboardState.IsKeyUp(Keys.NumPad2)))
-            {
-                bloom.Visible = !bloom.Visible;
-            }
-
-            // Cycle through the intermediate buffer debug display modes?
-            if ((currentGamePadState.Buttons.X == ButtonState.Pressed &&
-                 lastGamePadState.Buttons.X != ButtonState.Pressed) ||
-                (currentKeyboardState.IsKeyDown(Keys.NumPad3) &&
-                 lastKeyboardState.IsKeyUp(Keys.NumPad3)))
-            {
-                bloom.Visible = true;
-                bloom.ShowBuffer++;
-
-                if (bloom.ShowBuffer > BloomComponent.IntermediateBuffer.FinalResult)
-                    bloom.ShowBuffer= 0;
-            }
         }
     }
 }
