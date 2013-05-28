@@ -288,9 +288,9 @@ namespace Danmaku_no_Kyojin.Entities
                 bullet.WaveMode = false;
 
                 Vector2 directionLeft = direction;
-                Vector2 positionLeft = Position;
+                Vector2 positionLeft = new Vector2(Position.X - 25f * (float)Math.Cos(Rotation), Position.Y - 25f * (float)Math.Sin(Rotation));
                 Vector2 directionRight = direction;
-                Vector2 positionRight = Position;
+                Vector2 positionRight = new Vector2(Position.X + 25f * (float)Math.Cos(Rotation), Position.Y + 25f * (float)Math.Sin(Rotation)); ;
 
                 if (!SlowMode)
                 {
@@ -298,11 +298,6 @@ namespace Danmaku_no_Kyojin.Entities
                                                 (float)Math.Cos(Rotation - Math.PI / 4) * -1);
                     directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 4),
                                                  (float)Math.Cos(Rotation + Math.PI / 4) * -1);
-                }
-                else
-                {
-                    positionLeft.X -= 50f;
-                    positionRight.X += 50f;
                 }
 
                 var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);

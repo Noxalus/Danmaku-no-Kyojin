@@ -39,7 +39,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public float GetRank() { return 0; }
 
-        private const float TotalHealth = 500000000f;
+        private const float TotalHealth = 5f;
         private float _health;
         private Texture2D _healthBar;
 
