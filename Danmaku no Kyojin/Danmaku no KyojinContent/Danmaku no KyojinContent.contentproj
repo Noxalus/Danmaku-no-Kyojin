@@ -1360,8 +1360,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Pictures\titleScreenBackground.png">
-      <Name>titleScreenBackground</Name>
+    <Compile Include="Graphics\Pictures\background.png">
+      <Name>background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -1435,6 +1435,23 @@
   <ItemGroup>
     <Compile Include="Graphics\Entities\ship_bullet2.png">
       <Name>ship_bullet2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Pictures\bulletTimeBarContent.png">
+      <Name>bulletTimeBarContent</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Pictures\bulletTimeBarLeft.png">
+      <Name>bulletTimeBarLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Pictures\bulletTimeBarRight.png">
+      <Name>bulletTimeBarRight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

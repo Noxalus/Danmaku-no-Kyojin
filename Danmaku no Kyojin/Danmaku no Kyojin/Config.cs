@@ -11,7 +11,7 @@ namespace Danmaku_no_Kyojin
         public const bool FpsCapping = true;
 
         // Screen
-        public const bool FullScreen = false;
+        public static bool FullScreen = false;
         public static readonly Point Resolution = new Point(800, 600);
 
         // Bullet Time
@@ -30,12 +30,13 @@ namespace Danmaku_no_Kyojin
             Buttons.LeftTrigger, Buttons.RightTrigger
         };
 
-        public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 0, 3);
+        public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 3);
+        public static readonly TimeSpan DefaultBulletTimeTimer = new TimeSpan(0, 0, 1);
         public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 0, 50);
         public const float PlayerMaxVelocity = 400f;
         public const float PlayerMaxSlowVelocity = 125f;
         public const float PlayerBulletVelocity = 800f;
-        public const int PlayerLives = 100;
+        public const int PlayerLives = 5;
 
         // Game
         public static readonly Point GameArea = new Point(1000, 1000);

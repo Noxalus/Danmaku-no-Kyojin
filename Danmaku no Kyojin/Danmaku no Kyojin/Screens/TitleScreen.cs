@@ -60,7 +60,7 @@ namespace Danmaku_no_Kyojin.Screens
         protected override void LoadContent()
         {
             _logo = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo");
-            _backgroundImage = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/titleScreenBackground");
+            _backgroundImage = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/background");
 
             base.LoadContent();
         }

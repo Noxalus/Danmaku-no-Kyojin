@@ -28,7 +28,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             _currentTime = _initTime;
             _active = false;
-            
+
             // Draw after Screens's Draw method
             DrawOrder = 6000;
 
@@ -47,7 +47,10 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Update(GameTime gameTime)
         {
-            _currentTime -= gameTime.ElapsedGameTime;
+            if (_currentTime > TimeSpan.Zero)
+                _currentTime -= gameTime.ElapsedGameTime;
+            else
+                _currentTime = TimeSpan.Zero;
 
             base.Update(gameTime);
         }
@@ -61,7 +64,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_secondsFont, seconds, new Vector2(
-                Config.Resolution.X / 2f - _secondsFont.MeasureString(seconds).X / 2f, 
+                Config.Resolution.X / 2f - _secondsFont.MeasureString(seconds).X / 2f,
                 0), Color.White);
             _spriteBatch.DrawString(_millisecondsFont, milliseconds, new Vector2(
                 Config.Resolution.X / 2f + _secondsFont.MeasureString(seconds).X / 2f,

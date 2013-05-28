@@ -27,6 +27,11 @@ namespace Danmaku_no_Kyojin.Entities
 
         // Bullet Time
         public bool BulletTime { get; set; }
+        private Texture2D _bulletTimeBarLeft;
+        private Texture2D _bulletTimeBarContent;
+        private Texture2D _bulletTimeBarRight;
+        private TimeSpan _bulletTimeTimer;
+        private bool _bulletTimeReloading;
 
         private int _lives;
         public bool IsInvincible { get; set; }
@@ -34,7 +39,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         private int _score;
 
-        private SpriteEffects _bloomEffect;
+        private Texture2D _lifeIcon;
 
         #endregion
 
@@ -66,6 +71,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             _score = 0;
 
+            _bulletTimeTimer = Config.DefaultBulletTimeTimer;
+
             base.Initialize();
         }
 
@@ -73,12 +80,16 @@ namespace Danmaku_no_Kyojin.Entities
         {
             base.LoadContent();
 
-            Sprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship5");
+            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship5");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet2");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
             CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI);
 
-            //_bloomEffect = Game.Content.Load<SpriteEffects>("Graphics/Shaders/Bloom");
+            _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
+
+            _bulletTimeBarLeft = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarLeft");
+            _bulletTimeBarContent = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarContent");
+            _bulletTimeBarRight = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarRight");
         }
 
         public override void Update(GameTime gameTime)
@@ -116,7 +127,7 @@ namespace Danmaku_no_Kyojin.Entities
                     _direction.X = -1;
 
                 SlowMode = (InputHandler.KeyDown(Config.PlayerKeyboardInput[4])) ? true : false;
-                BulletTime = (InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
+                BulletTime = (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
 
                 if (_direction != Vector2.Zero)
                 {
@@ -150,7 +161,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
 
                 SlowMode = (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One)) ? true : false;
-                BulletTime = (InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One)) ? true : false;
+                BulletTime = (!_bulletTimeReloading && InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One)) ? true : false;
 
                 if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
                 {
@@ -160,6 +171,29 @@ namespace Danmaku_no_Kyojin.Entities
                                    InputHandler.GamePadStates[0].ThumbSticks.Right.X) + MathHelper.PiOver2;
 
                     Fire(gameTime);
+                }
+            }
+
+            if (BulletTime)
+            {
+                _bulletTimeTimer -= gameTime.ElapsedGameTime;
+
+                if (_bulletTimeTimer <= TimeSpan.Zero)
+                {
+                    _bulletTimeReloading = true;
+                    _bulletTimeTimer = TimeSpan.Zero;
+                }
+
+            }
+
+            if (_bulletTimeReloading)
+            {
+                _bulletTimeTimer += gameTime.ElapsedGameTime;
+
+                if (_bulletTimeTimer >= Config.DefaultBulletTimeTimer)
+                {
+                    _bulletTimeReloading = false;
+                    _bulletTimeTimer = Config.DefaultBulletTimeTimer;
                 }
             }
 
@@ -194,25 +228,47 @@ namespace Danmaku_no_Kyojin.Entities
             //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
 
             // Text
-            string lives = string.Format("P{0}'s lives: {1}", ID, _lives);
+            string lives = string.Format("P{0}", ID);
+            string score = string.Format("P{0} {1:000000000000}", ID, _score);
 
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, 61 + 20 * (ID - 1)), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 60 + 20 * (ID - 1)), Color.White);
-
-            string score = string.Format("P{0}:{1:000000000000}", ID, _score);
             if (ID == 1)
             {
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 0), Color.White);
+
+                for (int i = 0; i < _lives; i++)
+                {
+                    Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
+                        ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 5, 4), Color.White);   
+                }
+
+                int bulletTimeBarWidth = (int)(100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
+
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, bulletTimeBarWidth.ToString(), new Vector2(0, 30), Color.White);
+
+                Game.SpriteBatch.Draw(_bulletTimeBarLeft, new Rectangle(0, 20, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height), Color.White);
+                Game.SpriteBatch.Draw(_bulletTimeBarContent, new Rectangle(_bulletTimeBarLeft.Width, 20, bulletTimeBarWidth, _bulletTimeBarContent.Height), Color.White);
+                Game.SpriteBatch.Draw(_bulletTimeBarRight, new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, 20, _bulletTimeBarRight.Width, _bulletTimeBarRight.Height), Color.White); 
+
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20),
                                             Color.Black);
+
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(0, Config.Resolution.Y - 21),
                                             Color.White);
             }
             else if (ID == 2)
             {
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 170, Config.Resolution.Y - 20),
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X, 0), Color.White);
+
+                for (int i = 1; i < _lives; i++)
+                {
+                    Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
+                       Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X - i * _lifeIcon.Width - 5, 4), Color.White);
+                }
+
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 150, Config.Resolution.Y - 20),
                                              Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 171, Config.Resolution.Y - 21),
-                                            Color.White);     
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 151, Config.Resolution.Y - 21),
+                                            Color.White);
             }
 
             base.Draw(gameTime);

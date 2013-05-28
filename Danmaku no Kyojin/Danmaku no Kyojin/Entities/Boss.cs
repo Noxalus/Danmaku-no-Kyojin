@@ -208,7 +208,7 @@ namespace Danmaku_no_Kyojin.Entities
             
             Game.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
             */
-            _laser.Draw(gameTime);
+            //_laser.Draw(gameTime);
             /*
             Game.SpriteBatch.End();
 
