@@ -118,6 +118,7 @@
     <Compile Include="Controls\GameState.cs" />
     <Compile Include="Controls\GameStateManager.cs" />
     <Compile Include="Controls\InputHandler.cs" />
+    <Compile Include="PlayerData.cs" />
     <Compile Include="Entities\BaseBullet.cs" />
     <Compile Include="Entities\Bullet.cs" />
     <Compile Include="Entities\BulletLauncherEntity.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="DnK.cs" />
     <Compile Include="Screens\BaseGameState.cs" />
+    <Compile Include="Screens\GameConfigurationScreen.cs" />
     <Compile Include="Screens\GameoverScreen.cs" />
     <Compile Include="Screens\ImprovementScreen.cs" />
     <Compile Include="Screens\OptionsScreen.cs" />

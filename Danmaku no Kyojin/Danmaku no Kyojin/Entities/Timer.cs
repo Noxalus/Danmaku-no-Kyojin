@@ -24,6 +24,12 @@ namespace Danmaku_no_Kyojin.Entities
             _initTime = new TimeSpan(0, 0, seconds);
         }
 
+        public Timer(Game game, TimeSpan timeSpan)
+            : base(game)
+        {
+            _initTime = timeSpan;
+        }
+
         public override void Initialize()
         {
             _currentTime = _initTime;
@@ -62,12 +68,16 @@ namespace Danmaku_no_Kyojin.Entities
             Debug.Print((_millisecondsFont.MeasureString(milliseconds).Y).ToString());
 
             _spriteBatch.Begin();
+
             _spriteBatch.DrawString(_secondsFont, seconds, new Vector2(
                 Config.Resolution.X / 2f - _secondsFont.MeasureString(seconds).X / 2f,
                 -10), Color.White);
+            /*
             _spriteBatch.DrawString(_millisecondsFont, milliseconds, new Vector2(
                 Config.Resolution.X / 2f + _secondsFont.MeasureString(seconds).X / 2f,
                 20), Color.White);
+            */
+         
             _spriteBatch.End();
         }
 

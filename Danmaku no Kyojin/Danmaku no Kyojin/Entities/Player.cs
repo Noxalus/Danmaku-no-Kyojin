@@ -16,6 +16,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         #region Fields
         public int ID { get; set; }
+        private Config.Controller _controller;
 
         private Texture2D _bulletSprite;
 
@@ -43,25 +44,27 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        public Player(DnK game, int id, Vector2 position)
+        public Player(DnK game, int id, Config.Controller controller, Vector2 position)
             : base(game)
         {
             ID = id;
+            _controller = controller;
             Position = position;
             Center = Vector2.Zero;
         }
 
         public override void Initialize()
         {
-            _velocity = Config.PlayerMaxVelocity;
+            _velocity = (float)(Config.PlayerMaxVelocity * Improvements.SpeedData[PlayerData.SpeedIndex].Key);
             _velocitySlowMode = Config.PlayerMaxSlowVelocity;
             _direction = Vector2.Zero;
             Rotation = 0f;
             _distance = Vector2.Zero;
 
-            _lives = Config.PlayerLives;
+            _lives = Improvements.LivesNumberData[PlayerData.LivesNumberIndex].Key;
+
             IsInvincible = false;
-            _invincibleTime = Config.PlayerInvicibleTimer;
+            _invincibleTime = Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex].Key;
 
             BulletTime = false;
 
@@ -83,7 +86,7 @@ namespace Danmaku_no_Kyojin.Entities
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship5");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet2");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
-            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI * 3);
+            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI * 2);
 
             _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
 
@@ -114,7 +117,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             _direction = Vector2.Zero;
 
-            if (ID == 1)
+            if (_controller == Config.Controller.Keyboard)
             {
                 // Keyboard
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[0]))
@@ -155,7 +158,7 @@ namespace Danmaku_no_Kyojin.Entities
                     Fire(gameTime);
                 }
             }
-            else if (ID == 2)
+            else if (_controller == Config.Controller.GamePad)
             {
                 _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
                 _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
@@ -280,36 +283,77 @@ namespace Danmaku_no_Kyojin.Entities
                 BulletFrequence -= gameTime.ElapsedGameTime;
             else
             {
-                BulletFrequence = Config.PlayerBulletFrequence;
+                BulletFrequence = TimeSpan.FromTicks((long)(Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex].Key * Config.PlayerShootFrequency.Ticks));
 
                 var direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
-                var bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
-                bullet.Power = 1;// Improvements.ShootPower;
-                bullet.WaveMode = false;
 
-                AddBullet(bullet);
-
-                Vector2 directionLeft = direction;
-                Vector2 positionLeft = new Vector2(Position.X - 25f * (float)Math.Cos(Rotation), Position.Y - 25f * (float)Math.Sin(Rotation));
-                Vector2 directionRight = direction;
-                Vector2 positionRight = new Vector2(Position.X + 25f * (float)Math.Cos(Rotation), Position.Y + 25f * (float)Math.Sin(Rotation)); ;
-
-                if (!SlowMode)
+                // Straight
+                if (PlayerData.ShootTypeIndex != 1)
                 {
-                    directionLeft = new Vector2((float)Math.Sin(Rotation - Math.PI / 4),
-                                                (float)Math.Cos(Rotation - Math.PI / 4) * -1);
-                    directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 4),
-                                                 (float)Math.Cos(Rotation + Math.PI / 4) * -1);
+                    var bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
+                    bullet.WaveMode = false;
+
+                    AddBullet(bullet);
                 }
 
-                var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
-                bulletLeft.Power = 0.5f;
+                // Front sides 1/2 diagonal
+                if (PlayerData.ShootTypeIndex > 0)
+                {
+                    Vector2 directionLeft = direction;
+                    Vector2 positionLeft = new Vector2(Position.X - 25f * (float)Math.Cos(Rotation), Position.Y - 25f * (float)Math.Sin(Rotation));
+                    Vector2 directionRight = direction;
+                    Vector2 positionRight = new Vector2(Position.X + 25f * (float)Math.Cos(Rotation), Position.Y + 25f * (float)Math.Sin(Rotation));
+                    ;
 
-                var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
-                bulletRight.Power = 0.5f;
+                    if (!SlowMode)
+                    {
+                        directionLeft = new Vector2((float)Math.Sin(Rotation - Math.PI / 4), (float)Math.Cos(Rotation - Math.PI / 4) * -1);
+                        directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 4), (float)Math.Cos(Rotation + Math.PI / 4) * -1);
+                    }
 
-                AddBullet(bulletLeft);
-                AddBullet(bulletRight);
+                    var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
+
+                    var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
+
+                    AddBullet(bulletLeft);
+                    AddBullet(bulletRight);
+                }
+
+                // Front sides 1/4 diagonal
+                if (PlayerData.ShootTypeIndex >= 3)
+                {
+                    Vector2 directionLeft = direction;
+                    Vector2 positionLeft = new Vector2(Position.X - 10f * (float)Math.Cos(Rotation), Position.Y - 10f * (float)Math.Sin(Rotation));
+                    Vector2 directionRight = direction;
+                    Vector2 positionRight = new Vector2(Position.X + 10f * (float)Math.Cos(Rotation), Position.Y + 10f * (float)Math.Sin(Rotation));
+
+                    if (!SlowMode)
+                    {
+                        directionLeft = new Vector2((float)Math.Sin(Rotation - Math.PI / 8), (float)Math.Cos(Rotation - Math.PI / 8) * -1);
+                        directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 8), (float)Math.Cos(Rotation + Math.PI / 8) * -1);
+                    }
+
+                    var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
+                    bulletLeft.Power = 0.5f;
+
+                    var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
+                    bulletRight.Power = 0.5f;
+
+                    AddBullet(bulletLeft);
+                    AddBullet(bulletRight);
+                }
+
+                // Behind
+                if (PlayerData.ShootTypeIndex >= 2)
+                {
+                    var directionBehind = new Vector2((float)Math.Sin(Rotation) * -1, (float)Math.Cos(Rotation));
+
+                    var bullet = new Bullet(Game, _bulletSprite, Position, directionBehind, Config.PlayerBulletVelocity);
+                    bullet.Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
+                    bullet.WaveMode = false;
+
+                    AddBullet(bullet);
+                }
             }
         }
 

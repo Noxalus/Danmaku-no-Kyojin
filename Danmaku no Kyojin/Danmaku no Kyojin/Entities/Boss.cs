@@ -39,11 +39,9 @@ namespace Danmaku_no_Kyojin.Entities
 
         public float GetRank() { return 0; }
 
-        private const float TotalHealth = 5f;
+        private const float TotalHealth = 50f;
         private float _health;
         private Texture2D _healthBar;
-
-        private Laser _laser;
 
         public float Speed
         {
@@ -54,6 +52,14 @@ namespace Danmaku_no_Kyojin.Entities
         public Boss(DnK game)
             : base(game)
         {
+            MoverManager = new MoverManager(Game);
+            GameManager.GameDifficulty = Config.GameDifficultyDelegate;
+        }
+
+        public override void Initialize()
+        {
+            MoverManager.Initialize(Game.GameplayScreen.Players[0].GetPosition);
+
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
             _speed = 1;
@@ -61,15 +67,6 @@ namespace Danmaku_no_Kyojin.Entities
             _health = TotalHealth;
 
             IsAlive = true;
-
-            _laser = new Laser(Game, new Vector2(50, 300), new Vector2(350, 100), 8);
-        }
-
-        public override void Initialize()
-        {
-            MoverManager = new MoverManager(Game, Game.GameplayScreen.Players[0].GetPosition);
-
-            _laser.Initialize();
 
             base.Initialize();
         }
@@ -106,8 +103,6 @@ namespace Danmaku_no_Kyojin.Entities
                 pattern.ParseXML(source);
                 _myPatterns.Add(pattern);
             }
-
-            GameManager.GameDifficulty = this.GetRank;
 
             AddBullet(true);
 
@@ -171,7 +166,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (timer > 60)
             {
                 timer = 0;
-                if (_mover.used == false)
+                if (_mover != null && _mover.used == false)
                 {
                     AddBullet(true);
                 }
@@ -179,8 +174,6 @@ namespace Danmaku_no_Kyojin.Entities
 
             MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
-
-            _laser.Update(gameTime);
 
             base.Update(gameTime);
         }

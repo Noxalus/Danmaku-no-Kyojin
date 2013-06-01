@@ -29,6 +29,8 @@ namespace Danmaku_no_Kyojin.Entities
                 };
 
             CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
+
+            Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
         }
 
         public override void Update(GameTime gameTime)

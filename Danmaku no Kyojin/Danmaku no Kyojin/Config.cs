@@ -6,6 +6,12 @@ namespace Danmaku_no_Kyojin
 {
     public static class Config
     {
+        public enum Controller
+        {
+            Keyboard,
+            GamePad
+        };
+
         // Debug
         public static bool DisplayCollisionBoxes = false;
         public const bool FpsCapping = true;
@@ -30,9 +36,15 @@ namespace Danmaku_no_Kyojin
             Buttons.LeftTrigger, Buttons.RightTrigger
         };
 
+        public static Controller[] PlayersController = new Controller[]
+            {
+                Controller.Keyboard,
+                Controller.GamePad
+            };
+
         public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 3);
         public static readonly TimeSpan DefaultBulletTimeTimer = new TimeSpan(0, 0, 1);
-        public static readonly TimeSpan PlayerBulletFrequence = new TimeSpan(0, 0, 0, 0, 50);
+        public static readonly TimeSpan PlayerShootFrequency = new TimeSpan(0, 0, 0, 0, 33);
         public const float PlayerMaxVelocity = 400f;
         public const float PlayerMaxSlowVelocity = 125f;
         public const float PlayerBulletVelocity = 800f;
@@ -40,5 +52,11 @@ namespace Danmaku_no_Kyojin
 
         // Game
         public static readonly Point GameArea = new Point(1000, 1000);
+
+        public static float GameDifficulty = 0.5f; 
+        public static float GameDifficultyDelegate()
+        {
+            return GameDifficulty;
+        }
     }
 }

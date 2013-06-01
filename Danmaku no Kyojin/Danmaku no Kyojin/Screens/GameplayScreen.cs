@@ -46,10 +46,12 @@ namespace Danmaku_no_Kyojin.Screens
 
             Players = new List<Player>();
 
+           
+
             _enemy = new Boss(GameRef);
 
             // Timer
-            _timer = new Timer(Game, 102);
+            _timer = new Timer(Game, Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex].Key);
 
             // Bloom effect
             _bloom = new BloomComponent(this.Game);
@@ -63,12 +65,12 @@ namespace Danmaku_no_Kyojin.Screens
 
             for (int i = 1; i <= Config.PlayersNumber; i++)
             {
-                var player = new Player(GameRef, i,
-                                           new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2f,
-                                                       GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
+                var player = new Player(GameRef, i, Config.PlayersController[i - 1],
+                                        new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2f,
+                                                    GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
                 player.Initialize();
                 Players.Add(player);
-            };
+            }
 
             _enemy.Initialize();
 
@@ -149,7 +151,7 @@ namespace Danmaku_no_Kyojin.Screens
                             _enemy.TakeDamage(p.GetBullets()[i].Power);
                             p.GetBullets().Remove(p.GetBullets()[i]);
                             hit.Play();
-                            p.AddScore(5);
+                            p.AddScore(Improvements.ScoreByHitData[PlayerData.ScoreByHitIndex].Key);
                         }
                         else
                         {
@@ -182,6 +184,11 @@ namespace Danmaku_no_Kyojin.Screens
             if (_enemy.IsAlive)
             {
                 _enemy.Update(gameTime);
+            }
+            else
+            {
+                PlayerData.ShootTypeIndex++;
+                _enemy.Initialize();
             }
 
             // Adjust zoom if the mouse wheel has moved

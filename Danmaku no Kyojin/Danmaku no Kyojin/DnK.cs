@@ -29,6 +29,7 @@ namespace Danmaku_no_Kyojin
         public ImprovementScreen ImprovementScreen;
         public LeaderboardScreen LeaderboardScreen;
         public OptionsScreen OptionsScreen;
+        public GameConfigurationScreen GameConfigurationScreen;
         public GameplayScreen GameplayScreen;
         public GameOverScreen GameOverScreen;
 
@@ -71,6 +72,7 @@ namespace Danmaku_no_Kyojin
 
             // Screens
             TitleScreen = new TitleScreen(this, stateManager);
+            GameConfigurationScreen = new GameConfigurationScreen(this, stateManager);
             GameplayScreen = new GameplayScreen(this, stateManager);
             LeaderboardScreen = new LeaderboardScreen(this, stateManager);
             ImprovementScreen = new ImprovementScreen(this, stateManager);
@@ -93,11 +95,18 @@ namespace Danmaku_no_Kyojin
 
             var dataShootType = Improvements.ShootTypeData[0].Key;
 
-            StaticClassSerializer.Load(typeof(Improvements), "test.dat");
+            StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
 
             //bool test2 = Improvements.BulletTimeEnabled;
 
             base.Initialize();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            StaticClassSerializer.Save(typeof(PlayerData), "data.bin");
+
+            base.Dispose(disposing);
         }
 
         protected override void LoadContent()
