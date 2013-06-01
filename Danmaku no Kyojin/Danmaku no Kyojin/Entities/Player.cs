@@ -284,8 +284,10 @@ namespace Danmaku_no_Kyojin.Entities
 
                 var direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
                 var bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
-                bullet.Power = 1f;
+                bullet.Power = 1;// Improvements.ShootPower;
                 bullet.WaveMode = false;
+
+                AddBullet(bullet);
 
                 Vector2 directionLeft = direction;
                 Vector2 positionLeft = new Vector2(Position.X - 25f * (float)Math.Cos(Rotation), Position.Y - 25f * (float)Math.Sin(Rotation));
@@ -306,7 +308,6 @@ namespace Danmaku_no_Kyojin.Entities
                 var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
                 bulletRight.Power = 0.5f;
 
-                AddBullet(bullet);
                 AddBullet(bulletLeft);
                 AddBullet(bulletRight);
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -25,9 +26,11 @@ namespace Danmaku_no_Kyojin
 
         // Screens
         public TitleScreen TitleScreen;
+        public ImprovementScreen ImprovementScreen;
         public LeaderboardScreen LeaderboardScreen;
         public OptionsScreen OptionsScreen;
         public GameplayScreen GameplayScreen;
+        public GameOverScreen GameOverScreen;
 
         public Rectangle ScreenRectangle;
 
@@ -70,6 +73,8 @@ namespace Danmaku_no_Kyojin
             TitleScreen = new TitleScreen(this, stateManager);
             GameplayScreen = new GameplayScreen(this, stateManager);
             LeaderboardScreen = new LeaderboardScreen(this, stateManager);
+            ImprovementScreen = new ImprovementScreen(this, stateManager);
+            GameOverScreen = new GameOverScreen(this, stateManager);
             OptionsScreen = new OptionsScreen(this, stateManager);
 
             stateManager.ChangeState(TitleScreen);
@@ -85,6 +90,8 @@ namespace Danmaku_no_Kyojin
 
 
             //bool test1 = Improvements.BulletTimeEnabled;
+
+            var dataShootType = Improvements.ShootTypeData[0].Key;
 
             StaticClassSerializer.Load(typeof(Improvements), "test.dat");
 

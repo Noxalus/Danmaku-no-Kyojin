@@ -102,7 +102,7 @@ namespace Danmaku_no_Kyojin.Screens
                 }
                 // Improvements
                 else if (menuIndex == 2)
-                    StateManager.ChangeState(GameRef.LeaderboardScreen);
+                    StateManager.ChangeState(GameRef.ImprovementScreen);
                 // Leaderbord
                 else if (menuIndex == 3)
                     StateManager.ChangeState(GameRef.LeaderboardScreen);

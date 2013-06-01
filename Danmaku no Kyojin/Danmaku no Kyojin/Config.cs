@@ -15,7 +15,7 @@ namespace Danmaku_no_Kyojin
         public static readonly Point Resolution = new Point(800, 600);
 
         // Bullet Time
-        public const float DesiredTimeModifier = 5f;
+        public const float DesiredTimeModifier = 2f;
 
         // Player
         public static int PlayersNumber = 1;
