@@ -170,7 +170,7 @@
     <Compile Include="DnK.cs" />
     <Compile Include="Screens\BaseGameState.cs" />
     <Compile Include="Screens\GameConfigurationScreen.cs" />
-    <Compile Include="Screens\GameoverScreen.cs" />
+    <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\ImprovementScreen.cs" />
     <Compile Include="Screens\OptionsScreen.cs" />
     <Compile Include="Screens\LeaderboardScreen.cs" />

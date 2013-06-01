@@ -42,6 +42,11 @@ namespace Danmaku_no_Kyojin.Entities
 
         private Texture2D _lifeIcon;
 
+        public int Score
+        {
+            get { return _score; }
+        }
+
         #endregion
 
         public Player(DnK game, int id, Config.Controller controller, Vector2 position)
@@ -129,8 +134,8 @@ namespace Danmaku_no_Kyojin.Entities
                 if (InputHandler.KeyDown(Config.PlayerKeyboardInput[3]))
                     _direction.X = -1;
 
-                SlowMode = (InputHandler.KeyDown(Config.PlayerKeyboardInput[4])) ? true : false;
-                BulletTime = (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed) ? true : false;
+                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.KeyDown(Config.PlayerKeyboardInput[4]))) ? true : false;
+                BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed)) ? true : false;
 
                 if (_direction != Vector2.Zero)
                 {
@@ -163,8 +168,8 @@ namespace Danmaku_no_Kyojin.Entities
                 _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
                 _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
 
-                SlowMode = (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One)) ? true : false;
-                BulletTime = (!_bulletTimeReloading && InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One)) ? true : false;
+                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One))) ? true : false;
+                BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One))) ? true : false;
 
                 if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
                 {

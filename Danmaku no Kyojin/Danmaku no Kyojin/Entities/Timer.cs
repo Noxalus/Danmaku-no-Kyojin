@@ -13,10 +13,16 @@ namespace Danmaku_no_Kyojin.Entities
         private TimeSpan _currentTime;
         private SpriteBatch _spriteBatch;
         private bool _active;
+        private bool _isFinished;
 
         // Fonts
         private SpriteFont _secondsFont;
         private SpriteFont _millisecondsFont;
+
+        public bool IsFinished
+        {
+            get { return _isFinished; }
+        }
 
         public Timer(Game game, int seconds)
             : base(game)
@@ -34,6 +40,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             _currentTime = _initTime;
             _active = false;
+            _isFinished = false;
 
             base.Initialize();
         }
@@ -50,10 +57,16 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Update(GameTime gameTime)
         {
-            if (_currentTime > TimeSpan.Zero)
-                _currentTime -= gameTime.ElapsedGameTime;
-            else
-                _currentTime = TimeSpan.Zero;
+            if (!_isFinished)
+            {
+                if (_currentTime > TimeSpan.Zero)
+                    _currentTime -= gameTime.ElapsedGameTime;
+                else
+                {
+                    _currentTime = TimeSpan.Zero;
+                    _isFinished = true;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -89,6 +102,11 @@ namespace Danmaku_no_Kyojin.Entities
         public void Stop()
         {
             _active = false;
+        }
+
+        public void AddTime(TimeSpan extraTime)
+        {
+            _currentTime = _currentTime.Add(extraTime);
         }
     }
 }

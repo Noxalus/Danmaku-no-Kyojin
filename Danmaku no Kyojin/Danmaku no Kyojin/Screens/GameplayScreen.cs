@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.BulletEngine;
+﻿using System.Globalization;
+using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
@@ -16,6 +17,8 @@ namespace Danmaku_no_Kyojin.Screens
     {
         public List<Player> Players { get; set; }
         private Boss _enemy;
+
+        private int _waveNumber;
 
         // Audio
         AudioEngine _audioEngine;
@@ -46,8 +49,6 @@ namespace Danmaku_no_Kyojin.Screens
 
             Players = new List<Player>();
 
-           
-
             _enemy = new Boss(GameRef);
 
             // Timer
@@ -73,6 +74,7 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _enemy.Initialize();
+            _waveNumber = 0;
 
             _audioEngine = new AudioEngine(@"Content/Audio/DnK.xgs");
             _waveBank = new WaveBank(_audioEngine, @"Content/Audio/Wave Bank.xwb");
@@ -187,30 +189,31 @@ namespace Danmaku_no_Kyojin.Screens
             }
             else
             {
-                PlayerData.ShootTypeIndex++;
+                _waveNumber++;
+
+                _timer.AddTime(Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex].Key);
+
                 _enemy.Initialize();
             }
 
-            // Adjust zoom if the mouse wheel has moved
-            if (InputHandler.ScrollUp())
-                GameRef.Camera.Zoom += 0.1f;
-            else if (InputHandler.ScrollDown())
-                GameRef.Camera.Zoom -= 0.1f;
+            // Game Over
+            if ((!Players[0].IsAlive && (Config.PlayersNumber == 1 || (Config.PlayersNumber == 2 && !Players[1].IsAlive))) || _timer.IsFinished)
+            {
+                UnloadContent();
 
-            // Move the camera when the arrow keys are pressed
-            Vector2 movement = Vector2.Zero;
-            Viewport vp = GameRef.GraphicsDevice.Viewport;
+                GameRef.GameOverScreen.WaveNumber = _waveNumber;
+                GameRef.GameOverScreen.Player1Score = Players[0].Score;
+                if (Config.PlayersNumber == 2)
+                    GameRef.GameOverScreen.Player2Score = Players[1].Score;
 
-            if (InputHandler.KeyDown(Keys.Left))
-                movement.X -= 0.1f;
-            if (InputHandler.KeyDown(Keys.Right))
-                movement.X += 0.1f;
-            if (InputHandler.KeyDown(Keys.Up))
-                movement.Y -= 0.1f;
-            if (InputHandler.KeyDown(Keys.Down))
-                movement.Y += 0.1f;
+                PlayerData.Money += 
+                    GameRef.GameOverScreen.Player1Score +
+                    GameRef.GameOverScreen.Player2Score +
+                    (Improvements.ScoreByEnemyData[PlayerData.ScoreByEnemyIndex].Key * GameRef.GameOverScreen.WaveNumber);
 
-            GameRef.Camera.Pos += movement * 20;
+
+                StateManager.ChangeState(GameRef.GameOverScreen);
+            }
 
             if (InputHandler.KeyPressed(Keys.C))
                 Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
@@ -225,7 +228,7 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
 
             GameRef.SpriteBatch.Draw(_background, new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y),
-                                     Color.White); 
+                                     Color.White);
 
             /*
             GameRef.SpriteBatch.Draw(_background, new Rectangle(
@@ -275,8 +278,17 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             // Text
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(1, Config.Resolution.Y - 59), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(0, Config.Resolution.Y - 60), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
+                new Vector2(1, Config.Resolution.Y - 59), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
+                new Vector2(0, Config.Resolution.Y - 60), Color.White);
+
+            string waveNumber = "Wave #" + _waveNumber.ToString(CultureInfo.InvariantCulture);
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, waveNumber,
+                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f + 1, Config.Resolution.Y - 29), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, waveNumber,
+                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f, Config.Resolution.Y - 30), Color.White);
 
             /*
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(1, 41), Color.Black);

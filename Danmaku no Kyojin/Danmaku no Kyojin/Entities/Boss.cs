@@ -39,7 +39,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public float GetRank() { return 0; }
 
-        private const float TotalHealth = 50f;
+        private const float TotalHealth = 30f;
         private float _health;
         private Texture2D _healthBar;
 
@@ -116,6 +116,8 @@ namespace Danmaku_no_Kyojin.Entities
             if (Position.X > Game.GraphicsDevice.Viewport.Width - Sprite.Width - (Speed * dt) ||
                 Position.X < Sprite.Width + (Speed * dt))
                 _motion *= -1;
+
+            Rotation += 0.01f;
 
             //Position += _motion * Speed * dt;
 

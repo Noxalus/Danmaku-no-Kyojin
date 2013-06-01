@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.Controls;
+﻿using System.Globalization;
+using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -115,10 +116,10 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             if (_backgroundMainRectangle.X + _backgroundImage.Width <= 0)
-                    _backgroundMainRectangle.X = _backgroundRightRectangle.X + _backgroundImage.Width;
+                _backgroundMainRectangle.X = _backgroundRightRectangle.X + _backgroundImage.Width;
 
             if (_backgroundRightRectangle.X + _backgroundImage.Width <= 0)
-                    _backgroundRightRectangle.X = _backgroundMainRectangle.X + _backgroundImage.Width;
+                _backgroundRightRectangle.X = _backgroundMainRectangle.X + _backgroundImage.Width;
 
             /*
             if (_backgroundMainRectangle.Y + _backgroundImage.Height <= 0)
@@ -143,9 +144,10 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            ControlManager.Draw(GameRef.SpriteBatch);
+
             GameRef.SpriteBatch.Begin();
 
-            base.Draw(gameTime);
 
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRightRectangle, Color.White);
@@ -164,17 +166,24 @@ namespace Danmaku_no_Kyojin.Screens
                     textColor = Color.OrangeRed;
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
-                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f), 
+                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f),
                   Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i)), textColor);
             }
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4, 
+                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4,
                 Game.GraphicsDevice.Viewport.Height - 60), Color.GreenYellow);
 
-            ControlManager.Draw(GameRef.SpriteBatch);
+            string money = "Money: " + PlayerData.Money.ToString(CultureInfo.InvariantCulture);
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(
+                0,
+                Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y), Color.GreenYellow);
 
             GameRef.SpriteBatch.End();
+
+            base.Draw(gameTime);
+
         }
 
         #endregion
