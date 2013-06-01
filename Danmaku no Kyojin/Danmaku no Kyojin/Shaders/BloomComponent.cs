@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 
 namespace Danmaku_no_Kyojin.Shaders
@@ -16,25 +9,25 @@ namespace Danmaku_no_Kyojin.Shaders
     {
         #region Fields
 
-        SpriteBatch spriteBatch;
+        SpriteBatch _spriteBatch;
 
-        Effect bloomExtractEffect;
-        Effect bloomCombineEffect;
-        Effect gaussianBlurEffect;
+        Effect _bloomExtractEffect;
+        Effect _bloomCombineEffect;
+        Effect _gaussianBlurEffect;
 
-        RenderTarget2D sceneRenderTarget;
-        RenderTarget2D renderTarget1;
-        RenderTarget2D renderTarget2;
+        RenderTarget2D _sceneRenderTarget;
+        RenderTarget2D _renderTarget1;
+        RenderTarget2D _renderTarget2;
 
 
         // Choose what display settings the bloom should use.
         public BloomSettings Settings
         {
-            get { return settings; }
-            set { settings = value; }
+            get { return _settings; }
+            set { _settings = value; }
         }
 
-        BloomSettings settings = BloomSettings.PresetSettings[0];
+        BloomSettings _settings = BloomSettings.PresetSettings[0];
 
 
         // Optionally displays one of the intermediate buffers used
@@ -50,11 +43,11 @@ namespace Danmaku_no_Kyojin.Shaders
 
         public IntermediateBuffer ShowBuffer
         {
-            get { return showBuffer; }
-            set { showBuffer = value; }
+            get { return _showBuffer; }
+            set { _showBuffer = value; }
         }
 
-        IntermediateBuffer showBuffer = IntermediateBuffer.FinalResult;
+        IntermediateBuffer _showBuffer = IntermediateBuffer.FinalResult;
 
 
         #endregion
@@ -75,11 +68,11 @@ namespace Danmaku_no_Kyojin.Shaders
         /// </summary>
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            bloomExtractEffect = Game.Content.Load<Effect>("Graphics/Shaders/BloomExtract");
-            bloomCombineEffect = Game.Content.Load<Effect>("Graphics/Shaders/BloomCombine");
-            gaussianBlurEffect = Game.Content.Load<Effect>("Graphics/Shaders/GaussianBlur");
+            _bloomExtractEffect = Game.Content.Load<Effect>("Graphics/Shaders/BloomExtract");
+            _bloomCombineEffect = Game.Content.Load<Effect>("Graphics/Shaders/BloomCombine");
+            _gaussianBlurEffect = Game.Content.Load<Effect>("Graphics/Shaders/GaussianBlur");
 
             // Look up the resolution and format of our main backbuffer.
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
@@ -90,7 +83,7 @@ namespace Danmaku_no_Kyojin.Shaders
             SurfaceFormat format = pp.BackBufferFormat;
 
             // Create a texture for rendering the main scene, prior to applying bloom.
-            sceneRenderTarget = new RenderTarget2D(GraphicsDevice, width, height, false,
+            _sceneRenderTarget = new RenderTarget2D(GraphicsDevice, width, height, false,
                                                    format, pp.DepthStencilFormat, pp.MultiSampleCount,
                                                    RenderTargetUsage.DiscardContents);
 
@@ -101,8 +94,8 @@ namespace Danmaku_no_Kyojin.Shaders
             width /= 2;
             height /= 2;
 
-            renderTarget1 = new RenderTarget2D(GraphicsDevice, width, height, false, format, DepthFormat.None);
-            renderTarget2 = new RenderTarget2D(GraphicsDevice, width, height, false, format, DepthFormat.None);
+            _renderTarget1 = new RenderTarget2D(GraphicsDevice, width, height, false, format, DepthFormat.None);
+            _renderTarget2 = new RenderTarget2D(GraphicsDevice, width, height, false, format, DepthFormat.None);
         }
 
 
@@ -111,9 +104,9 @@ namespace Danmaku_no_Kyojin.Shaders
         /// </summary>
         protected override void UnloadContent()
         {
-            sceneRenderTarget.Dispose();
-            renderTarget1.Dispose();
-            renderTarget2.Dispose();
+            _sceneRenderTarget.Dispose();
+            _renderTarget1.Dispose();
+            _renderTarget2.Dispose();
         }
 
 
@@ -131,7 +124,7 @@ namespace Danmaku_no_Kyojin.Shaders
         {
             if (Visible)
             {
-                GraphicsDevice.SetRenderTarget(sceneRenderTarget);
+                GraphicsDevice.SetRenderTarget(_sceneRenderTarget);
             }
         }
 
@@ -146,27 +139,27 @@ namespace Danmaku_no_Kyojin.Shaders
 
             // Pass 1: draw the scene into rendertarget 1, using a
             // shader that extracts only the brightest parts of the image.
-            bloomExtractEffect.Parameters["BloomThreshold"].SetValue(
+            _bloomExtractEffect.Parameters["BloomThreshold"].SetValue(
                 Settings.BloomThreshold);
 
-            DrawFullscreenQuad(sceneRenderTarget, renderTarget1,
-                               bloomExtractEffect,
+            DrawFullscreenQuad(_sceneRenderTarget, _renderTarget1,
+                               _bloomExtractEffect,
                                IntermediateBuffer.PreBloom);
 
             // Pass 2: draw from rendertarget 1 into rendertarget 2,
             // using a shader to apply a horizontal gaussian blur filter.
-            SetBlurEffectParameters(1.0f / (float)renderTarget1.Width, 0);
+            SetBlurEffectParameters(1.0f / (float)_renderTarget1.Width, 0);
 
-            DrawFullscreenQuad(renderTarget1, renderTarget2,
-                               gaussianBlurEffect,
+            DrawFullscreenQuad(_renderTarget1, _renderTarget2,
+                               _gaussianBlurEffect,
                                IntermediateBuffer.BlurredHorizontally);
 
             // Pass 3: draw from rendertarget 2 back into rendertarget 1,
             // using a shader to apply a vertical gaussian blur filter.
-            SetBlurEffectParameters(0, 1.0f / (float)renderTarget1.Height);
+            SetBlurEffectParameters(0, 1.0f / (float)_renderTarget1.Height);
 
-            DrawFullscreenQuad(renderTarget2, renderTarget1,
-                               gaussianBlurEffect,
+            DrawFullscreenQuad(_renderTarget2, _renderTarget1,
+                               _gaussianBlurEffect,
                                IntermediateBuffer.BlurredBothWays);
 
             // Pass 4: draw both rendertarget 1 and the original scene
@@ -174,20 +167,20 @@ namespace Danmaku_no_Kyojin.Shaders
             // combines them to produce the final bloomed result.
             GraphicsDevice.SetRenderTarget(null);
 
-            EffectParameterCollection parameters = bloomCombineEffect.Parameters;
+            EffectParameterCollection parameters = _bloomCombineEffect.Parameters;
 
             parameters["BloomIntensity"].SetValue(Settings.BloomIntensity);
             parameters["BaseIntensity"].SetValue(Settings.BaseIntensity);
             parameters["BloomSaturation"].SetValue(Settings.BloomSaturation);
             parameters["BaseSaturation"].SetValue(Settings.BaseSaturation);
 
-            GraphicsDevice.Textures[1] = sceneRenderTarget;
+            GraphicsDevice.Textures[1] = _sceneRenderTarget;
 
             Viewport viewport = GraphicsDevice.Viewport;
 
-            DrawFullscreenQuad(renderTarget1,
+            DrawFullscreenQuad(_renderTarget1,
                                viewport.Width, viewport.Height,
-                               bloomCombineEffect,
+                               _bloomCombineEffect,
                                IntermediateBuffer.FinalResult);
         }
 
@@ -217,14 +210,14 @@ namespace Danmaku_no_Kyojin.Shaders
             // If the user has selected one of the show intermediate buffer options,
             // we still draw the quad to make sure the image will end up on the screen,
             // but might need to skip applying the custom pixel shader.
-            if (showBuffer < currentBuffer)
+            if (_showBuffer < currentBuffer)
             {
                 effect = null;
             }
 
-            spriteBatch.Begin(0, BlendState.Opaque, null, null, null, effect);
-            spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
-            spriteBatch.End();
+            _spriteBatch.Begin(0, BlendState.Opaque, null, null, null, effect);
+            _spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
+            _spriteBatch.End();
         }
 
 
@@ -237,8 +230,8 @@ namespace Danmaku_no_Kyojin.Shaders
             // Look up the sample weight and offset effect parameters.
             EffectParameter weightsParameter, offsetsParameter;
 
-            weightsParameter = gaussianBlurEffect.Parameters["SampleWeights"];
-            offsetsParameter = gaussianBlurEffect.Parameters["SampleOffsets"];
+            weightsParameter = _gaussianBlurEffect.Parameters["SampleWeights"];
+            offsetsParameter = _gaussianBlurEffect.Parameters["SampleOffsets"];
 
             // Look up how many samples our gaussian blur effect supports.
             int sampleCount = weightsParameter.Elements.Count;

@@ -93,6 +93,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -162,6 +163,7 @@
     <Compile Include="BulletEngine\Tasks\Vanish.cs" />
     <Compile Include="BulletEngine\Tasks\Wait.cs" />
     <Compile Include="Entities\Timer.cs" />
+    <Compile Include="Improvements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DnK.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Sprites\BaseSprite.cs" />
     <Compile Include="Utils\FrameRateCounter.cs" />
     <Compile Include="Utils\Primitives2D.cs" />
+    <Compile Include="Utils\StaticClassSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

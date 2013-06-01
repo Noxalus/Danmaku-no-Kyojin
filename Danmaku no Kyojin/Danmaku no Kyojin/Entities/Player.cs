@@ -224,9 +224,11 @@ namespace Danmaku_no_Kyojin.Entities
 
             Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
 
-            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, Rotation + " (X" + Math.Cos(Rotation) + "|Y: " + Math.Sin(Rotation) + ")", new Vector2(0, 300), Color.Black);
-            //Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _distance.ToString(), new Vector2(0, 20), Color.Black);
+            base.Draw(gameTime);
+        }
 
+        public void DrawString(GameTime gameTime)
+        {
             // Text
             string lives = string.Format("P{0}", ID);
             string score = string.Format("P{0} {1:000000000000}", ID, _score);
@@ -238,7 +240,7 @@ namespace Danmaku_no_Kyojin.Entities
                 for (int i = 0; i < _lives; i++)
                 {
                     Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
-                        ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 5, 4), Color.White);   
+                        ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 5, 4), Color.White);
                 }
 
                 int bulletTimeBarWidth = (int)(100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
@@ -247,7 +249,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                 Game.SpriteBatch.Draw(_bulletTimeBarLeft, new Rectangle(0, 20, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height), Color.White);
                 Game.SpriteBatch.Draw(_bulletTimeBarContent, new Rectangle(_bulletTimeBarLeft.Width, 20, bulletTimeBarWidth, _bulletTimeBarContent.Height), Color.White);
-                Game.SpriteBatch.Draw(_bulletTimeBarRight, new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, 20, _bulletTimeBarRight.Width, _bulletTimeBarRight.Height), Color.White); 
+                Game.SpriteBatch.Draw(_bulletTimeBarRight, new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, 20, _bulletTimeBarRight.Width, _bulletTimeBarRight.Height), Color.White);
 
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20),
                                             Color.Black);
@@ -270,8 +272,6 @@ namespace Danmaku_no_Kyojin.Entities
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 151, Config.Resolution.Y - 21),
                                             Color.White);
             }
-
-            base.Draw(gameTime);
         }
 
         private void Fire(GameTime gameTime)

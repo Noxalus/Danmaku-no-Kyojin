@@ -83,6 +83,12 @@ namespace Danmaku_no_Kyojin
         {
             Camera = new Camera2D(GraphicsDevice.Viewport, 1000, 1000, 1);
 
+            bool test1 = Improvements.BulletTimeEnabled;
+
+            StaticClassSerializer.Load(typeof(Improvements), "test.dat");
+
+            bool test2 = Improvements.BulletTimeEnabled;
+
             base.Initialize();
         }
 

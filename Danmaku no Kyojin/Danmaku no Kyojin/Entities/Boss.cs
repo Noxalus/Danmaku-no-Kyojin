@@ -93,7 +93,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2f,
-                20 + Sprite.Height / 2f);
+                75 + Sprite.Height / 2f);
 
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML\", "*.xml", SearchOption.AllDirectories))
@@ -192,6 +192,7 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
+
 
             /*
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);

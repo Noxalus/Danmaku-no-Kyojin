@@ -31,10 +31,11 @@ namespace Danmaku_no_Kyojin.Screens
         public TitleScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            menuText = new string[] { "1 Player", "2 Players", "Leaderboard", "Options", "Exit" };
+            menuText = new string[] { "1 Player", "2 Players", "Improvements", "Leaderboard", "Options", "Exit" };
             menuDescription = new string[] { 
                 "Playing game with only one player", 
                 "Playing game with your best friend", 
+                "Get new abilities to burst more enemies",
                 "A list of scores to know who have the biggest one", 
                 "You can change inputs here", 
                 "Warning: I've never tested this button !", 
@@ -99,8 +100,11 @@ namespace Danmaku_no_Kyojin.Screens
                     Config.PlayersNumber = 2;
                     StateManager.ChangeState(GameRef.GameplayScreen);
                 }
-                // Leaderbord
+                // Improvements
                 else if (menuIndex == 2)
+                    StateManager.ChangeState(GameRef.LeaderboardScreen);
+                // Leaderbord
+                else if (menuIndex == 3)
                     StateManager.ChangeState(GameRef.LeaderboardScreen);
                 // Options
                 else if (menuIndex == 3)

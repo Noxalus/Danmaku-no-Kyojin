@@ -50,7 +50,6 @@ namespace Danmaku_no_Kyojin.Screens
 
             // Timer
             _timer = new Timer(Game, 102);
-            Components.Add(_timer);
 
             // Bloom effect
             _bloom = new BloomComponent(this.Game);
@@ -114,6 +113,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             HandleInput();
 
+            _timer.Update(gameTime);
             _counter += 0.01f;
 
             if (InputHandler.KeyDown(Keys.Escape))
@@ -215,12 +215,23 @@ namespace Danmaku_no_Kyojin.Screens
 
             ControlManager.Draw(GameRef.SpriteBatch);
 
-            GameRef.SpriteBatch.Begin();
+            GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
 
+            GameRef.SpriteBatch.Draw(_background, new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y),
+                                     Color.White); 
+
+            /*
             GameRef.SpriteBatch.Draw(_background, new Rectangle(
                 (int)(Config.Resolution.X / 2f), (int)(Config.Resolution.Y / 2f), 
                 Config.Resolution.X * 2, Config.Resolution.Y * 2), 
                 null, Color.White, _counter, new Vector2(_background.Width / 2f, _background.Height / 2f), SpriteEffects.None, 0f);
+            */
+
+            GameRef.SpriteBatch.End();
+
+            GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            GameRef.SpriteBatch.Begin();
 
             foreach (Player p in Players)
             {
@@ -242,11 +253,19 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.End();
 
-            Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
             base.Draw(gameTime);
 
             GameRef.SpriteBatch.Begin();
+
+            _timer.Draw(gameTime);
+
+            foreach (Player p in Players)
+            {
+                if (p.IsAlive)
+                {
+                    p.DrawString(gameTime);
+                }
+            }
 
             // Text
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(), new Vector2(1, Config.Resolution.Y - 59), Color.Black);
