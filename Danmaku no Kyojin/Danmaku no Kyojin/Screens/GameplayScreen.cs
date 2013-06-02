@@ -32,8 +32,11 @@ namespace Danmaku_no_Kyojin.Screens
         // Random
         public static Random Rand = new Random();
 
-        // Timer
+        // Timer (descending)
         private readonly Timer _timer;
+
+        // Timer for play time
+        private TimeSpan _playTime;
 
         // Bloom
         private readonly BloomComponent _bloom;
@@ -41,7 +44,6 @@ namespace Danmaku_no_Kyojin.Screens
 
         // Background
         private Texture2D _background;
-        private float _counter = 0;
 
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
@@ -62,6 +64,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
+            _playTime = TimeSpan.Zero;
+
             _enemy = new Boss(GameRef);
 
             Players.Clear();
@@ -122,7 +126,8 @@ namespace Danmaku_no_Kyojin.Screens
             HandleInput();
 
             _timer.Update(gameTime);
-            _counter += 0.01f;
+
+            _playTime += gameTime.ElapsedGameTime;
 
             if (InputHandler.KeyDown(Keys.Escape))
             {
@@ -206,15 +211,21 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 UnloadContent();
 
+                GameRef.GameOverScreen.Time = _playTime;
                 GameRef.GameOverScreen.WaveNumber = _waveNumber;
                 GameRef.GameOverScreen.Player1Score = Players[0].Score;
                 if (Config.PlayersNumber == 2)
                     GameRef.GameOverScreen.Player2Score = Players[1].Score;
 
-                PlayerData.Money += 
+                int totalScore = 
                     GameRef.GameOverScreen.Player1Score +
                     GameRef.GameOverScreen.Player2Score +
-                    (Improvements.ScoreByEnemyData[PlayerData.ScoreByEnemyIndex].Key * GameRef.GameOverScreen.WaveNumber);
+                    (Improvements.ScoreByEnemyData[PlayerData.ScoreByEnemyIndex].Key * GameRef.GameOverScreen.WaveNumber) +
+                    (int)_playTime.TotalSeconds;
+
+                GameRef.GameOverScreen.TotalScore = totalScore;
+
+                PlayerData.Credits += totalScore;
 
 
                 StateManager.ChangeState(GameRef.GameOverScreen);

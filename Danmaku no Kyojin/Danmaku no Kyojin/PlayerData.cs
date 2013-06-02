@@ -7,7 +7,7 @@ namespace Danmaku_no_Kyojin
     static class PlayerData
     {
         /** Player data **/
-        public static int Money = 0; // Money to buy improvements
+        public static int Credits = 0; // Money to buy improvements
 
         public static bool BulletTimeEnabled = false; // true|false
         public static bool SlowModeEnabled = false; // true|false

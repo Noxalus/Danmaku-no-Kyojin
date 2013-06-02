@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin.Screens
@@ -13,6 +14,7 @@ namespace Danmaku_no_Kyojin.Screens
         private string[] _menuText;
         private int _menuIndex;
         private Dictionary<string, bool> _finished;
+        private Texture2D _background;
 
         #endregion
 
@@ -40,6 +42,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
+            _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+
             base.LoadContent();
         }
 
@@ -69,23 +73,23 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     // Lives
                     case 0:
-                        if (!_finished["livesNumber"] && PlayerData.Money >= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value)
+                        if (!_finished["livesNumber"] && PlayerData.Credits >= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value)
                         {
-                            PlayerData.Money -= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value;
+                            PlayerData.Credits -= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value;
                             PlayerData.LivesNumberIndex++;
                         }
                         break;
                     case 1:
-                        if (!_finished["shootPower"] && PlayerData.Money >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
+                        if (!_finished["shootPower"] && PlayerData.Credits >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
                         {
-                            PlayerData.Money -= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value;
+                            PlayerData.Credits -= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value;
                             PlayerData.ShootPowerIndex++;
                         }
                         break;
                     case 2:
-                        if (!_finished["shootFrequency"] && PlayerData.Money >= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value)
+                        if (!_finished["shootFrequency"] && PlayerData.Credits >= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value)
                         {
-                            PlayerData.Money -= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value;
+                            PlayerData.Credits -= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value;
                             PlayerData.ShootFrequencyIndex++;
                         }
                         break;
@@ -102,6 +106,8 @@ namespace Danmaku_no_Kyojin.Screens
             ControlManager.Draw(GameRef.SpriteBatch);
 
             GameRef.SpriteBatch.Begin();
+
+            GameRef.SpriteBatch.Draw(_background, new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y), Color.GreenYellow);
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _message,
                 new Vector2(
@@ -120,7 +126,7 @@ namespace Danmaku_no_Kyojin.Screens
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(500, 20 * i), color);
             }
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Money: " + PlayerData.Money, new Vector2(0, Config.Resolution.Y - 20), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Money: " + PlayerData.Credits, new Vector2(0, Config.Resolution.Y - 20), Color.White);
 
             GameRef.SpriteBatch.End();
 

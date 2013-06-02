@@ -32,11 +32,11 @@ namespace Danmaku_no_Kyojin.Screens
         public TitleScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            menuText = new string[] { "1 Player", "2 Players", "Improvements", "Leaderboard", "Options", "Exit" };
+            menuText = new string[] { "1 Player", "2 Players", "Shop", "Leaderboard", "Options", "Exit" };
             menuDescription = new string[] { 
                 "Playing game with only one player", 
                 "Playing game with your best friend", 
-                "Get new abilities to burst more enemies",
+                "Get new abilities to crush more enemies",
                 "A list of scores to know who have the biggest one", 
                 "You can change inputs here", 
                 "Warning: I've never tested this button !", 
@@ -108,10 +108,10 @@ namespace Danmaku_no_Kyojin.Screens
                 else if (menuIndex == 3)
                     StateManager.ChangeState(GameRef.LeaderboardScreen);
                 // Options
-                else if (menuIndex == 3)
+                else if (menuIndex == 4)
                     StateManager.ChangeState(GameRef.OptionsScreen);
                 // Exit
-                else if (menuIndex == 4)
+                else if (menuIndex == 5)
                     Game.Exit();
             }
 
@@ -160,7 +160,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             for (int i = 0; i < menuText.Length; i++)
             {
-                Color textColor = Color.GreenYellow;
+                Color textColor = Color.White;
 
                 if (i == menuIndex)
                     textColor = Color.OrangeRed;
@@ -174,13 +174,16 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
+                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4 + 1,
+                Game.GraphicsDevice.Viewport.Height - 60 + 1), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4,
-                Game.GraphicsDevice.Viewport.Height - 60), Color.GreenYellow);
+                Game.GraphicsDevice.Viewport.Height - 60), Color.White);
 
-            string money = "Credits: " + PlayerData.Money.ToString(CultureInfo.InvariantCulture);
+            string credits = "Credits: " + PlayerData.Credits.ToString(CultureInfo.InvariantCulture);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(1, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y + 1), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(0, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y), Color.White);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, credits, new Vector2(1, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(credits).Y + 1), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, credits, new Vector2(0, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(credits).Y), Color.White);
 
             GameRef.SpriteBatch.End();
 

@@ -30,6 +30,7 @@ Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
 Content\Graphics\Shaders\GaussianBlur.xnb
+Content\Graphics\Fonts\TitleFont.xnb
 Content\Audio\DnK.xgs
 Content\Audio\Wave Bank.xwb
 Content\Audio\Sound Bank.xsb
