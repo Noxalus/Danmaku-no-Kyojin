@@ -64,22 +64,29 @@ namespace Danmaku_no_Kyojin.Screens
                 _menuIndex--;
 
                 if (_menuIndex < 0)
-                    _menuIndex = _menuText.Length - 1;
+                    _menuIndex = _menuText.Length;
             }
 
             if (InputHandler.PressedDown())
             {
-                _menuIndex = (_menuIndex + 1) % _menuText.Length;
+                _menuIndex = (_menuIndex + 1) % (_menuText.Length + 1);
             }
 
             if (InputHandler.PressedAction())
             {
+                if (_menuIndex == _menuText.Length)
+                {
+                    StateManager.ChangeState(GameRef.TitleScreen);
+                }
+
                 bool error = false;
                 switch (_menuIndex)
                 {
                     // Lives
                     case 0:
-                        if (!_finished["livesNumber"] && PlayerData.Credits >= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value)
+                        if (!_finished["livesNumber"] &&
+                            PlayerData.LivesNumberIndex < Improvements.LivesNumberData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value)
                         {
                             PlayerData.Credits -= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value;
                             PlayerData.LivesNumberIndex++;
@@ -90,7 +97,22 @@ namespace Danmaku_no_Kyojin.Screens
                         }
                         break;
                     case 1:
-                        if (!_finished["shootPower"] && PlayerData.Credits >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
+                        if (!_finished["shootType"] &&
+                            PlayerData.ShootTypeIndex < Improvements.ShootTypeData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.ShootTypeData[PlayerData.ShootTypeIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.ShootTypeData[PlayerData.ShootTypeIndex + 1].Value;
+                            PlayerData.ShootTypeIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 2:
+                        if (!_finished["shootPower"] &&
+                            PlayerData.ShootPowerIndex < Improvements.ShootPowerData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
                         {
                             PlayerData.Credits -= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value;
                             PlayerData.ShootPowerIndex++;
@@ -100,8 +122,10 @@ namespace Danmaku_no_Kyojin.Screens
                             error = true;
                         }
                         break;
-                    case 2:
-                        if (!_finished["shootFrequency"] && PlayerData.Credits >= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value)
+                    case 3:
+                        if (!_finished["shootFrequency"] &&
+                            PlayerData.ShootFrequencyIndex < Improvements.ShootFrequencyData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value)
                         {
                             PlayerData.Credits -= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value;
                             PlayerData.ShootFrequencyIndex++;
@@ -111,6 +135,98 @@ namespace Danmaku_no_Kyojin.Screens
                             error = true;
                         }
                         break;
+                    case 4:
+                        if (!_finished["timerInitialTime"] &&
+                            PlayerData.TimerInitialTimeIndex < Improvements.TimerInitialTimeData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex + 1].Value;
+                            PlayerData.TimerInitialTimeIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 5:
+                        if (!_finished["timerExtraTime"] &&
+                            PlayerData.TimerExtraTimeIndex < Improvements.TimerExtraTimeData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex + 1].Value;
+                            PlayerData.TimerExtraTimeIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 6:
+                        if (!_finished["bulletTimeDivisor"] &&
+                            PlayerData.InvicibleTimeIndex < Improvements.InvicibleTimeData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex + 1].Value;
+                            PlayerData.InvicibleTimeIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 7:
+                        if (!_finished["slowMode"] &&
+                            !PlayerData.SlowModeEnabled &&
+                            PlayerData.Credits >= Improvements.SlowModePrice)
+                        {
+                            PlayerData.Credits -= Improvements.SlowModePrice;
+                            PlayerData.SlowModeEnabled = true;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 8:
+                        if (!_finished["bulletTime"] &&
+                            !PlayerData.BulletTimeEnabled &&
+                            PlayerData.Credits >= Improvements.BulletTimePrice)
+                        {
+                            PlayerData.Credits -= Improvements.BulletTimePrice;
+                            PlayerData.BulletTimeEnabled = true;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 9:
+                        if (!_finished["bulletTimeTimer"] &&
+                            PlayerData.BulletTimeTimerIndex < Improvements.BulletTimeTimerData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.BulletTimeTimerData[PlayerData.BulletTimeTimerIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.BulletTimeTimerData[PlayerData.BulletTimeTimerIndex + 1].Value;
+                            PlayerData.BulletTimeTimerIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    case 10:
+                        if (!_finished["bulletTimeDivisor"] &&
+                            PlayerData.BulletTimeDivisorIndex < Improvements.BulletTimeDivisorData.Count - 1 &&
+                            PlayerData.Credits >= Improvements.BulletTimeDivisorData[PlayerData.BulletTimeDivisorIndex + 1].Value)
+                        {
+                            PlayerData.Credits -= Improvements.BulletTimeDivisorData[PlayerData.BulletTimeDivisorIndex + 1].Value;
+                            PlayerData.BulletTimeDivisorIndex++;
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+
                     default:
                         error = true;
                         break;
@@ -160,16 +276,36 @@ namespace Danmaku_no_Kyojin.Screens
                 Color.White);
 
             var menuTextOrigin = new Point(300, 150);
+            int lineHeight = 40;
+            Color color;
             for (int i = 0; i < _menuText.Length; i++)
             {
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(menuTextOrigin.X, menuTextOrigin.Y + 20 * i), Color.White);
+                color = Color.White;
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(menuTextOrigin.X + 1, menuTextOrigin.Y + lineHeight * i + 1), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(menuTextOrigin.X, menuTextOrigin.Y + lineHeight * i), Color.White);
 
-                Color color = Color.White;
                 if (_menuIndex == i)
                     color = Color.Red;
 
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(menuTextOrigin.X + 500, menuTextOrigin.Y + 20 * i), color);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(menuTextOrigin.X + 500 + 1, menuTextOrigin.Y + lineHeight * i + 1), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(menuTextOrigin.X + 500, menuTextOrigin.Y + lineHeight * i), color);
             }
+
+            // Back
+            color = Color.White;
+            if (_menuIndex == _menuText.Length)
+                color = Color.Red;
+
+            string back = "Back to title";
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, back, new Vector2(
+                Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(back).X / 2 + 1, 
+                menuTextOrigin.Y + lineHeight * _menuText.Length + 1), 
+            Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, back, new Vector2(
+                Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(back).X / 2,
+                menuTextOrigin.Y + lineHeight * _menuText.Length), 
+            color);
 
             // Errors
             if (_error != null)
@@ -215,6 +351,19 @@ namespace Danmaku_no_Kyojin.Screens
                 livesNumber += "FINISHED";
             }
 
+            string shootType = "Shoot type: ";
+            if (PlayerData.ShootTypeIndex < Improvements.ShootTypeData.Count - 1)
+            {
+                shootType += Improvements.ShootTypeData[PlayerData.ShootTypeIndex + 1].Key + " (" +
+                              Improvements.ShootTypeData[PlayerData.ShootTypeIndex + 1].Value + "$)";
+                _finished.Add("shootType", false);
+            }
+            else
+            {
+                _finished.Add("shootType", true);
+                shootType += "FINISHED";
+            }
+
             string shootPower = "Shoot power: ";
             if (PlayerData.ShootPowerIndex < Improvements.ShootPowerData.Count - 1)
             {
@@ -241,11 +390,108 @@ namespace Danmaku_no_Kyojin.Screens
                 shootFrequency += "FINISHED";
             }
 
+            string timerInitialTime = "Timer initial time: ";
+            if (PlayerData.TimerInitialTimeIndex < Improvements.TimerInitialTimeData.Count - 1)
+            {
+                timerInitialTime += Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex + 1].Key + " (" +
+                                  Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex + 1].Value + "$)";
+                _finished.Add("timerInitialTime", false);
+            }
+            else
+            {
+                _finished.Add("timerInitialTime", true);
+                timerInitialTime += "FINISHED";
+            }
+
+            string timerExtraTime = "Timer extra time: ";
+            if (PlayerData.TimerExtraTimeIndex < Improvements.TimerExtraTimeData.Count - 1)
+            {
+                timerExtraTime += Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex + 1].Key + " (" +
+                                  Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex + 1].Value + "$)";
+                _finished.Add("timerExtraTime", false);
+            }
+            else
+            {
+                _finished.Add("timerExtraTime", true);
+                timerExtraTime += "FINISHED";
+            }
+
+            string invicibleTime = "Invicible time: ";
+            if (PlayerData.InvicibleTimeIndex < Improvements.InvicibleTimeData.Count - 1)
+            {
+                invicibleTime += Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex + 1].Key + " (" +
+                                  Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex + 1].Value + "$)";
+                _finished.Add("invicibleTime", false);
+            }
+            else
+            {
+                _finished.Add("invicibleTime", true);
+                invicibleTime += "FINISHED";
+            }
+
+            string slowMode = "Slow mode: ";
+            if (!PlayerData.SlowModeEnabled)
+            {
+                slowMode += "UNLOCK (" + Improvements.SlowModePrice + "$)";
+                _finished.Add("slowMode", false);
+            }
+            else
+            {
+                _finished.Add("slowMode", true);
+                slowMode += "UNLOCKED";
+            }
+
+            string bulletTime = "Bullet time: ";
+            if (!PlayerData.BulletTimeEnabled)
+            {
+                bulletTime += "UNLOCK (" + Improvements.BulletTimePrice + "$)";
+                _finished.Add("bulletTime", false);
+            }
+            else
+            {
+                _finished.Add("bulletTime", true);
+                bulletTime += "UNLOCKED";
+            }
+
+            string bulletTimeTimer = "Bullet time timer: ";
+            if (PlayerData.BulletTimeTimerIndex < Improvements.BulletTimeTimerData.Count - 1)
+            {
+                bulletTimeTimer += Improvements.BulletTimeTimerData[PlayerData.BulletTimeTimerIndex + 1].Key + " (" +
+                                  Improvements.BulletTimeTimerData[PlayerData.BulletTimeTimerIndex + 1].Value + "$)";
+                _finished.Add("bulletTimeTimer", false);
+            }
+            else
+            {
+                _finished.Add("bulletTimeTimer", true);
+                bulletTimeTimer += "FINISHED";
+            }
+
+            string bulletTimeDivisor = "Bullet time divisor: ";
+            if (PlayerData.BulletTimeDivisorIndex < Improvements.BulletTimeDivisorData.Count - 1)
+            {
+                bulletTimeDivisor += "x1/" + (Improvements.BulletTimeDivisorData[PlayerData.BulletTimeDivisorIndex + 1].Key) + " (" +
+                                  Improvements.BulletTimeDivisorData[PlayerData.BulletTimeDivisorIndex + 1].Value + "$)";
+                _finished.Add("bulletTimeDivisor", false);
+            }
+            else
+            {
+                _finished.Add("bulletTimeDivisor", true);
+                bulletTimeDivisor += "FINISHED";
+            }
+
             _menuText = new string[]
                 {
                     livesNumber,
+                    shootType,
                     shootPower,
-                    shootFrequency
+                    shootFrequency,
+                    timerInitialTime,
+                    timerExtraTime,
+                    invicibleTime,
+                    slowMode,
+                    bulletTime,
+                    bulletTimeTimer,
+                    bulletTimeDivisor
                 };
         }
 
