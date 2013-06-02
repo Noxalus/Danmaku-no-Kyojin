@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             Players = new List<Player>();
 
-            _enemy = new Boss(GameRef);
+           
 
             // Timer
             _timer = new Timer(Game);
@@ -62,6 +62,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
+            _enemy = new Boss(GameRef);
+
             Players.Clear();
 
             for (int i = 1; i <= Config.PlayersNumber; i++)
@@ -140,7 +142,7 @@ namespace Danmaku_no_Kyojin.Screens
                     {
                         var newGameTime = new GameTime(
                             gameTime.TotalGameTime,
-                            new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / Config.DesiredTimeModifier))
+                            new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks / Improvements.BulletTimeDivisorData[PlayerData.BulletTimeDivisorIndex].Key))
                         );
 
                         gameTime = newGameTime;
@@ -195,6 +197,7 @@ namespace Danmaku_no_Kyojin.Screens
 
                 _timer.AddTime(Improvements.TimerExtraTimeData[PlayerData.TimerExtraTimeIndex].Key);
 
+                _enemy.DefeatNumber++;
                 _enemy.Initialize();
             }
 
@@ -280,10 +283,12 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             // Text
+            /*
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
                 new Vector2(1, Config.Resolution.Y - 59), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
                 new Vector2(0, Config.Resolution.Y - 60), Color.White);
+            */
 
             string waveNumber = "Wave #" + _waveNumber.ToString(CultureInfo.InvariantCulture);
 

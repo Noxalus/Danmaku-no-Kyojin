@@ -57,8 +57,8 @@ namespace Danmaku_no_Kyojin.Utils
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null);
 
-            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, Config.Resolution.Y - 40), Color.Black);
-            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(0, Config.Resolution.Y - 41), Color.White);
+            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.Black);
+            _spriteBatch.DrawString(_spriteFont, fps, new Vector2(0, 0), Color.White);
 
             _spriteBatch.End();
         }

@@ -92,6 +92,8 @@ namespace Danmaku_no_Kyojin
 
             StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
 
+            PlayerData.BulletTimeEnabled = false;
+            PlayerData.BulletTimeDivisorIndex = 3;
             PlayerData.TimerInitialTimeIndex = 4;
 
             base.Initialize();

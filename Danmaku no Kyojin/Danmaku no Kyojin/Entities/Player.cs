@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System.Globalization;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
@@ -239,31 +240,54 @@ namespace Danmaku_no_Kyojin.Entities
         {
             // Text
             string lives = string.Format("P{0}", ID);
-            string score = string.Format("P{0} {1:000000000000}", ID, _score);
+            string score = string.Format("{1:000000000000}", ID, _score);
 
             if (ID == 1)
             {
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, 0), Color.White);
+                // Lives
+                int hudY = 40;
+
+                if (PlayerData.BulletTimeEnabled)
+                    hudY = 80;
+
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, Config.Resolution.Y - hudY + 1), Color.Black);
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, Config.Resolution.Y - hudY), Color.White);
 
                 for (int i = 0; i < _lives; i++)
                 {
                     Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
-                        ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 5, 4), Color.White);
+                        ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 10, Config.Resolution.Y - (hudY - 7)), Color.White);
                 }
 
-                int bulletTimeBarWidth = (int)(100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
+                // Bullet time bar
+                if (PlayerData.BulletTimeEnabled)
+                {
+                    int bulletTimeBarWidth =
+                        (int)
+                        (100* (float) (_bulletTimeTimer.TotalMilliseconds/Config.DefaultBulletTimeTimer.TotalMilliseconds));
 
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, bulletTimeBarWidth.ToString(), new Vector2(0, 30), Color.White);
+                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                                bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
+                                                new Vector2(1, Config.Resolution.Y - 39), Color.Black);
+                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                                bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
+                                                new Vector2(0, Config.Resolution.Y - 40), Color.White);
 
-                Game.SpriteBatch.Draw(_bulletTimeBarLeft, new Rectangle(0, 20, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height), Color.White);
-                Game.SpriteBatch.Draw(_bulletTimeBarContent, new Rectangle(_bulletTimeBarLeft.Width, 20, bulletTimeBarWidth, _bulletTimeBarContent.Height), Color.White);
-                Game.SpriteBatch.Draw(_bulletTimeBarRight, new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, 20, _bulletTimeBarRight.Width, _bulletTimeBarRight.Height), Color.White);
+                    Game.SpriteBatch.Draw(_bulletTimeBarLeft,
+                                          new Rectangle(0, Config.Resolution.Y - 50, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height),
+                                          Color.White);
+                    Game.SpriteBatch.Draw(_bulletTimeBarContent,
+                                          new Rectangle(_bulletTimeBarLeft.Width, Config.Resolution.Y - 50, bulletTimeBarWidth,
+                                                        _bulletTimeBarContent.Height), Color.White);
+                    Game.SpriteBatch.Draw(_bulletTimeBarRight,
+                                          new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, Config.Resolution.Y - 50,
+                                                        _bulletTimeBarRight.Width, _bulletTimeBarRight.Height),
+                                          Color.White);
+                }
 
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20),
-                                            Color.Black);
-
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(0, Config.Resolution.Y - 21),
-                                            Color.White);
+                // Score
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20), Color.Black);
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(0, Config.Resolution.Y - 21), Color.White);
             }
             else if (ID == 2)
             {

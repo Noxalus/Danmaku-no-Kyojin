@@ -156,7 +156,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Draw(_logo, new Vector2(
                                                 (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2),
-                                                0), Color.White);
+                                                100), Color.White);
 
             for (int i = 0; i < menuText.Length; i++)
             {
@@ -166,6 +166,9 @@ namespace Danmaku_no_Kyojin.Screens
                     textColor = Color.OrangeRed;
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
+                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f) + 1,
+                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i) + 1), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f),
                   Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i)), textColor);
             }
@@ -174,11 +177,10 @@ namespace Danmaku_no_Kyojin.Screens
                 Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4,
                 Game.GraphicsDevice.Viewport.Height - 60), Color.GreenYellow);
 
-            string money = "Money: " + PlayerData.Money.ToString(CultureInfo.InvariantCulture);
+            string money = "Credits: " + PlayerData.Money.ToString(CultureInfo.InvariantCulture);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(
-                0,
-                Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y), Color.GreenYellow);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(1, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y + 1), Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, money, new Vector2(0, Game.GraphicsDevice.Viewport.Height - ControlManager.SpriteFont.MeasureString(money).Y), Color.White);
 
             GameRef.SpriteBatch.End();
 

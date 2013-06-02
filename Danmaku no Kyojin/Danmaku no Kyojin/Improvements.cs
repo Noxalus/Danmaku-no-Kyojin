@@ -10,7 +10,6 @@ namespace Danmaku_no_Kyojin
         public enum ShootTypeEnum { Single, Twofold, Behind, Threefold, Fivefold, Eightfold }
 
         public static readonly List<KeyValuePair<ShootTypeEnum, int>> ShootTypeData = new List<KeyValuePair<ShootTypeEnum, int>>()
-
             {
                 new KeyValuePair<ShootTypeEnum, int>(ShootTypeEnum.Single, 0),
                 new KeyValuePair<ShootTypeEnum, int>(ShootTypeEnum.Twofold, 500),
@@ -19,19 +18,6 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<ShootTypeEnum, int>(ShootTypeEnum.Fivefold, 5000),
                 new KeyValuePair<ShootTypeEnum, int>(ShootTypeEnum.Eightfold, 10000),
             };
-
-        /*
-        public static List<KeyValuePair<double, int>> ShootFrequencyData = new List<KeyValuePair<double, int>>
-            {
-                new KeyValuePair<double, int>(1, 0), 
-                new KeyValuePair<double, int>(1.5, 500), 
-                new KeyValuePair<double, int>(2, 1000), 
-                new KeyValuePair<double, int>(2.5, 2000), 
-                new KeyValuePair<double, int>(3, 5000), 
-                new KeyValuePair<double, int>(3.5, 10000), 
-                new KeyValuePair<double, int>(4, 20000)
-            };
-        */
 
         public static List<KeyValuePair<double, int>> ShootFrequencyData = new List<KeyValuePair<double, int>>
             {
@@ -83,13 +69,13 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<int, int>(5, 4)
             };
 
-        public static readonly List<KeyValuePair<double, int>> ShootDivisorData = new List<KeyValuePair<double, int>> ()
+        public static readonly List<KeyValuePair<double, int>> BulletTimeDivisorData = new List<KeyValuePair<double, int>>()
 
             {
-                new KeyValuePair<double, int>(0.5, 0),
-                new KeyValuePair<double, int>(0.3, 150),
-                new KeyValuePair<double, int>(0.25, 500),
-                new KeyValuePair<double, int>(0.125, 1000)
+                new KeyValuePair<double, int>(2, 0),
+                new KeyValuePair<double, int>(3, 150),
+                new KeyValuePair<double, int>(4, 500),
+                new KeyValuePair<double, int>(8, 1000)
             };
 
         public static readonly List<KeyValuePair<double, int>> SpeedData = new List<KeyValuePair<double, int>> ()

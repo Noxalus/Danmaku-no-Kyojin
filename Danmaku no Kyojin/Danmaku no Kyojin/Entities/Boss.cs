@@ -15,7 +15,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         // Bullet engine
         private Texture2D _bulletSprite;
-        int timer = 0;
+        int _timer = 0;
         Mover _mover;
         public MoverManager MoverManager { get; set; }
 
@@ -40,9 +40,11 @@ namespace Danmaku_no_Kyojin.Entities
 
         public float GetRank() { return 0; }
 
-        private const float TotalHealth = 30f;
+        private float _totalHealth;
         private float _health;
         private Texture2D _healthBar;
+
+        public int DefeatNumber { get; set; }
 
         public float Speed
         {
@@ -55,6 +57,8 @@ namespace Danmaku_no_Kyojin.Entities
         {
             MoverManager = new MoverManager(Game);
             GameManager.GameDifficulty = Config.GameDifficultyDelegate;
+            DefeatNumber = 0;
+            _totalHealth = 30f;
         }
 
         public override void Initialize()
@@ -71,7 +75,8 @@ namespace Danmaku_no_Kyojin.Entities
             _motion = new Vector2(1, 0);
             _speed = 1;
 
-            _health = TotalHealth;
+            _totalHealth *= 2;
+            _health = _totalHealth;
 
             IsAlive = true;
 
@@ -124,6 +129,8 @@ namespace Danmaku_no_Kyojin.Entities
                 Position.X < Sprite.Width + (Speed * dt))
                 _motion *= -1;
 
+            Rotation += 0.01f;
+
             //Position += _motion * Speed * dt;
 
             if (_health <= 0)
@@ -169,10 +176,10 @@ namespace Danmaku_no_Kyojin.Entities
                 AddBullet(false);
             }
 
-            timer++;
-            if (timer > 60)
+            _timer++;
+            if (_timer > 60)
             {
-                timer = 0;
+                _timer = 0;
                 if (_mover != null && _mover.used == false)
                 {
                     AddBullet(true);
@@ -191,7 +198,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
-                (int)(100f * (_health / TotalHealth)), 10), Color.Blue);
+                (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
 
 
             /*
