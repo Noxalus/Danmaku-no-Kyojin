@@ -90,14 +90,9 @@ namespace Danmaku_no_Kyojin
         {
             Camera = new Camera2D(GraphicsDevice.Viewport, 1000, 1000, 1);
 
-
-            //bool test1 = Improvements.BulletTimeEnabled;
-
-            var dataShootType = Improvements.ShootTypeData[0].Key;
-
             StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
 
-            //bool test2 = Improvements.BulletTimeEnabled;
+            PlayerData.TimerInitialTimeIndex = 4;
 
             base.Initialize();
         }

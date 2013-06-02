@@ -9,7 +9,7 @@ namespace Danmaku_no_Kyojin.Entities
 {
     public class Timer : DrawableGameComponent
     {
-        private readonly TimeSpan _initTime;
+        private TimeSpan _initTime;
         private TimeSpan _currentTime;
         private SpriteBatch _spriteBatch;
         private bool _active;
@@ -24,20 +24,15 @@ namespace Danmaku_no_Kyojin.Entities
             get { return _isFinished; }
         }
 
-        public Timer(Game game, int seconds)
+        public Timer(Game game)
             : base(game)
         {
-            _initTime = new TimeSpan(0, 0, seconds);
-        }
-
-        public Timer(Game game, TimeSpan timeSpan)
-            : base(game)
-        {
-            _initTime = timeSpan;
+            _initTime = TimeSpan.Zero;
         }
 
         public override void Initialize()
         {
+            _initTime = Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex].Key;
             _currentTime = _initTime;
             _active = false;
             _isFinished = false;
@@ -76,9 +71,7 @@ namespace Danmaku_no_Kyojin.Entities
             base.Draw(gameTime);
 
             string seconds = Math.Round(_currentTime.TotalSeconds).ToString(CultureInfo.InvariantCulture);
-            string milliseconds = string.Format("{0:00}", (_currentTime.Milliseconds / 10));
-
-            Debug.Print((_millisecondsFont.MeasureString(milliseconds).Y).ToString());
+            string milliseconds = string.Format("{0:00}", (_currentTime.Milliseconds / 10)); 
 
             _spriteBatch.Begin();
 

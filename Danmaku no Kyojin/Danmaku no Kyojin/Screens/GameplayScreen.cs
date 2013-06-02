@@ -52,7 +52,7 @@ namespace Danmaku_no_Kyojin.Screens
             _enemy = new Boss(GameRef);
 
             // Timer
-            _timer = new Timer(Game, Improvements.TimerInitialTimeData[PlayerData.TimerInitialTimeIndex].Key);
+            _timer = new Timer(Game);
 
             // Bloom effect
             _bloom = new BloomComponent(this.Game);
@@ -94,6 +94,8 @@ namespace Danmaku_no_Kyojin.Screens
             _music.Play();
 
             _bloom.Initialize();
+
+            _timer.Initialize();
         }
 
         protected override void LoadContent()

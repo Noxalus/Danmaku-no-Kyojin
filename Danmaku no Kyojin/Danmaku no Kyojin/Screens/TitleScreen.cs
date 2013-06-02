@@ -87,7 +87,7 @@ namespace Danmaku_no_Kyojin.Screens
                 menuIndex = (menuIndex + 1) % menuText.Length;
             }
 
-            if (InputHandler.KeyPressed(Keys.Enter))
+            if (InputHandler.PressedAction())
             {
                 // 1 Player
                 if (menuIndex == 0)

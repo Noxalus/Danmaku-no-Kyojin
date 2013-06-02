@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.BulletEngine;
+﻿using System.Diagnostics;
+using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
@@ -58,7 +59,13 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Initialize()
         {
-            MoverManager.Initialize(Game.GameplayScreen.Players[0].GetPosition);
+            int targetPlayerId = 0;
+            if (Config.PlayersNumber == 2)
+                targetPlayerId = GameplayScreen.Rand.Next(0, 2);
+
+            MoverManager.Initialize(Game.GameplayScreen.Players[targetPlayerId].GetPosition);
+
+            MoverManager.movers.Clear();
 
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
@@ -104,7 +111,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _myPatterns.Add(pattern);
             }
 
-            AddBullet(true);
+            //AddBullet(true);
 
             base.LoadContent();
         }
@@ -116,8 +123,6 @@ namespace Danmaku_no_Kyojin.Entities
             if (Position.X > Game.GraphicsDevice.Viewport.Width - Sprite.Width - (Speed * dt) ||
                 Position.X < Sprite.Width + (Speed * dt))
                 _motion *= -1;
-
-            Rotation += 0.01f;
 
             //Position += _motion * Speed * dt;
 

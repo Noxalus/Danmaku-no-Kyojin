@@ -58,7 +58,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
 			//BulletMLで自分を動かす
 			base.Update(gameTime);
 
-            if (X < 0 || X > Config.Resolution.X || Y < 0 || Y > Config.Resolution.Y)
+            if (X < -Config.GameArea.X || X > Config.GameArea.X * 2 || Y < -Config.GameArea.Y || Y > Config.GameArea.Y * 2)
 			{
 				used = false;
 			}

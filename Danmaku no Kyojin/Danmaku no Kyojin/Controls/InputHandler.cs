@@ -137,6 +137,13 @@ namespace Danmaku_no_Kyojin.Controls
                 ButtonPressed(Buttons.LeftThumbstickDown, PlayerIndex.One));
         }
 
+        public static bool PressedAction()
+        {
+            return
+                (KeyPressed(Keys.Enter) ||
+                ButtonPressed(Buttons.A, PlayerIndex.One));
+        }
+
         #endregion
 
         #region Mouse Region

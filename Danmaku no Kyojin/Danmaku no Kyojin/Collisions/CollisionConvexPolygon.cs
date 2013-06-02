@@ -102,8 +102,6 @@ namespace Danmaku_no_Kyojin.Collisions
                 Vector2 p1 = this.Project(axis);
                 Vector2 p2 = element.Project(axis);
 
-                Debug.Print("" + p1.X + " - " + p1.Y);
-
                 // do the projections overlap?
                 if (!Overlap(p1, p2))
                 {

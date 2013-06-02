@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.Controls;
+﻿using System.Collections.Generic;
+using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,6 +10,9 @@ namespace Danmaku_no_Kyojin.Screens
         #region Field region
 
         private string _message;
+        private string[] _menuText;
+        private int _menuIndex;
+        private Dictionary<string, bool> _finished;
 
         #endregion
 
@@ -17,7 +21,6 @@ namespace Danmaku_no_Kyojin.Screens
         public ImprovementScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            
         }
 
         #endregion
@@ -27,6 +30,10 @@ namespace Danmaku_no_Kyojin.Screens
         public override void Initialize()
         {
             _message = "This functionnality is not implemented yet !";
+
+            UpdateMenuText();
+
+            _menuIndex = 0;
 
             base.Initialize();
         }
@@ -43,26 +50,136 @@ namespace Danmaku_no_Kyojin.Screens
             if (InputHandler.KeyPressed(Keys.Escape))
                 StateManager.ChangeState(GameRef.TitleScreen);
 
+            if (InputHandler.PressedUp())
+            {
+                _menuIndex--;
+
+                if (_menuIndex < 0)
+                    _menuIndex = _menuText.Length - 1;
+            }
+
+            if (InputHandler.PressedDown())
+            {
+                _menuIndex = (_menuIndex + 1) % _menuText.Length;
+            }
+
+            if (InputHandler.PressedAction())
+            {
+                switch (_menuIndex)
+                {
+                    // Lives
+                    case 0:
+                        if (!_finished["livesNumber"] && PlayerData.Money >= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value)
+                        {
+                            PlayerData.Money -= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value;
+                            PlayerData.LivesNumberIndex++;
+                        }
+                        break;
+                    case 1:
+                        if (!_finished["shootPower"] && PlayerData.Money >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
+                        {
+                            PlayerData.Money -= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value;
+                            PlayerData.ShootPowerIndex++;
+                        }
+                        break;
+                    case 2:
+                        if (!_finished["shootFrequency"] && PlayerData.Money >= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value)
+                        {
+                            PlayerData.Money -= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value;
+                            PlayerData.ShootFrequencyIndex++;
+                        }
+                        break;
+                }
+
+                UpdateMenuText();
+            }
+
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            GameRef.SpriteBatch.Begin();
+            ControlManager.Draw(GameRef.SpriteBatch);
 
-            base.Draw(gameTime);
+            GameRef.SpriteBatch.Begin();
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _message,
                 new Vector2(
-                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_message).X / 2, 
-                    Game.GraphicsDevice.Viewport.Height / 2f - ControlManager.SpriteFont.MeasureString(_message).Y / 2), 
+                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_message).X / 2,
+                    Game.GraphicsDevice.Viewport.Height / 2f - ControlManager.SpriteFont.MeasureString(_message).Y / 2),
                 Color.White);
 
-            ControlManager.Draw(GameRef.SpriteBatch);
+            for (int i = 0; i < _menuText.Length; i++)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(0, 20 * i), Color.White);
+
+                Color color = Color.White;
+                if (_menuIndex == i)
+                    color = Color.Red;
+
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(500, 20 * i), color);
+            }
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Money: " + PlayerData.Money, new Vector2(0, Config.Resolution.Y - 20), Color.White);
 
             GameRef.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         #endregion
+
+        private void UpdateMenuText()
+        {
+            _finished = new Dictionary<string, bool>();
+
+            string livesNumber = "Lives numbers: ";
+            if (PlayerData.LivesNumberIndex < Improvements.LivesNumberData.Count - 1)
+            {
+                livesNumber += (Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Key + " (" +
+                                 Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value + "$)");
+
+                _finished.Add("livesNumber", false);
+            }
+            else
+            {
+                _finished.Add("livesNumber", true);
+                livesNumber += "FINISHED";
+            }
+
+            string shootPower = "Shoot power: ";
+            if (PlayerData.ShootPowerIndex < Improvements.ShootPowerData.Count - 1)
+            {
+                shootPower += "x" + Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Key + " (" +
+                              Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value + "$)";
+                _finished.Add("shootPower", false);
+            }
+            else
+            {
+                _finished.Add("shootPower", true);
+                shootPower += "FINISHED";
+            }
+
+            string shootFrequency = "Shoot frequency: ";
+            if (PlayerData.ShootFrequencyIndex < Improvements.ShootFrequencyData.Count - 1)
+            {
+                shootFrequency += "x" + Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Key + " (" +
+                                  Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value + "$)";
+                _finished.Add("shootFrequency", false);
+            }
+            else
+            {
+                _finished.Add("shootFrequency", true);
+                shootFrequency += "FINISHED";
+            }
+
+            _menuText = new string[]
+                {
+                    livesNumber,
+                    shootPower,
+                    shootFrequency
+                };
+        }
+
     }
 }
