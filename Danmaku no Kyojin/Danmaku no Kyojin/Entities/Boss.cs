@@ -129,7 +129,7 @@ namespace Danmaku_no_Kyojin.Entities
                 Position.X < Sprite.Width + (Speed * dt))
                 _motion *= -1;
 
-            Rotation += 0.01f;
+            Rotation += 1f;
 
             //Position += _motion * Speed * dt;
 

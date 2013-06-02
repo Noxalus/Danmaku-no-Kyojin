@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Danmaku_no_Kyojin.Utils;
 
 namespace Danmaku_no_Kyojin
 {
@@ -41,15 +42,14 @@ namespace Danmaku_no_Kyojin
             };
 
         public static readonly List<KeyValuePair<int, int>> LivesNumberData = new List<KeyValuePair<int, int>> 
-
             {
                 new KeyValuePair<int, int>(1, 0),
-                new KeyValuePair<int, int>(2, 1),
-                new KeyValuePair<int, int>(3, 2),
-                new KeyValuePair<int, int>(5, 3)
+                new KeyValuePair<int, int>(2, 500),
+                new KeyValuePair<int, int>(3, 1000),
+                new KeyValuePair<int, int>(5, 5000)
             };
 
-        public static readonly List<KeyValuePair<TimeSpan, int>> BulletTimeTimerData = new List<KeyValuePair<TimeSpan, int>> ()
+        public static readonly List<KeyValuePair<TimeSpan, int>> BulletTimeTimerData = new List<KeyValuePair<TimeSpan, int>>()
 
             {
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(1), 0),
@@ -78,7 +78,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<double, int>(8, 1000)
             };
 
-        public static readonly List<KeyValuePair<double, int>> SpeedData = new List<KeyValuePair<double, int>> ()
+        public static readonly List<KeyValuePair<double, int>> SpeedData = new List<KeyValuePair<double, int>>()
 
             {
                 new KeyValuePair<double, int>(1, 0),
@@ -86,7 +86,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<double, int>(2, 500)
             };
 
-        public static readonly List<KeyValuePair<double, int>> HitBoxSizeData = new List<KeyValuePair<double, int>> ()
+        public static readonly List<KeyValuePair<double, int>> HitBoxSizeData = new List<KeyValuePair<double, int>>()
 
             {
                 new KeyValuePair<double, int>(1, 0),
@@ -95,7 +95,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<double, int>(0.25, 1000)
             };
 
-        public static readonly List<KeyValuePair<TimeSpan, int>> TimerInitialTimeData = new List<KeyValuePair<TimeSpan, int>> ()
+        public static readonly List<KeyValuePair<TimeSpan, int>> TimerInitialTimeData = new List<KeyValuePair<TimeSpan, int>>()
 
             {
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(15), 0),
@@ -105,7 +105,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(300), 4)
             };
 
-        public static readonly List<KeyValuePair<TimeSpan, int>> TimerExtraTimeData = new List<KeyValuePair<TimeSpan, int>> ()
+        public static readonly List<KeyValuePair<TimeSpan, int>> TimerExtraTimeData = new List<KeyValuePair<TimeSpan, int>>()
 
             {
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(15), 0),
@@ -116,7 +116,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(90), 5)
             };
 
-        public static readonly List<KeyValuePair<TimeSpan, int>> InvicibleTimeData = new List<KeyValuePair<TimeSpan, int>> ()
+        public static readonly List<KeyValuePair<TimeSpan, int>> InvicibleTimeData = new List<KeyValuePair<TimeSpan, int>>()
 
             {
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(1), 0),
@@ -126,7 +126,7 @@ namespace Danmaku_no_Kyojin
                 new KeyValuePair<TimeSpan, int>(TimeSpan.FromSeconds(5), 4)
             };
 
-        public static readonly List<KeyValuePair<double, int>> ScoreToMoneyFactorData = new List<KeyValuePair<double, int>> ()
+        public static readonly List<KeyValuePair<double, int>> ScoreToMoneyFactorData = new List<KeyValuePair<double, int>>()
 
             {
                 new KeyValuePair<double, int>(1, 0),

@@ -183,6 +183,7 @@
     <Compile Include="Sprites\Animation.cs" />
     <Compile Include="Sprites\BaseSprite.cs" />
     <Compile Include="Utils\FrameRateCounter.cs" />
+    <Compile Include="Utils\ImprovementElement.cs" />
     <Compile Include="Utils\Primitives2D.cs" />
     <Compile Include="Utils\StaticClassSerializer.cs" />
   </ItemGroup>

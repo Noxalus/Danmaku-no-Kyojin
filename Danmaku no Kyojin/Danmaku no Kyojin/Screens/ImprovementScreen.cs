@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,11 +11,14 @@ namespace Danmaku_no_Kyojin.Screens
     {
         #region Field region
 
-        private string _message;
+        private string _title;
+        private string _credits;
+        private string _error;
         private string[] _menuText;
         private int _menuIndex;
         private Dictionary<string, bool> _finished;
         private Texture2D _background;
+        private SpriteFont _titleFont;
 
         #endregion
 
@@ -31,7 +35,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
-            _message = "This functionnality is not implemented yet !";
+            _title = "Shop";
 
             UpdateMenuText();
 
@@ -43,6 +47,7 @@ namespace Danmaku_no_Kyojin.Screens
         protected override void LoadContent()
         {
             _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _titleFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TitleFont");
 
             base.LoadContent();
         }
@@ -69,6 +74,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             if (InputHandler.PressedAction())
             {
+                bool error = false;
                 switch (_menuIndex)
                 {
                     // Lives
@@ -78,12 +84,20 @@ namespace Danmaku_no_Kyojin.Screens
                             PlayerData.Credits -= Improvements.LivesNumberData[PlayerData.LivesNumberIndex + 1].Value;
                             PlayerData.LivesNumberIndex++;
                         }
+                        else
+                        {
+                            error = true;
+                        }
                         break;
                     case 1:
                         if (!_finished["shootPower"] && PlayerData.Credits >= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value)
                         {
                             PlayerData.Credits -= Improvements.ShootPowerData[PlayerData.ShootPowerIndex + 1].Value;
                             PlayerData.ShootPowerIndex++;
+                        }
+                        else
+                        {
+                            error = true;
                         }
                         break;
                     case 2:
@@ -92,8 +106,20 @@ namespace Danmaku_no_Kyojin.Screens
                             PlayerData.Credits -= Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex + 1].Value;
                             PlayerData.ShootFrequencyIndex++;
                         }
+                        else
+                        {
+                            error = true;
+                        }
+                        break;
+                    default:
+                        error = true;
                         break;
                 }
+
+                if (error)
+                    _error = "You don't have enought credits to buy this !";
+                else
+                    _error = "";
 
                 UpdateMenuText();
             }
@@ -109,24 +135,58 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Draw(_background, new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y), Color.GreenYellow);
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _message,
+            // Title
+            GameRef.SpriteBatch.DrawString(_titleFont, _title,
                 new Vector2(
-                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_message).X / 2,
-                    Game.GraphicsDevice.Viewport.Height / 2f - ControlManager.SpriteFont.MeasureString(_message).Y / 2),
+                    Game.GraphicsDevice.Viewport.Width / 2f - _titleFont.MeasureString(_title).X / 2 + 5,
+                    Game.GraphicsDevice.Viewport.Height / 2f - (_titleFont.MeasureString(_title).Y * 3) + 5),
+                Color.Black);
+            GameRef.SpriteBatch.DrawString(_titleFont, _title,
+                new Vector2(
+                    Game.GraphicsDevice.Viewport.Width / 2f - _titleFont.MeasureString(_title).X / 2,
+                    Game.GraphicsDevice.Viewport.Height / 2f - (_titleFont.MeasureString(_title).Y * 3)),
                 Color.White);
 
+            // Credits
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _credits,
+                new Vector2(
+                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_credits).X / 2 + 1,
+                    100 + 1),
+                Color.Black);
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _credits,
+                new Vector2(
+                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_credits).X / 2,
+                    100), 
+                Color.White);
+
+            var menuTextOrigin = new Point(300, 150);
             for (int i = 0; i < _menuText.Length; i++)
             {
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(0, 20 * i), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(menuTextOrigin.X, menuTextOrigin.Y + 20 * i), Color.White);
 
                 Color color = Color.White;
                 if (_menuIndex == i)
                     color = Color.Red;
 
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(500, 20 * i), color);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Buy", new Vector2(menuTextOrigin.X + 500, menuTextOrigin.Y + 20 * i), color);
             }
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Money: " + PlayerData.Credits, new Vector2(0, Config.Resolution.Y - 20), Color.White);
+            // Errors
+            if (_error != null)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _error,
+                                               new Vector2(
+                                                   Game.GraphicsDevice.Viewport.Width/2f -
+                                                   ControlManager.SpriteFont.MeasureString(_error).X/2 + 1,
+                                                   Config.Resolution.Y - 40 + 1),
+                                               Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _error,
+                                               new Vector2(
+                                                   Game.GraphicsDevice.Viewport.Width/2f -
+                                                   ControlManager.SpriteFont.MeasureString(_error).X/2,
+                                                   Config.Resolution.Y - 40),
+                                               Color.White);
+            }
 
             GameRef.SpriteBatch.End();
 
@@ -137,6 +197,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         private void UpdateMenuText()
         {
+            _credits = "You currently have " + PlayerData.Credits.ToString(CultureInfo.InvariantCulture) + "$";
+
             _finished = new Dictionary<string, bool>();
 
             string livesNumber = "Lives numbers: ";
