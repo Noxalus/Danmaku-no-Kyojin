@@ -91,14 +91,6 @@ namespace Danmaku_no_Kyojin
             Camera = new Camera2D(GraphicsDevice.Viewport, 1000, 1000, 1);
 
             StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
-            
-            PlayerData.Credits = 424242;
-
-            /*
-            PlayerData.BulletTimeEnabled = false;
-            PlayerData.BulletTimeDivisorIndex = 3;
-            PlayerData.TimerInitialTimeIndex = 4;
-            */
 
             base.Initialize();
         }

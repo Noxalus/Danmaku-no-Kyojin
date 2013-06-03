@@ -3,20 +3,44 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no Kyojin", "Danmaku no Kyojin\Danmaku no Kyojin\Danmaku no Kyojin.csproj", "{574375AD-4203-4AC3-B2C6-D52A31E20A05}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Danmaku no KyojinContent", "Danmaku no Kyojin\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj", "{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no KyojinContent", "Danmaku no Kyojin\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj", "{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}"
+EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj", "{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|x86 = CD_ROM|x86
 		Debug|x86 = Debug|x86
+		DVD-5|x86 = DVD-5|x86
 		Release|x86 = Release|x86
+		SingleImage|x86 = SingleImage|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.CD_ROM|x86.ActiveCfg = Release|x86
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.CD_ROM|x86.Build.0 = Release|x86
 		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Debug|x86.ActiveCfg = Debug|x86
 		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Debug|x86.Build.0 = Debug|x86
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.DVD-5|x86.ActiveCfg = Debug|x86
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.DVD-5|x86.Build.0 = Debug|x86
 		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Release|x86.ActiveCfg = Release|x86
 		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Release|x86.Build.0 = Release|x86
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.SingleImage|x86.ActiveCfg = Release|x86
+		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.SingleImage|x86.Build.0 = Release|x86
+		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.CD_ROM|x86.ActiveCfg = Release|x86
 		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.Debug|x86.ActiveCfg = Debug|x86
+		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.DVD-5|x86.ActiveCfg = Debug|x86
 		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.Release|x86.ActiveCfg = Release|x86
+		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.SingleImage|x86.ActiveCfg = Release|x86
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.CD_ROM|x86.ActiveCfg = CD_ROM
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.CD_ROM|x86.Build.0 = CD_ROM
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Debug|x86.ActiveCfg = DVD-5
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Debug|x86.Build.0 = DVD-5
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.DVD-5|x86.ActiveCfg = DVD-5
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.DVD-5|x86.Build.0 = DVD-5
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Release|x86.ActiveCfg = SingleImage
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Release|x86.Build.0 = SingleImage
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.SingleImage|x86.ActiveCfg = SingleImage
+		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.SingleImage|x86.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
