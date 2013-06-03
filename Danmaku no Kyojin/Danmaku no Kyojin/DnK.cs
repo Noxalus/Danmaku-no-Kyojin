@@ -81,6 +81,9 @@ namespace Danmaku_no_Kyojin
 
             StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
 
+            PlayerData.LivesNumberIndex = 4;
+            PlayerData.BulletTimeEnabled = true;
+
             base.Initialize();
         }
 

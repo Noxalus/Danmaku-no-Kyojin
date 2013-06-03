@@ -264,8 +264,9 @@ namespace Danmaku_no_Kyojin.Entities
                 {
                     int bulletTimeBarWidth =
                         (int)
-                        (100* (float) (_bulletTimeTimer.TotalMilliseconds/Config.DefaultBulletTimeTimer.TotalMilliseconds));
+                        (100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
 
+                    // Text
                     Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
                                                 new Vector2(1, Config.Resolution.Y - 39), Color.Black);
@@ -273,6 +274,7 @@ namespace Danmaku_no_Kyojin.Entities
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
                                                 new Vector2(0, Config.Resolution.Y - 40), Color.White);
 
+                    // Bar
                     Game.SpriteBatch.Draw(_bulletTimeBarLeft,
                                           new Rectangle(0, Config.Resolution.Y - 50, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height),
                                           Color.White);
@@ -291,18 +293,71 @@ namespace Danmaku_no_Kyojin.Entities
             }
             else if (ID == 2)
             {
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X, 0), Color.White);
+                // Lives
+                int hudY = 40;
 
-                for (int i = 1; i < _lives; i++)
+                if (PlayerData.BulletTimeEnabled)
+                    hudY = 80;
+
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X + 1, 
+                    Config.Resolution.Y - hudY + 1), 
+                Color.Black);
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X, 
+                    Config.Resolution.Y - hudY), 
+                Color.White);
+
+                for (int i = 0; i < _lives; i++)
                 {
                     Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
-                       Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X - i * _lifeIcon.Width - 5, 4), Color.White);
+                        Config.Resolution.X - (ControlManager.SpriteFont.MeasureString(lives).X * 2) - i * _lifeIcon.Width + 10, 
+                        Config.Resolution.Y - (hudY - 7)), 
+                    Color.White);
                 }
 
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 150, Config.Resolution.Y - 20),
-                                             Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(Config.Resolution.X - 151, Config.Resolution.Y - 21),
-                                            Color.White);
+                // Bullet time bar
+                if (PlayerData.BulletTimeEnabled)
+                {
+                    int bulletTimeBarWidth =
+                        (int)
+                        (100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
+
+                    // Text
+                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                                bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture), new Vector2(
+                                                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString("100").X, 
+                                                    Config.Resolution.Y - 39), 
+                                                Color.Black);
+                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                                bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture), new Vector2(
+                                                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString("100").X,
+                                                    Config.Resolution.Y - 40), 
+                                                Color.White);
+
+                    // Bar
+                    Game.SpriteBatch.Draw(_bulletTimeBarLeft,
+                                          new Rectangle(Config.Resolution.X - bulletTimeBarWidth - _bulletTimeBarRight.Width - _bulletTimeBarLeft.Width, Config.Resolution.Y - 50, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height),
+                                          Color.White);
+                    Game.SpriteBatch.Draw(_bulletTimeBarContent,
+                                          new Rectangle(Config.Resolution.X - bulletTimeBarWidth - _bulletTimeBarRight.Width, Config.Resolution.Y - 50, bulletTimeBarWidth,
+                                                        _bulletTimeBarContent.Height), Color.White);
+                    Game.SpriteBatch.Draw(_bulletTimeBarRight,
+                                          new Rectangle(Config.Resolution.X - _bulletTimeBarRight.Width, Config.Resolution.Y - 50,
+                                                        _bulletTimeBarRight.Width, _bulletTimeBarRight.Height),
+                                          Color.White);
+                }
+
+
+                // Score
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(score).X + 1,
+                    Config.Resolution.Y - 20),
+                Color.Black);
+                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(score).X,
+                    Config.Resolution.Y - 21),
+                Color.White);
             }
         }
 

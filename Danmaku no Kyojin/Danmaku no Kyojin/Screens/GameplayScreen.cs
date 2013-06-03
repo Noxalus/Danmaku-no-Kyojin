@@ -298,11 +298,11 @@ namespace Danmaku_no_Kyojin.Screens
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                "Boss bullets: " +
                                                _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
-                                               new Vector2(1, Config.Resolution.Y - 59), Color.Black);
+                                               new Vector2(1, 21), Color.Black);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                "Boss bullets: " +
                                                _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
-                                               new Vector2(0, Config.Resolution.Y - 60), Color.White);
+                                               new Vector2(0, 20), Color.White);
             }
 
             // Wave number
