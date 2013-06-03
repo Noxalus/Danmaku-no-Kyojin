@@ -22,9 +22,14 @@ Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
 Content\Graphics\Shaders\GaussianBlur.xnb
-Content\Audio\DnK.xgs
-Content\Audio\Wave Bank.xwb
-Content\Audio\Sound Bank.xsb
+Content\Audio\Musics\Menu.xnb
+Content\Audio\Musics\Background.xnb
+Content\Audio\SE\buy.xnb
+Content\Audio\SE\choose.xnb
+Content\Audio\SE\hurt.xnb
+Content\Audio\SE\select.xnb
+Content\Audio\Musics\Menu.wma
+Content\Audio\Musics\Background.wma
 Content\Graphics\Pictures\logo.png
 Content\XML\sample.xml
 Content\XML\3way.xml

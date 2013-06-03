@@ -5,6 +5,7 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -41,6 +42,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
+            MediaPlayer.Stop();
+
             _menuIndex = 0;
             _title = "YOU DIED";
 

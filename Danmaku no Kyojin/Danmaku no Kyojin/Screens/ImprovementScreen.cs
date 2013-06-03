@@ -4,6 +4,7 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -19,6 +20,8 @@ namespace Danmaku_no_Kyojin.Screens
         private Dictionary<string, bool> _finished;
         private Texture2D _background;
         private SpriteFont _titleFont;
+
+        private SoundEffect _buySound;
 
         #endregion
 
@@ -49,6 +52,8 @@ namespace Danmaku_no_Kyojin.Screens
             _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
             _titleFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TitleFont");
 
+            _buySound = Game.Content.Load<SoundEffect>(@"Audio/SE/buy");
+
             base.LoadContent();
         }
 
@@ -61,6 +66,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             if (InputHandler.PressedUp())
             {
+                GameRef.Select.Play();
+
                 _menuIndex--;
 
                 if (_menuIndex < 0)
@@ -69,6 +76,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             if (InputHandler.PressedDown())
             {
+                GameRef.Select.Play();
+
                 _menuIndex = (_menuIndex + 1) % (_menuText.Length + 1);
             }
 
@@ -76,6 +85,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 if (_menuIndex == _menuText.Length)
                 {
+                    GameRef.Choose.Play();
                     StateManager.ChangeState(GameRef.TitleScreen);
                 }
 
@@ -235,7 +245,10 @@ namespace Danmaku_no_Kyojin.Screens
                 if (error)
                     _error = "You don't have enought credits to buy this !";
                 else
+                {
                     _error = "";
+                    _buySound.Play();
+                }
 
                 UpdateMenuText();
             }

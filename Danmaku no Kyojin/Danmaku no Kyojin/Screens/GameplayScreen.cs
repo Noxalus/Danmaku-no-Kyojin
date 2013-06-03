@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -20,12 +21,6 @@ namespace Danmaku_no_Kyojin.Screens
         private int _waveNumber;
 
         // Audio
-        AudioEngine _audioEngine;
-        WaveBank _waveBank;
-        SoundBank _soundBank;
-        AudioCategory _musicCategory;
-
-        Cue _music;
         private SoundEffect hit = null;
 
         // Random
@@ -49,8 +44,6 @@ namespace Danmaku_no_Kyojin.Screens
         {
 
             Players = new List<Player>();
-
-
 
             // Timer
             _timer = new Timer(Game);
@@ -81,24 +74,14 @@ namespace Danmaku_no_Kyojin.Screens
             _enemy.Initialize();
             _waveNumber = 0;
 
-            _audioEngine = new AudioEngine(@"Content/Audio/DnK.xgs");
-            _waveBank = new WaveBank(_audioEngine, @"Content/Audio/Wave Bank.xwb");
-            _soundBank = new SoundBank(_audioEngine, @"Content/Audio/Sound Bank.xsb");
-
-            _musicCategory = _audioEngine.GetCategory("Music");
-
-            _musicCategory.SetVolume(1);
-
-            SoundEffect.MasterVolume = 0.25f;
-
             _timer.Initialize();
 
             base.Initialize();
 
-            _music = _soundBank.GetCue("Background");
-            _music.Play();
-
             _bloom.Initialize();
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Background"));
 
             _timer.Initialize();
         }
@@ -107,7 +90,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             if (hit == null)
             {
-                hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hit");
+                hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hurt");
             }
 
             _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
@@ -117,7 +100,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void UnloadContent()
         {
-            _music.Stop(AudioStopOptions.AsAuthored);
+            MediaPlayer.Stop();
         }
 
         public override void Update(GameTime gameTime)
@@ -135,8 +118,6 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             base.Update(gameTime);
-
-            _audioEngine.Update();
 
             foreach (Player p in Players)
             {

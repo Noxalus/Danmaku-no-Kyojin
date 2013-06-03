@@ -3,6 +3,7 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -53,6 +54,13 @@ namespace Danmaku_no_Kyojin.Screens
             _backgroundTopRectangle = new Rectangle(0, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
             _backgroundTopRightRectangle = new Rectangle(Config.Resolution.X, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
 
+            // Music
+            if (MediaPlayer.State != MediaState.Playing)
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Menu"));
+            }
+
             base.Initialize();
         }
 
@@ -77,15 +85,20 @@ namespace Danmaku_no_Kyojin.Screens
 
                 if (_menuIndex < 0)
                     _menuIndex = _menuText.Length - 1;
+
+                GameRef.Select.Play();
             }
 
             if (InputHandler.PressedDown())
             {
                 _menuIndex = (_menuIndex + 1) % _menuText.Length;
+                GameRef.Select.Play();
             }
 
             if (InputHandler.PressedAction())
             {
+                GameRef.Choose.Play();
+
                 // 1 Player
                 if (_menuIndex == 0)
                 {

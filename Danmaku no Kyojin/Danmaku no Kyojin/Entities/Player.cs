@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
@@ -47,6 +48,9 @@ namespace Danmaku_no_Kyojin.Entities
         {
             get { return _score; }
         }
+
+        // Audio
+        private SoundEffect _shoot = null;
 
         #endregion
 
@@ -99,6 +103,11 @@ namespace Danmaku_no_Kyojin.Entities
             _bulletTimeBarLeft = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarLeft");
             _bulletTimeBarContent = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarContent");
             _bulletTimeBarRight = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarRight");
+
+            if (_shoot == null)
+            {
+                _shoot = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -438,6 +447,8 @@ namespace Danmaku_no_Kyojin.Entities
 
                     AddBullet(bullet);
                 }
+
+                _shoot.Play();
             }
         }
 

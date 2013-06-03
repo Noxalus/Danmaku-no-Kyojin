@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 using Danmaku_no_Kyojin.Utils;
 using Danmaku_no_Kyojin.Camera;
+using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin
 {
@@ -28,6 +30,10 @@ namespace Danmaku_no_Kyojin
 
         // Camera
         public Camera2D Camera;
+
+        // Audio
+        public SoundEffect Select;
+        public SoundEffect Choose;
 
         public DnK()
         {
@@ -72,6 +78,9 @@ namespace Danmaku_no_Kyojin
 
             // FPS
             Components.Add(new FrameRateCounter(this));
+
+            // Audio
+            SoundEffect.MasterVolume = 0.75f;
         }
 
 
@@ -96,6 +105,9 @@ namespace Danmaku_no_Kyojin
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Pixel = Content.Load<Texture2D>("Graphics/Pictures/pixel");
+
+            Select = Content.Load<SoundEffect>(@"Audio/SE/select");
+            Choose = Content.Load<SoundEffect>(@"Audio/SE/choose");
         }
 
         protected override void UnloadContent()
@@ -105,6 +117,13 @@ namespace Danmaku_no_Kyojin
 
         protected override void Update(GameTime gameTime)
         {
+            if (InputHandler.KeyPressed(Keys.F1))
+            {
+                Config.FullScreen = !Config.FullScreen;
+                Graphics.IsFullScreen = Config.FullScreen; 
+                Graphics.ApplyChanges();
+            }
+
             base.Update(gameTime);
         }
 
