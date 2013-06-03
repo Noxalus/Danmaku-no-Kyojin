@@ -866,3 +866,14 @@ dt{
 dd{
 	margin-bottom: 40px;
 }
+
+p.success{
+	color: green;
+	text-align: center;
+}
+
+
+p.error{
+	color: red;
+	text-align: center;
+}
