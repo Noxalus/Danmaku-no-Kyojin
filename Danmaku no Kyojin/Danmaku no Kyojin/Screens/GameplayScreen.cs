@@ -294,12 +294,17 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             // Text
-            /*
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
-                new Vector2(1, Config.Resolution.Y - 59), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Boss bullets: " + _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
-                new Vector2(0, Config.Resolution.Y - 60), Color.White);
-            */
+            if (Config.Debug)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                               "Boss bullets: " +
+                                               _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
+                                               new Vector2(1, Config.Resolution.Y - 59), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                                               "Boss bullets: " +
+                                               _enemy.MoverManager.movers.Count.ToString(CultureInfo.InvariantCulture),
+                                               new Vector2(0, Config.Resolution.Y - 60), Color.White);
+            }
 
             string waveNumber = "Wave #" + _waveNumber.ToString(CultureInfo.InvariantCulture);
 

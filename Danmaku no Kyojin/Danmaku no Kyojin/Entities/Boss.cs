@@ -40,6 +40,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public float GetRank() { return 0; }
 
+        private const float InitialHealth = 30f;
         private float _totalHealth;
         private float _health;
         private Texture2D _healthBar;
@@ -58,7 +59,6 @@ namespace Danmaku_no_Kyojin.Entities
             MoverManager = new MoverManager(Game);
             GameManager.GameDifficulty = Config.GameDifficultyDelegate;
             DefeatNumber = 0;
-            _totalHealth = 30f;
         }
 
         public override void Initialize()
@@ -75,7 +75,7 @@ namespace Danmaku_no_Kyojin.Entities
             _motion = new Vector2(1, 0);
             _speed = 1;
 
-            _totalHealth *= 2;
+            _totalHealth = InitialHealth * (DefeatNumber + 1);
             _health = _totalHealth;
 
             IsAlive = true;
@@ -116,7 +116,8 @@ namespace Danmaku_no_Kyojin.Entities
                 _myPatterns.Add(pattern);
             }
 
-            //AddBullet(true);
+            _currentPattern = GameplayScreen.Rand.Next(0, _patternNames.Count);
+            AddBullet(true);
 
             base.LoadContent();
         }
@@ -180,10 +181,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (_timer > 60)
             {
                 _timer = 0;
-                if (_mover != null && _mover.used == false)
-                {
-                    AddBullet(true);
-                }
+                AddBullet(false);
             }
 
             MoverManager.Update(gameTime);
@@ -199,7 +197,6 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
-
 
             /*
             Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
@@ -235,7 +232,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (true)
             {
                 //clear out all the bulelts
-                MoverManager.movers.Clear();
+                //MoverManager.movers.Clear();
             }
 
             //add a new bullet in the center of the screen

@@ -3,10 +3,6 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -15,9 +11,10 @@ namespace Danmaku_no_Kyojin.Screens
         #region Field region
 
         private Texture2D _logo;
-        private string[] menuText;
-        private string[] menuDescription;
-        private int menuIndex;
+        private readonly string[] _menuText;
+        private readonly string[] _menuDescription;
+        private int _menuIndex;
+        private int _passStep;
 
         private Texture2D _backgroundImage;
         private Rectangle _backgroundMainRectangle;
@@ -32,8 +29,8 @@ namespace Danmaku_no_Kyojin.Screens
         public TitleScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            menuText = new string[] { "1 Player", "2 Players", "Shop", "Leaderboard", "Options", "Exit" };
-            menuDescription = new string[] { 
+            _menuText = new string[] { "1 Player", "2 Players", "Shop", "Leaderboard", "Options", "Exit" };
+            _menuDescription = new string[] { 
                 "Playing game with only one player", 
                 "Playing game with your best friend", 
                 "Get new abilities to crush more enemies",
@@ -42,7 +39,7 @@ namespace Danmaku_no_Kyojin.Screens
                 "Warning: I've never tested this button !", 
             };
 
-            menuIndex = 0;
+            _menuIndex = 0;
         }
 
         #endregion
@@ -76,42 +73,42 @@ namespace Danmaku_no_Kyojin.Screens
 
             if (InputHandler.PressedUp())
             {
-                menuIndex--;
+                _menuIndex--;
 
-                if (menuIndex < 0)
-                    menuIndex = menuText.Length - 1;
+                if (_menuIndex < 0)
+                    _menuIndex = _menuText.Length - 1;
             }
 
             if (InputHandler.PressedDown())
             {
-                menuIndex = (menuIndex + 1) % menuText.Length;
+                _menuIndex = (_menuIndex + 1) % _menuText.Length;
             }
 
             if (InputHandler.PressedAction())
             {
                 // 1 Player
-                if (menuIndex == 0)
+                if (_menuIndex == 0)
                 {
                     Config.PlayersNumber = 1;
                     StateManager.ChangeState(GameRef.GameplayScreen);
                 }
                 // 2 Players
-                else if (menuIndex == 1)
+                else if (_menuIndex == 1)
                 {
                     Config.PlayersNumber = 2;
                     StateManager.ChangeState(GameRef.GameplayScreen);
                 }
                 // Improvements
-                else if (menuIndex == 2)
+                else if (_menuIndex == 2)
                     StateManager.ChangeState(GameRef.ImprovementScreen);
                 // Leaderbord
-                else if (menuIndex == 3)
+                else if (_menuIndex == 3)
                     StateManager.ChangeState(GameRef.LeaderboardScreen);
                 // Options
-                else if (menuIndex == 4)
+                else if (_menuIndex == 4)
                     StateManager.ChangeState(GameRef.OptionsScreen);
                 // Exit
-                else if (menuIndex == 5)
+                else if (_menuIndex == 5)
                     Game.Exit();
             }
 
@@ -136,8 +133,43 @@ namespace Danmaku_no_Kyojin.Screens
                 _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
 
 
+            /*
             _backgroundMainRectangle.X -= 1;
             _backgroundRightRectangle.X -= 1;
+            */
+
+            if (!Config.Cheat)
+            {
+                if ((_passStep == 0 || _passStep == 1) && InputHandler.KeyPressed(Keys.Up))
+                {
+                    _passStep++;
+                }
+                else if ((_passStep == 2 || _passStep == 3) && InputHandler.KeyPressed(Keys.Down))
+                {
+                    _passStep++;
+                }
+                else if ((_passStep == 4 || _passStep == 6) && InputHandler.KeyPressed(Keys.Left))
+                {
+                    _passStep++;
+                }
+                else if ((_passStep == 5 || _passStep == 7) && InputHandler.KeyPressed(Keys.Right))
+                {
+                    _passStep++;
+                }
+                else if (_passStep == 8 && InputHandler.KeyPressed(Keys.B))
+                {
+                    _passStep++;
+                }
+                else if (_passStep == 9 && InputHandler.KeyPressed(Keys.A))
+                {
+                    _passStep++;
+                }
+
+                if (_passStep == 10)
+                {
+                    Config.Cheat = true;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -158,26 +190,26 @@ namespace Danmaku_no_Kyojin.Screens
                                                 (GameRef.Graphics.GraphicsDevice.Viewport.Width / 2) - (_logo.Width / 2),
                                                 100), Color.White);
 
-            for (int i = 0; i < menuText.Length; i++)
+            for (int i = 0; i < _menuText.Length; i++)
             {
                 Color textColor = Color.White;
 
-                if (i == menuIndex)
+                if (i == _menuIndex)
                     textColor = Color.OrangeRed;
 
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
-                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f) + 1,
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
+                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f) + 1,
                   Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i) + 1), Color.Black);
-                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, menuText[i], new Vector2(
-                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuText[i]).X / 2f),
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
+                  Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f),
                   Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i)), textColor);
             }
 
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4 + 1,
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + _menuDescription[_menuIndex] + "]", new Vector2(
+                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuDescription[_menuIndex]).X / 2f) - 4 + 1,
                 Game.GraphicsDevice.Viewport.Height - 60 + 1), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + menuDescription[menuIndex] + "]", new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(menuDescription[menuIndex]).X / 2f) - 4,
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + _menuDescription[_menuIndex] + "]", new Vector2(
+                Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuDescription[_menuIndex]).X / 2f) - 4,
                 Game.GraphicsDevice.Viewport.Height - 60), Color.White);
 
             string credits = "Credits: " + PlayerData.Credits.ToString(CultureInfo.InvariantCulture);

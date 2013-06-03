@@ -6,6 +6,9 @@ namespace Danmaku_no_Kyojin
 {
     public static class Config
     {
+        public static bool Debug = true;
+        public static bool Cheat = false;
+
         public enum Controller
         {
             Keyboard,
