@@ -17,7 +17,8 @@
     <XnaCrossPlatformGroupID>7d8e2e6b-ff2e-4e97-909c-fdb39cef76b0</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>icon.png</Thumbnail>
+    <Thumbnail>
+    </Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>D:\Danmaku no Kyojin\Installateur\</PublishUrl>
     <Install>true</Install>
@@ -206,7 +207,6 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj">

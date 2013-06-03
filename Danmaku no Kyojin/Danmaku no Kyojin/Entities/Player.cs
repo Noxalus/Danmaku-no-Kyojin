@@ -89,8 +89,8 @@ namespace Danmaku_no_Kyojin.Entities
         {
             base.LoadContent();
 
-            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship5");
-            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet2");
+            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship");
+            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
             CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI * 2);
 
