@@ -131,14 +131,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="XML\test.xml">
-      <Name>test</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="XML\homing.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>homing</Name>
@@ -215,12 +207,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Bulletsmorph]_fallen_string.xml">
-      <Name>[Bulletsmorph]_fallen_string</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Bulletsmorph]_kunekune_plus_homing.xml">
       <Name>[Bulletsmorph]_kunekune_plus_homing</Name>
       <Importer>XmlImporter</Importer>
@@ -245,12 +231,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Daiouzyou]_hibachi_2.xml">
-      <Name>[Daiouzyou]_hibachi_2</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Daiouzyou]_hibachi_3.xml">
       <Name>[Daiouzyou]_hibachi_3</Name>
       <Importer>XmlImporter</Importer>
@@ -263,38 +243,14 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Daiouzyou]_hibachi_image.xml">
-      <Name>[Daiouzyou]_hibachi_image</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Daiouzyou]_hibachi_maybe.xml">
-      <Name>[Daiouzyou]_hibachi_maybe</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Daiouzyou]_round_1_boss.xml">
       <Name>[Daiouzyou]_round_1_boss</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Daiouzyou]_round_1_boss_hakkyou.xml">
-      <Name>[Daiouzyou]_round_1_boss_hakkyou</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Daiouzyou]_round_3_boss.xml">
       <Name>[Daiouzyou]_round_3_boss</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Daiouzyou]_round_3_boss_2.xml">
-      <Name>[Daiouzyou]_round_3_boss_2</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -347,12 +303,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Daiouzyou]_round_6_boss_1.xml">
-      <Name>[Daiouzyou]_round_6_boss_1</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Daiouzyou]_round_6_boss_2.xml">
       <Name>[Daiouzyou]_round_6_boss_2</Name>
       <Importer>XmlImporter</Importer>
@@ -377,18 +327,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Dodonpachi]_hibachi.xml">
-      <Name>[Dodonpachi]_hibachi</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Dodonpachi]_kitiku_1.xml">
-      <Name>[Dodonpachi]_kitiku_1</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Dodonpachi]_kitiku_2.xml">
       <Name>[Dodonpachi]_kitiku_2</Name>
       <Importer>XmlImporter</Importer>
@@ -403,12 +341,6 @@
     </None>
     <None Include="XML\Samples\[Dodonpachi]_kitiku_5.xml">
       <Name>[Dodonpachi]_kitiku_5</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[DragonBlaze]_nebyurosu_2.xml">
-      <Name>[DragonBlaze]_nebyurosu_2</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -433,12 +365,6 @@
     </None>
     <None Include="XML\Samples\[ESP_RADE]_round_5_alice_clone.xml">
       <Name>[ESP_RADE]_round_5_alice_clone</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[ESP_RADE]_round_5_boss_ares_2.xml">
-      <Name>[ESP_RADE]_round_5_boss_ares_2</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -486,12 +412,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[G-Wange]_roll_gara.xml">
-      <Name>[G-Wange]_roll_gara</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[G-Wange]_round_trip_bit.xml">
       <Name>[G-Wange]_round_trip_bit</Name>
       <Importer>XmlImporter</Importer>
@@ -500,18 +420,6 @@
     </None>
     <None Include="XML\Samples\[Garegga]_black_heart_mk2_winder.xml">
       <Name>[Garegga]_black_heart_mk2_winder</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[GigaWing2]_akurimi.xml">
-      <Name>[GigaWing2]_akurimi</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Guwange]_round_2_boss_circle_fire.xml">
-      <Name>[Guwange]_round_2_boss_circle_fire</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -570,20 +478,8 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[MDA]_2f.xml">
-      <Name>[MDA]_2f</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[MDA]_75l-42.xml">
       <Name>[MDA]_75l-42</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[MDA]_acc_n_dec.xml">
-      <Name>[MDA]_acc_n_dec</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -596,12 +492,6 @@
     </None>
     <None Include="XML\Samples\[MDA]_circular_model.xml">
       <Name>[MDA]_circular_model</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[MDA]_circular_sun.xml">
-      <Name>[MDA]_circular_sun</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -738,12 +628,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_circle.xml">
-      <Name>[Original]_circle</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_cont_circle.xml">
       <Name>[Original]_cont_circle</Name>
       <Importer>XmlImporter</Importer>
@@ -768,12 +652,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_evil_eye.xml">
-      <Name>[Original]_evil_eye</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_extinction.xml">
       <Name>[Original]_extinction</Name>
       <Importer>XmlImporter</Importer>
@@ -792,12 +670,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_guruguru.xml">
-      <Name>[Original]_guruguru</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_gurutyo.xml">
       <Name>[Original]_gurutyo</Name>
       <Importer>XmlImporter</Importer>
@@ -812,18 +684,6 @@
     </None>
     <None Include="XML\Samples\[Original]_hajike.xml">
       <Name>[Original]_hajike</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Original]_hasami.xml">
-      <Name>[Original]_hasami</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Original]_hirahira.xml">
-      <Name>[Original]_hirahira</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -882,12 +742,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_kunekune.xml">
-      <Name>[Original]_kunekune</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_light_lv10.xml">
       <Name>[Original]_light_lv10</Name>
       <Importer>XmlImporter</Importer>
@@ -902,12 +756,6 @@
     </None>
     <None Include="XML\Samples\[Original]_light_max.xml">
       <Name>[Original]_light_max</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Original]_oogi_hutatsu.xml">
-      <Name>[Original]_oogi_hutatsu</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -960,32 +808,14 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_time_twist.xml">
-      <Name>[Original]_time_twist</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_tsunami.xml">
       <Name>[Original]_tsunami</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Original]_two_cross.xml">
-      <Name>[Original]_two_cross</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[Original]_uneri.xml">
       <Name>[Original]_uneri</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[Original]_wana.xml">
-      <Name>[Original]_wana</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1052,12 +882,6 @@
     </None>
     <None Include="XML\Samples\[OtakuTwo]_dis_bee_1.xml">
       <Name>[OtakuTwo]_dis_bee_1</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="XML\Samples\[OtakuTwo]_dis_bee_2.xml">
-      <Name>[OtakuTwo]_dis_bee_2</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1399,6 +1223,22 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>unilateral</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XML\circles.xml">
+      <Name>circles</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XML\spiral.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>spiral</Name>
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
     </None>

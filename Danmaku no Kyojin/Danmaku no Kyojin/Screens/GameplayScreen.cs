@@ -50,7 +50,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             Players = new List<Player>();
 
-           
+
 
             // Timer
             _timer = new Timer(Game);
@@ -173,18 +173,15 @@ namespace Danmaku_no_Kyojin.Screens
                         }
                     }
 
-                    if (!p.IsInvincible)
+                    if (p.Intersects(_enemy))
                     {
-                        if (p.Intersects(_enemy))
-                        {
-                            p.Hit();
-                        }
+                        p.Hit();
+                    }
 
-                        foreach (Mover m in _enemy.MoverManager.movers)
-                        {
-                            if (p.Intersects(m))
-                                p.Hit();
-                        }
+                    foreach (Mover m in _enemy.MoverManager.movers)
+                    {
+                        if (p.Intersects(m))
+                            p.Hit();
                     }
 
                     p.Update(gameTime);
@@ -216,7 +213,7 @@ namespace Danmaku_no_Kyojin.Screens
                 if (Config.PlayersNumber == 2)
                     GameRef.GameOverScreen.Player2Score = Players[1].Score;
 
-                int totalScore = 
+                int totalScore =
                     GameRef.GameOverScreen.Player1Score +
                     GameRef.GameOverScreen.Player2Score +
                     (Improvements.ScoreByEnemyData[PlayerData.ScoreByEnemyIndex].Key * GameRef.GameOverScreen.WaveNumber) +
@@ -318,16 +315,16 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _enemy.GetCurrentPatternName(),
                                                new Vector2(
-                                                   Config.Resolution.X/2f -
+                                                   Config.Resolution.X / 2f -
                                                    ControlManager.SpriteFont.MeasureString(
-                                                       _enemy.GetCurrentPatternName()).X/2,
+                                                       _enemy.GetCurrentPatternName()).X / 2,
                                                    Config.Resolution.Y - 25),
                                                Color.Black);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _enemy.GetCurrentPatternName(),
                                                new Vector2(
-                                                   Config.Resolution.X/2f -
+                                                   Config.Resolution.X / 2f -
                                                    ControlManager.SpriteFont.MeasureString(
-                                                       _enemy.GetCurrentPatternName()).X/2 + 1,
+                                                       _enemy.GetCurrentPatternName()).X / 2 + 1,
                                                    Config.Resolution.Y - 26),
                                                Color.White);
             }

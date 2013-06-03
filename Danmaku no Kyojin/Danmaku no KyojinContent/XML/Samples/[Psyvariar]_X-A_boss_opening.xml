@@ -8,7 +8,7 @@
 <repeat> <times>600</times>
 <action>
  <fire>
-  <direction>-45+$rand*90</direction>
+  <direction>135+$rand*90</direction>
   <speed>(0.3+$rand*0.5)*($rank+1)</speed>
   <bullet/>
  </fire>

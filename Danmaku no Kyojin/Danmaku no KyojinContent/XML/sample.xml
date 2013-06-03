@@ -1,97 +1,24 @@
 <?xml version="1.0" ?>
-<!DOCTYPE bulletml SYSTEM "http://www.asahi-net.or.jp/~cs8k-cyu/bulletml/bulletml.dtd">
+<!DOCTYPE bulletml SYSTEM "../bulletml.dtd">
 
-<bulletml type="vertical"
+<bulletml
           xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
 
-  <bullet label="winderBullet">
-    <speed>5</speed>
-  </bullet>
-
-  <bullet label="testBullet">
-    <speed>10</speed>
-  </bullet>
-
-  <fire label="fireWinder">
-    <direction type="sequence">$1</direction>
-    <bulletRef label="winderBullet"/>
-  </fire>
-
-  <fire label="fireTest">
-    <direction type="sequence">$1</direction>
-    <bulletRef label="testBullet"/>
-  </fire>
-
-  <action label="roundWinder">
-    <fireRef label="fireWinder">
-      <param>$1</param>
-    </fireRef>
+  <action label="top">
     <repeat>
-      <times>11</times>
+      <times>200+200*$rank</times>
       <action>
-        <fireRef label="fireWinder">
-          <param>30</param>
-        </fireRef>
+
+        <fire>
+          <direction>360*$rand-60</direction>
+          <speed>0.5+$rand*2</speed>
+          <bullet/>
+        </fire>
+
       </action>
     </repeat>
-    <wait>5</wait>
-  </action>
 
-  <action label="roundTest">
-    <fireRef label="fireTest">
-      <param>$1</param>
-    </fireRef>
-    <repeat>
-      <times>11</times>
-      <action>
-        <fireRef label="fireTest">
-          <param>30</param>
-        </fireRef>
-      </action>
-    </repeat>
-    <wait>5</wait>
-  </action>
-
-  <action label="winderSequence">
-    <repeat>
-      <times>12</times>
-      <actionRef label="roundWinder">
-        <param>30</param>
-      </actionRef>
-    </repeat>
-    <wait>50</wait>
-    <repeat>
-      <times>50</times>
-      <actionRef label="roundTest">
-        <param>$1</param>
-      </actionRef>
-    </repeat>
-    <repeat>
-      <times>12</times>
-      <actionRef label="roundWinder">
-        <param>30</param>
-      </actionRef>
-    </repeat>
-  </action>
-
-  <action label="top1">
-    <fire>
-      <direction type="absolute">2</direction>
-      <bulletRef label="winderBullet"/>
-    </fire>
-    <actionRef label="winderSequence">
-      <param>50</param>
-    </actionRef>
-  </action>
-
-  <action label="top2">
-    <fire>
-      <direction type="relative">40</direction>
-      <bulletRef label="winderBullet"/>
-    </fire>
-    <actionRef label="winderSequence">
-      <param>10</param>
-    </actionRef>
+    <wait>150</wait>
   </action>
 
 </bulletml>

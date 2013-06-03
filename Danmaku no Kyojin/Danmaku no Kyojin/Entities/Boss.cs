@@ -187,9 +187,14 @@ namespace Danmaku_no_Kyojin.Entities
             if (_timer < TimeSpan.Zero)
             {
                 _timer = Config.BossInitialTimer;
+                /*
                 if (MoverManager.movers.Count < 10)
                     AddBullet(false);
+                */
             }
+
+            if (MoverManager.movers.Count <= 1)
+                AddBullet(true);
 
             MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
@@ -231,10 +236,10 @@ namespace Danmaku_no_Kyojin.Entities
 
         private void AddBullet(bool clear)
         {
-            if (true)
+            if (clear)
             {
                 //clear out all the bulelts
-                //MoverManager.movers.Clear();
+                MoverManager.movers.Clear();
             }
 
             //add a new bullet in the center of the screen
@@ -246,7 +251,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public string GetCurrentPatternName()
         {
-            return Path.GetFileNameWithoutExtension(_patternNames[_currentPattern]);
+            return Path.GetFileNameWithoutExtension(_patternNames[_currentPattern].ToUpper());
         }
     }
 }

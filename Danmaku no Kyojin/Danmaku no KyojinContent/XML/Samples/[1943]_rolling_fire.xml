@@ -8,7 +8,7 @@
 	</action>
 	<bullet label="roll">
 		<action>
-			<wait>40+$rand*20</wait>
+			<wait>40+$rand*60</wait>
 			<changeDirection>
 				<direction type="relative">-90</direction>
 				<term>4</term>

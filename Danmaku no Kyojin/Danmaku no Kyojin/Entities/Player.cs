@@ -92,7 +92,7 @@ namespace Danmaku_no_Kyojin.Entities
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
-            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI/* * 2*/);
+            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI * 1.5f);
 
             _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
 
@@ -112,7 +112,7 @@ namespace Danmaku_no_Kyojin.Entities
             {
                 _invincibleTime -= gameTime.ElapsedGameTime;
 
-                if (_invincibleTime.Seconds <= 0)
+                if (_invincibleTime.Milliseconds <= 0)
                 {
                     _invincibleTime = Config.PlayerInvicibleTimer;
                     IsInvincible = false;
@@ -351,11 +351,11 @@ namespace Danmaku_no_Kyojin.Entities
 
                 // Score
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
-                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(score).X + 1,
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString("000000000000").X + 1,
                     Config.Resolution.Y - 20),
                 Color.Black);
                 Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
-                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString(score).X,
+                    Config.Resolution.X - ControlManager.SpriteFont.MeasureString("000000000000").X,
                     Config.Resolution.Y - 21),
                 Color.White);
             }
@@ -443,9 +443,12 @@ namespace Danmaku_no_Kyojin.Entities
 
         public void Hit()
         {
-            _lives--;
+            if (!IsInvincible)
+            {
+                _lives--;
 
-            IsInvincible = true;
+                IsInvincible = true;
+            }
         }
 
         public void AddScore(int value)

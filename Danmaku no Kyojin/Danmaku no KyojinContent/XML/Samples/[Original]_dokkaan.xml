@@ -1,23 +1,24 @@
 <?xml version="1.0" ?>
 <!DOCTYPE bulletml SYSTEM "../bulletml.dtd">
 
-<bulletml 
+<bulletml
           xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
 
-<action label="top">
- <repeat> <times>200+200*$rank</times>
- <action>
+  <action label="top">
+    <repeat>
+      <times>200+200*$rank</times>
+      <action>
 
-  <fire>
-   <direction>120*$rand-60</direction>
-   <speed>0.5+$rand*2</speed>
-   <bullet/>
-  </fire>
+        <fire>
+          <direction>360*$rand-60</direction>
+          <speed>0.5+$rand*2</speed>
+          <bullet/>
+        </fire>
 
- </action>
- </repeat>
+      </action>
+    </repeat>
 
- <wait>150</wait>
-</action>
+    <wait>150</wait>
+  </action>
 
 </bulletml>
