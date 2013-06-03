@@ -789,7 +789,6 @@ section {
 section #title {
   border: 0;
   outline: none;
-  margin: 0 0 50px 0;
   padding: 0 0 5px 0;
 }
 section #title h1 {
@@ -799,6 +798,7 @@ section #title h1 {
   text-align: center;
   line-height: 36px;
 }
+
 section #title p {
   color: #d7cfbe;
   font-family: 'OpenSansLight', "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -848,4 +848,21 @@ section #title .credits.right {
   nav {
     display: none;
   }
+}
+
+.youtube-video{
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+form{
+	text-align: center;
+}
+
+dt{
+	margin-bottom: 20px;
+}
+
+dd{
+	margin-bottom: 40px;
 }
