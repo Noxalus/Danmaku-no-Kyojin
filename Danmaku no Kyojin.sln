@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no Kyojin", "Danmak
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no KyojinContent", "Danmaku no Kyojin\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj", "{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}"
 EndProject
-Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj", "{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|x86 = CD_ROM|x86
@@ -31,16 +29,6 @@ Global
 		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.DVD-5|x86.ActiveCfg = Debug|x86
 		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.Release|x86.ActiveCfg = Release|x86
 		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.SingleImage|x86.ActiveCfg = Release|x86
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.CD_ROM|x86.ActiveCfg = CD_ROM
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.CD_ROM|x86.Build.0 = CD_ROM
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Debug|x86.ActiveCfg = DVD-5
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Debug|x86.Build.0 = DVD-5
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.DVD-5|x86.ActiveCfg = DVD-5
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.DVD-5|x86.Build.0 = DVD-5
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Release|x86.ActiveCfg = SingleImage
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.Release|x86.Build.0 = SingleImage
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.SingleImage|x86.ActiveCfg = SingleImage
-		{9C18E66B-64F1-48C0-8C46-0451F7F02CEB}.SingleImage|x86.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
