@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -15,7 +16,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         // Bullet engine
         private Texture2D _bulletSprite;
-        int _timer = 0;
+        private TimeSpan _timer;
         Mover _mover;
         public MoverManager MoverManager { get; set; }
 
@@ -75,10 +76,12 @@ namespace Danmaku_no_Kyojin.Entities
             _motion = new Vector2(1, 0);
             _speed = 1;
 
-            _totalHealth = InitialHealth * (DefeatNumber + 1);
+            _totalHealth = InitialHealth * ((DefeatNumber + 1)/2f);
             _health = _totalHealth;
 
             IsAlive = true;
+
+            _timer = Config.BossInitialTimer;
 
             base.Initialize();
         }
@@ -177,11 +180,12 @@ namespace Danmaku_no_Kyojin.Entities
                 AddBullet(false);
             }
 
-            _timer++;
-            if (_timer > 60)
+            Debug.Print(_timer.ToString());
+            _timer -= gameTime.ElapsedGameTime;
+            if (_timer < TimeSpan.Zero)
             {
-                _timer = 0;
-                AddBullet(false);
+                _timer = Config.BossInitialTimer;
+                //AddBullet(false);
             }
 
             MoverManager.Update(gameTime);
