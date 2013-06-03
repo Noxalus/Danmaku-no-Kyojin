@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Danmaku_no_Kyojin.BulletEngine;
-using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Shaders;
@@ -231,7 +230,7 @@ namespace Danmaku_no_Kyojin.Screens
                 StateManager.ChangeState(GameRef.GameOverScreen);
             }
 
-            if (InputHandler.KeyPressed(Keys.C))
+            if (Config.Debug && InputHandler.KeyPressed(Keys.C))
                 Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
         }
 
@@ -306,17 +305,32 @@ namespace Danmaku_no_Kyojin.Screens
                                                new Vector2(0, Config.Resolution.Y - 60), Color.White);
             }
 
+            // Wave number
             string waveNumber = "Wave #" + _waveNumber.ToString(CultureInfo.InvariantCulture);
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, waveNumber,
-                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f + 1, Config.Resolution.Y - 29), Color.Black);
+                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f + 1, Config.Resolution.Y - 49), Color.Black);
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, waveNumber,
-                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f, Config.Resolution.Y - 30), Color.White);
+                new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f, Config.Resolution.Y - 50), Color.White);
 
-            /*
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(1, 41), Color.Black);
-            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "Player bullets: " + p.GetBullets().Count.ToString(), new Vector2(0, 40), Color.White);
-            */
+            // Boss current pattern
+            if (Config.Debug)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _enemy.GetCurrentPatternName(),
+                                               new Vector2(
+                                                   Config.Resolution.X/2f -
+                                                   ControlManager.SpriteFont.MeasureString(
+                                                       _enemy.GetCurrentPatternName()).X/2,
+                                                   Config.Resolution.Y - 25),
+                                               Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _enemy.GetCurrentPatternName(),
+                                               new Vector2(
+                                                   Config.Resolution.X/2f -
+                                                   ControlManager.SpriteFont.MeasureString(
+                                                       _enemy.GetCurrentPatternName()).X/2 + 1,
+                                                   Config.Resolution.Y - 26),
+                                               Color.White);
+            }
 
             GameRef.SpriteBatch.End();
         }

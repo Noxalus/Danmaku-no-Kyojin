@@ -62,6 +62,6 @@ namespace Danmaku_no_Kyojin
             return GameDifficulty;
         }
 
-        public static TimeSpan BossInitialTimer = TimeSpan.FromSeconds(10);
+        public static TimeSpan BossInitialTimer = TimeSpan.FromSeconds(5);
     }
 }

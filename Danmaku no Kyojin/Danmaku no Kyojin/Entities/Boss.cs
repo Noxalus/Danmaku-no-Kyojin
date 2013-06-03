@@ -76,7 +76,7 @@ namespace Danmaku_no_Kyojin.Entities
             _motion = new Vector2(1, 0);
             _speed = 1;
 
-            _totalHealth = InitialHealth * ((DefeatNumber + 1)/2f);
+            _totalHealth = InitialHealth * ((DefeatNumber + 1) / 2f);
             _health = _totalHealth;
 
             IsAlive = true;
@@ -144,48 +144,51 @@ namespace Danmaku_no_Kyojin.Entities
             }
 
 
-            //check input to increment/decrement the current bullet pattern
-            if (InputHandler.KeyPressed(Keys.A))
+            if (Config.Debug)
             {
-                //decrement the pattern
-                if (0 >= _currentPattern)
+                //check input to increment/decrement the current bullet pattern
+                if (InputHandler.KeyPressed(Keys.A))
                 {
-                    //if it is at the beginning, move to the end
-                    _currentPattern = _myPatterns.Count - 1;
-                }
-                else
-                {
-                    _currentPattern--;
-                }
+                    //decrement the pattern
+                    if (0 >= _currentPattern)
+                    {
+                        //if it is at the beginning, move to the end
+                        _currentPattern = _myPatterns.Count - 1;
+                    }
+                    else
+                    {
+                        _currentPattern--;
+                    }
 
-                AddBullet(true);
-            }
-            else if (InputHandler.KeyPressed(Keys.X))
-            {
-                //increment the pattern
-                if ((_myPatterns.Count - 1) <= _currentPattern)
-                {
-                    //if it is at the beginning, move to the end
-                    _currentPattern = 0;
+                    AddBullet(true);
                 }
-                else
+                else if (InputHandler.KeyPressed(Keys.X))
                 {
-                    _currentPattern++;
+                    //increment the pattern
+                    if ((_myPatterns.Count - 1) <= _currentPattern)
+                    {
+                        //if it is at the beginning, move to the end
+                        _currentPattern = 0;
+                    }
+                    else
+                    {
+                        _currentPattern++;
+                    }
+
+                    AddBullet(true);
                 }
-
-                AddBullet(true);
-            }
-            else if (InputHandler.KeyPressed(Keys.LeftControl))
-            {
-                AddBullet(false);
+                else if (InputHandler.KeyPressed(Keys.LeftControl))
+                {
+                    AddBullet(false);
+                }
             }
 
-            Debug.Print(_timer.ToString());
             _timer -= gameTime.ElapsedGameTime;
             if (_timer < TimeSpan.Zero)
             {
                 _timer = Config.BossInitialTimer;
-                //AddBullet(false);
+                if (MoverManager.movers.Count < 10)
+                    AddBullet(false);
             }
 
             MoverManager.Update(gameTime);
@@ -201,11 +204,6 @@ namespace Danmaku_no_Kyojin.Entities
             Game.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
-
-            /*
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(1, Game.GraphicsDevice.Viewport.Height - 24), Color.Black);
-            Game.SpriteBatch.DrawString(ControlManager.SpriteFont, _patternNames[_currentPattern], new Vector2(0, Game.GraphicsDevice.Viewport.Height - 25), Color.White);
-            */
 
             foreach (Mover mover in MoverManager.movers)
             {
@@ -244,6 +242,11 @@ namespace Danmaku_no_Kyojin.Entities
             _mover.X = Position.X;
             _mover.Y = Position.Y - 5;
             _mover.SetBullet(_myPatterns[_currentPattern].RootNode);
+        }
+
+        public string GetCurrentPatternName()
+        {
+            return Path.GetFileNameWithoutExtension(_patternNames[_currentPattern]);
         }
     }
 }

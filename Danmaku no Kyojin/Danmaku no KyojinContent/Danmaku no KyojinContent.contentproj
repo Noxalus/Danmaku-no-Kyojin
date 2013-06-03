@@ -1062,12 +1062,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[OtakuTwo]_dis_bee_3.xml">
-      <Name>[OtakuTwo]_dis_bee_3</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[OtakuTwo]_dis_bee_hakkyou.xml">
       <Name>[OtakuTwo]_dis_bee_hakkyou</Name>
       <Importer>XmlImporter</Importer>

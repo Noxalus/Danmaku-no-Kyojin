@@ -1,20 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 using Danmaku_no_Kyojin.Utils;
 using Danmaku_no_Kyojin.Camera;
-using Danmaku_no_Kyojin.Shaders;
 
 namespace Danmaku_no_Kyojin
 {
@@ -22,7 +11,7 @@ namespace Danmaku_no_Kyojin
     {
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch;
-        GameStateManager stateManager;
+        readonly GameStateManager _stateManager;
 
         // Screens
         public TitleScreen TitleScreen;
@@ -35,7 +24,7 @@ namespace Danmaku_no_Kyojin
 
         public Rectangle ScreenRectangle;
 
-        public static Texture2D _pixel;
+        public static Texture2D Pixel;
 
         // Camera
         public Camera2D Camera;
@@ -67,19 +56,19 @@ namespace Danmaku_no_Kyojin
 
             Components.Add(new InputHandler(this));
 
-            stateManager = new GameStateManager(this);
-            Components.Add(stateManager);
+            _stateManager = new GameStateManager(this);
+            Components.Add(_stateManager);
 
             // Screens
-            TitleScreen = new TitleScreen(this, stateManager);
-            GameConfigurationScreen = new GameConfigurationScreen(this, stateManager);
-            GameplayScreen = new GameplayScreen(this, stateManager);
-            LeaderboardScreen = new LeaderboardScreen(this, stateManager);
-            ImprovementScreen = new ImprovementScreen(this, stateManager);
-            GameOverScreen = new GameOverScreen(this, stateManager);
-            OptionsScreen = new OptionsScreen(this, stateManager);
+            TitleScreen = new TitleScreen(this, _stateManager);
+            GameConfigurationScreen = new GameConfigurationScreen(this, _stateManager);
+            GameplayScreen = new GameplayScreen(this, _stateManager);
+            LeaderboardScreen = new LeaderboardScreen(this, _stateManager);
+            ImprovementScreen = new ImprovementScreen(this, _stateManager);
+            GameOverScreen = new GameOverScreen(this, _stateManager);
+            OptionsScreen = new OptionsScreen(this, _stateManager);
 
-            stateManager.ChangeState(TitleScreen);
+            _stateManager.ChangeState(TitleScreen);
 
             // FPS
             Components.Add(new FrameRateCounter(this));
@@ -106,7 +95,7 @@ namespace Danmaku_no_Kyojin
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _pixel = Content.Load<Texture2D>("Graphics/Pictures/pixel");
+            Pixel = Content.Load<Texture2D>("Graphics/Pictures/pixel");
         }
 
         protected override void UnloadContent()
