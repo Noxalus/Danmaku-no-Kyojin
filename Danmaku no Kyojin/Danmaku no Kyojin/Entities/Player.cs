@@ -249,7 +249,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             // Text
             string lives = string.Format("P{0}", ID);
-            string score = string.Format("{1:000000000000}", ID, _score);
+            string score = string.Format("{0:000000000000}", _score);
 
             if (ID == 1)
             {

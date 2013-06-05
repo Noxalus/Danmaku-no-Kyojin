@@ -17,7 +17,6 @@ Content\Graphics\Fonts\MenuFont.xnb
 Content\Graphics\Fonts\TimerSeconds.xnb
 Content\Graphics\Fonts\TimerMilliseconds.xnb
 Content\Graphics\Fonts\TitleFont.xnb
-Content\Audio\SE\hit.xnb
 Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
@@ -26,6 +25,7 @@ Content\Audio\Musics\Menu.xnb
 Content\Audio\Musics\Background.xnb
 Content\Audio\SE\buy.xnb
 Content\Audio\SE\choose.xnb
+Content\Audio\SE\hit.xnb
 Content\Audio\SE\hurt.xnb
 Content\Audio\SE\select.xnb
 Content\Audio\Musics\Menu.wma

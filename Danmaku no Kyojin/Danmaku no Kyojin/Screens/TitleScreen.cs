@@ -183,6 +183,11 @@ namespace Danmaku_no_Kyojin.Screens
                     Config.Cheat = true;
                 }
             }
+            else
+            {
+                if (InputHandler.KeyDown(Keys.F9))
+                    Config.Debug = !Config.Debug;
+            }
 
             base.Update(gameTime);
         }

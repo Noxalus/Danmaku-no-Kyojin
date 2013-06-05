@@ -188,6 +188,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 UnloadContent();
 
+                GameRef.GameOverScreen.Died = !_timer.IsFinished;
                 GameRef.GameOverScreen.Time = _playTime;
                 GameRef.GameOverScreen.WaveNumber = _waveNumber;
                 GameRef.GameOverScreen.Player1Score = Players[0].Score;
@@ -203,7 +204,6 @@ namespace Danmaku_no_Kyojin.Screens
                 GameRef.GameOverScreen.TotalScore = totalScore;
 
                 PlayerData.Credits += totalScore;
-
 
                 StateManager.ChangeState(GameRef.GameOverScreen);
             }

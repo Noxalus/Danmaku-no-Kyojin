@@ -16,6 +16,7 @@ namespace Danmaku_no_Kyojin.Screens
         private string _title;
         private List<string> _content;
         private string[] _actions;
+        public bool Died { get; set; }
         public TimeSpan Time { get; set; }
         public int WaveNumber { get; set; }
         public int Player1Score { get; set; }
@@ -45,7 +46,8 @@ namespace Danmaku_no_Kyojin.Screens
             MediaPlayer.Stop();
 
             _menuIndex = 0;
-            _title = "YOU DIED";
+
+            _title = (Died) ? "YOU DIED !" : "TIME'S UP !";
 
             // Scores
             _content.Clear();

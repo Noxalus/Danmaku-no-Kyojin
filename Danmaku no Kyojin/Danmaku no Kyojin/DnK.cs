@@ -95,6 +95,18 @@ namespace Danmaku_no_Kyojin
 
         protected override void Dispose(bool disposing)
         {
+            TitleScreen.Dispose();
+            GameConfigurationScreen.Dispose();
+            GameplayScreen.Dispose();
+            LeaderboardScreen.Dispose();
+            ImprovementScreen.Dispose();
+            GameOverScreen.Dispose();
+            OptionsScreen.Dispose();
+
+            _stateManager.Dispose();
+            SpriteBatch.Dispose();
+
+
             StaticClassSerializer.Save(typeof(PlayerData), "data.bin");
 
             base.Dispose(disposing);
