@@ -145,7 +145,7 @@ namespace Danmaku_no_Kyojin.Entities
             }
             else
             {
-                Rotation += _rotationIncrementor;
+                Rotation += _rotationIncrementor * dt;
                 if (_rotationIncrementor < 1f)
                     _rotationIncrementor += 0.001f;
 
@@ -191,7 +191,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                         AddBullet(true);
                     }
-                    else if (Config.Debug && InputHandler.KeyPressed(Keys.LeftControl))
+                    else if (InputHandler.KeyPressed(Keys.LeftControl))
                     {
                         AddBullet(false);
                     }
@@ -208,7 +208,7 @@ namespace Danmaku_no_Kyojin.Entities
                 }
 
                 if (MoverManager.movers.Count <= 1)
-                    AddBullet(true);
+                    AddBullet(false);
 
                 MoverManager.Update(gameTime);
                 MoverManager.FreeMovers();

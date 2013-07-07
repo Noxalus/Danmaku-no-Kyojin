@@ -11,12 +11,14 @@ Content\Graphics\Entities\ship_bullet.xnb
 Content\Graphics\Pictures\bulletTimeBarContent.xnb
 Content\Graphics\Pictures\bulletTimeBarLeft.xnb
 Content\Graphics\Pictures\bulletTimeBarRight.xnb
+Content\Graphics\Pictures\hitbox.xnb
+Content\Graphics\Pictures\gamepad_icon.xnb
+Content\Graphics\Pictures\keyboard_icon.xnb
 Content\Graphics\Fonts\ControlFont.xnb
 Content\Graphics\Fonts\FPS.xnb
 Content\Graphics\Fonts\MenuFont.xnb
-Content\Graphics\Fonts\TimerSeconds.xnb
-Content\Graphics\Fonts\TimerMilliseconds.xnb
 Content\Graphics\Fonts\TitleFont.xnb
+Content\Graphics\Fonts\TimerSeconds.xnb
 Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
@@ -29,7 +31,9 @@ Content\Audio\SE\hit.xnb
 Content\Audio\SE\hurt.xnb
 Content\Audio\SE\select.xnb
 Content\Audio\SE\boss_shoot.xnb
-Content\Graphics\Pictures\hitbox.xnb
+Content\Audio\SE\pass.xnb
+Content\Audio\SE\dead.xnb
+Content\Audio\SE\boss_dead.xnb
 Content\Audio\Musics\Menu.wma
 Content\Audio\Musics\Background.wma
 Content\Graphics\Pictures\logo.png
@@ -193,7 +197,6 @@ Content\XML\Samples\[Psyvariar]_X-A_boss_winder.xml
 Content\XML\Samples\[Psyvariar]_X-B_colony_shape_satellite.xml
 Content\XML\Samples\[SilverGun]_4D_boss_PENTA.xml
 Content\XML\Samples\[STORM_CALIBAR]_last_boss_double_roll_bullets.xml
-Content\XML\Samples\[Strikers1999]_hanabi.xml
 Content\XML\Samples\[tenmado]_3_boss_2.xml
 Content\XML\Samples\[tenmado]_5_boss_1.xml
 Content\XML\Samples\[tenmado]_5_boss_3.xml

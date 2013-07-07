@@ -103,6 +103,8 @@ namespace Danmaku_no_Kyojin
             ImprovementScreen.Dispose();
             GameOverScreen.Dispose();
             OptionsScreen.Dispose();
+            KeyboardInputsScreen.Dispose();
+            GamepadInputsScreen.Dispose();
 
             _stateManager.Dispose();
             SpriteBatch.Dispose();
@@ -130,7 +132,7 @@ namespace Danmaku_no_Kyojin
 
         protected override void Update(GameTime gameTime)
         {
-            if (InputHandler.KeyPressed(Keys.F1))
+            if (InputHandler.KeyPressed(Keys.F1) || InputHandler.ButtonPressed(Buttons.Start, PlayerIndex.One))
             {
                 Config.FullScreen = !Config.FullScreen;
                 Graphics.IsFullScreen = Config.FullScreen; 

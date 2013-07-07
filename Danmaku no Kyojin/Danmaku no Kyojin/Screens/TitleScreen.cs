@@ -85,7 +85,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
-            if (InputHandler.PressedCancel())
+            if (InputHandler.PressedCancel() && _passStep != 8)
                 Game.Exit();
 
             if (InputHandler.PressedUp())
@@ -104,7 +104,7 @@ namespace Danmaku_no_Kyojin.Screens
                 GameRef.Select.Play();
             }
 
-            if (InputHandler.PressedAction())
+            if (InputHandler.PressedAction() && _passStep != 9)
             {
                 GameRef.Choose.Play();
 
@@ -149,29 +149,30 @@ namespace Danmaku_no_Kyojin.Screens
             _backgroundMainRectangle.X -= (int)(70 * (float)gameTime.ElapsedGameTime.TotalSeconds);
             _backgroundRightRectangle.X -= (int)(70 * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
+            // Cheat and debug mode
             if (!Config.Cheat)
             {
-                if ((_passStep == 0 || _passStep == 1) && InputHandler.KeyPressed(Keys.Up))
+                if ((_passStep == 0 || _passStep == 1) && InputHandler.PressedUp())
                 {
                     _passStep++;
                 }
-                else if ((_passStep == 2 || _passStep == 3) && InputHandler.KeyPressed(Keys.Down))
+                else if ((_passStep == 2 || _passStep == 3) && InputHandler.PressedDown())
                 {
                     _passStep++;
                 }
-                else if ((_passStep == 4 || _passStep == 6) && InputHandler.KeyPressed(Keys.Left))
+                else if ((_passStep == 4 || _passStep == 6) && InputHandler.PressedLeft())
                 {
                     _passStep++;
                 }
-                else if ((_passStep == 5 || _passStep == 7) && InputHandler.KeyPressed(Keys.Right))
+                else if ((_passStep == 5 || _passStep == 7) && InputHandler.PressedRight())
                 {
                     _passStep++;
                 }
-                else if (_passStep == 8 && InputHandler.KeyPressed(Keys.B))
+                else if (_passStep == 8 && (InputHandler.PressedCancel() || InputHandler.KeyPressed(Keys.B)))
                 {
                     _passStep++;
                 }
-                else if (_passStep == 9 && InputHandler.KeyPressed(Keys.A))
+                else if (_passStep == 9 && (InputHandler.PressedAction() || InputHandler.KeyPressed(Keys.A)))
                 {
                     _passStep++;
                 }
@@ -180,13 +181,20 @@ namespace Danmaku_no_Kyojin.Screens
                 {
                     Config.Cheat = true;
                     _passSound.Play();
-                    //_passSound.Dispose();
                 }
             }
             else
             {
                 if (InputHandler.KeyDown(Keys.F9))
                     Config.Debug = !Config.Debug;
+            }
+
+            if (Config.Cheat)
+            {
+                if (InputHandler.KeyDown(Keys.A) || InputHandler.ButtonDown(Buttons.Y, PlayerIndex.One))
+                {
+                    PlayerData.Credits += 1000;
+                }
             }
 
             base.Update(gameTime);

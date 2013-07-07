@@ -9,7 +9,7 @@
   <direction type="absolute">180</direction>
   <speed>0</speed>
   <bulletRef label="dummy">
-    <param>0.5</param>
+    <param>1.5</param>
   </bulletRef>
  </fire>
 

@@ -1071,12 +1071,6 @@
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XML\Samples\[Strikers1999]_hanabi.xml">
-      <Name>[Strikers1999]_hanabi</Name>
-      <Importer>XmlImporter</Importer>
-      <Processor>PassThroughProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="XML\Samples\[tenmado]_3_boss_2.xml">
       <Name>[tenmado]_3_boss_2</Name>
       <Importer>XmlImporter</Importer>
