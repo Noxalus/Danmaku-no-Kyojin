@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin.Screens
 {
-    public class OptionsScreen : BaseGameState
+    public class GamepadInputsScreen : BaseGameState
     {
         #region Field region
 
@@ -19,10 +19,10 @@ namespace Danmaku_no_Kyojin.Screens
 
         #region Constructor region
 
-        public OptionsScreen(Game game, GameStateManager manager)
+        public GamepadInputsScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            _title = "Options";
+            _title = "Gamepad";
             _messages = new string[]
                 {
                     "This functionnality is not implemented yet !",
@@ -51,8 +51,8 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
-            if (InputHandler.KeyPressed(Keys.Escape))
-                StateManager.ChangeState(GameRef.TitleScreen);
+            if (InputHandler.PressedCancel())
+                StateManager.ChangeState(GameRef.OptionsScreen);
 
             base.Update(gameTime);
         }

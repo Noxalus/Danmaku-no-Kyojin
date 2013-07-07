@@ -17,7 +17,6 @@ namespace Danmaku_no_Kyojin.Entities
 
         // Fonts
         private SpriteFont _secondsFont;
-        private SpriteFont _millisecondsFont;
 
         public bool IsFinished
         {
@@ -45,7 +44,6 @@ namespace Danmaku_no_Kyojin.Entities
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _secondsFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TimerSeconds");
-            _millisecondsFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TimerMilliseconds");
 
             base.LoadContent();
         }

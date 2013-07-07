@@ -53,7 +53,8 @@ namespace Danmaku_no_Kyojin.Entities
         }
 
         // Audio
-        private SoundEffect _shoot = null;
+        private SoundEffect _shootSound = null;
+        private SoundEffect _deadSound = null;
 
         #endregion
 
@@ -110,10 +111,10 @@ namespace Danmaku_no_Kyojin.Entities
             _bulletTimeBarContent = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarContent");
             _bulletTimeBarRight = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarRight");
 
-            if (_shoot == null)
-            {
-                _shoot = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
-            }
+            if (_shootSound == null)
+                _shootSound = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
+            if (_deadSound == null)
+                _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
         }
 
         public override void Update(GameTime gameTime)
@@ -141,16 +142,16 @@ namespace Danmaku_no_Kyojin.Entities
             if (_controller == Config.Controller.Keyboard)
             {
                 // Keyboard
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInput[0]))
+                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Up"]))
                     _direction.Y = -1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInput[1]))
+                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Right"]))
                     _direction.X = 1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInput[2]))
+                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Down"]))
                     _direction.Y = 1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInput[3]))
+                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Left"]))
                     _direction.X = -1;
 
-                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.KeyDown(Config.PlayerKeyboardInput[4]))) ? true : false;
+                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Slow"]))) ? true : false;
                 BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed)) ? true : false;
 
                 if (_direction != Vector2.Zero)
@@ -465,7 +466,7 @@ namespace Danmaku_no_Kyojin.Entities
                     AddBullet(bullet);
                 }
 
-                _shoot.Play();
+                _shootSound.Play();
             }
         }
 
@@ -474,6 +475,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (!IsInvincible)
             {
                 _lives--;
+                _deadSound.Play();
 
                 IsInvincible = true;
             }

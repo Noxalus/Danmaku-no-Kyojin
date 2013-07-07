@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace Danmaku_no_Kyojin
 {
@@ -29,9 +30,13 @@ namespace Danmaku_no_Kyojin
         // Player
         public static int PlayersNumber = 1;
 
-        public static readonly Keys[] PlayerKeyboardInput = new Keys[]
+        public static readonly Dictionary<string, Keys> PlayerKeyboardInputs = new Dictionary<string, Keys>()
         {
-            Keys.Z, Keys.D, Keys.S, Keys.Q, Keys.LeftShift
+            {"Up", Keys.Z },
+            {"Right", Keys.D },
+            {"Down", Keys.S },
+            {"Left", Keys.Q },
+            {"Slow", Keys.LeftShift },
         };
 
         public static readonly Buttons[] PlayerGamepadInput = new Buttons[]
@@ -63,5 +68,9 @@ namespace Danmaku_no_Kyojin
         }
 
         public static TimeSpan BossInitialTimer = TimeSpan.FromSeconds(5);
+
+        // Audio
+        public static int SoundVolume = 80;
+        public static int MusicVolume = 100;
     }
 }

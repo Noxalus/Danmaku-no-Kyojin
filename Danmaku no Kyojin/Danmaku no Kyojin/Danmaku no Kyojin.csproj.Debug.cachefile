@@ -14,9 +14,8 @@ Content\Graphics\Pictures\bulletTimeBarRight.xnb
 Content\Graphics\Fonts\ControlFont.xnb
 Content\Graphics\Fonts\FPS.xnb
 Content\Graphics\Fonts\MenuFont.xnb
-Content\Graphics\Fonts\TimerSeconds.xnb
-Content\Graphics\Fonts\TimerMilliseconds.xnb
 Content\Graphics\Fonts\TitleFont.xnb
+Content\Audio\SE\hit.xnb
 Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
@@ -25,17 +24,16 @@ Content\Audio\Musics\Menu.xnb
 Content\Audio\Musics\Background.xnb
 Content\Audio\SE\buy.xnb
 Content\Audio\SE\choose.xnb
-<<<<<<< HEAD
 Content\Audio\SE\hurt.xnb
 Content\Audio\SE\select.xnb
 Content\Audio\SE\boss_shoot.xnb
 Content\Graphics\Pictures\hitbox.xnb
 Content\Audio\SE\pass.xnb
-=======
-Content\Audio\SE\hit.xnb
-Content\Audio\SE\hurt.xnb
-Content\Audio\SE\select.xnb
->>>>>>> 74a7c93923e927597ccd635e08e39eb5f5c74495
+Content\Audio\SE\dead.xnb
+Content\Graphics\Fonts\TimerSeconds.xnb
+Content\Audio\SE\boss_dead.xnb
+Content\Graphics\Pictures\gamepad_icon.xnb
+Content\Graphics\Pictures\keyboard_icon.xnb
 Content\Audio\Musics\Menu.wma
 Content\Audio\Musics\Background.wma
 Content\Graphics\Pictures\logo.png

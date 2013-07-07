@@ -20,6 +20,8 @@ namespace Danmaku_no_Kyojin
         public ImprovementScreen ImprovementScreen;
         public LeaderboardScreen LeaderboardScreen;
         public OptionsScreen OptionsScreen;
+        public KeyboardInputsScreen KeyboardInputsScreen;
+        public GamepadInputsScreen GamepadInputsScreen;
         public GameConfigurationScreen GameConfigurationScreen;
         public GameplayScreen GameplayScreen;
         public GameOverScreen GameOverScreen;
@@ -73,14 +75,13 @@ namespace Danmaku_no_Kyojin
             ImprovementScreen = new ImprovementScreen(this, _stateManager);
             GameOverScreen = new GameOverScreen(this, _stateManager);
             OptionsScreen = new OptionsScreen(this, _stateManager);
+            KeyboardInputsScreen = new KeyboardInputsScreen(this, _stateManager);
+            GamepadInputsScreen = new GamepadInputsScreen(this, _stateManager);
 
             _stateManager.ChangeState(TitleScreen);
 
             // FPS
             Components.Add(new FrameRateCounter(this));
-
-            // Audio
-            SoundEffect.MasterVolume = 0.75f;
         }
 
 

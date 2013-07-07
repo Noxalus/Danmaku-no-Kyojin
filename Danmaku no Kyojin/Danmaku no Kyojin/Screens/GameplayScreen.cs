@@ -125,7 +125,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             _playTime += gameTime.ElapsedGameTime;
 
-            if (InputHandler.KeyDown(Keys.Escape))
+            if (InputHandler.PressedCancel())
             {
                 UnloadContent();
                 StateManager.ChangeState(GameRef.TitleScreen);
@@ -153,10 +153,14 @@ namespace Danmaku_no_Kyojin.Screens
 
                         if (_enemy.IsAlive && _enemy.GetBoundingElement().Intersects(p.GetBullets()[i].GetBoundingElement()))
                         {
-                            _enemy.TakeDamage(p.GetBullets()[i].Power);
+                            if (_enemy.IsReady())
+                            {
+                                _enemy.TakeDamage(p.GetBullets()[i].Power);
+                                hit.Play();
+                                p.AddScore(Improvements.ScoreByHitData[PlayerData.ScoreByHitIndex].Key);
+                            }
+                            
                             p.GetBullets().Remove(p.GetBullets()[i]);
-                            hit.Play();
-                            p.AddScore(Improvements.ScoreByHitData[PlayerData.ScoreByHitIndex].Key);
                         }
                         else
                         {
@@ -332,30 +336,33 @@ namespace Danmaku_no_Kyojin.Screens
         /// </summary>
         private void HandleInput()
         {
-            // Switch to the next bloom settings preset?
-            if (InputHandler.KeyPressed(Keys.I))
+            if (Config.Debug)
             {
-                _bloomSettingsIndex = (_bloomSettingsIndex + 1) %
-                                     BloomSettings.PresetSettings.Length;
+                // Switch to the next bloom settings preset?
+                if (InputHandler.KeyPressed(Keys.I))
+                {
+                    _bloomSettingsIndex = (_bloomSettingsIndex + 1) %
+                                         BloomSettings.PresetSettings.Length;
 
-                _bloom.Settings = BloomSettings.PresetSettings[_bloomSettingsIndex];
-                _bloom.Visible = true;
-            }
+                    _bloom.Settings = BloomSettings.PresetSettings[_bloomSettingsIndex];
+                    _bloom.Visible = true;
+                }
 
-            // Toggle bloom on or off?
-            if (InputHandler.KeyPressed(Keys.O))
-            {
-                _bloom.Visible = !_bloom.Visible;
-            }
+                // Toggle bloom on or off?
+                if (InputHandler.KeyPressed(Keys.O))
+                {
+                    _bloom.Visible = !_bloom.Visible;
+                }
 
-            // Cycle through the intermediate buffer debug display modes?
-            if (InputHandler.KeyPressed(Keys.P))
-            {
-                _bloom.Visible = true;
-                _bloom.ShowBuffer++;
+                // Cycle through the intermediate buffer debug display modes?
+                if (InputHandler.KeyPressed(Keys.P))
+                {
+                    _bloom.Visible = true;
+                    _bloom.ShowBuffer++;
 
-                if (_bloom.ShowBuffer > BloomComponent.IntermediateBuffer.FinalResult)
-                    _bloom.ShowBuffer = 0;
+                    if (_bloom.ShowBuffer > BloomComponent.IntermediateBuffer.FinalResult)
+                        _bloom.ShowBuffer = 0;
+                }
             }
         }
     }

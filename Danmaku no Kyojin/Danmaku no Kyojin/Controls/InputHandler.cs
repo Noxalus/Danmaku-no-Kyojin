@@ -137,11 +137,34 @@ namespace Danmaku_no_Kyojin.Controls
                 ButtonPressed(Buttons.LeftThumbstickDown, PlayerIndex.One));
         }
 
+        public static bool PressedLeft()
+        {
+            return
+                (KeyPressed(Keys.Left) ||
+                ButtonPressed(Buttons.DPadLeft, PlayerIndex.One) ||
+                ButtonPressed(Buttons.LeftThumbstickLeft, PlayerIndex.One));
+        }
+
+        public static bool PressedRight()
+        {
+            return
+                (KeyPressed(Keys.Right) ||
+                ButtonPressed(Buttons.DPadRight, PlayerIndex.One) ||
+                ButtonPressed(Buttons.LeftThumbstickRight, PlayerIndex.One));
+        }
+
         public static bool PressedAction()
         {
             return
                 (KeyPressed(Keys.Enter) ||
                 ButtonPressed(Buttons.A, PlayerIndex.One));
+        }
+
+        public static bool PressedCancel()
+        {
+            return
+                (KeyPressed(Keys.Escape) ||
+                ButtonPressed(Buttons.B, PlayerIndex.One));
         }
 
         #endregion

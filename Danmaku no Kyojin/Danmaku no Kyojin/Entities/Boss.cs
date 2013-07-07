@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -20,22 +21,18 @@ namespace Danmaku_no_Kyojin.Entities
         Mover _mover;
         public MoverManager MoverManager { get; set; }
 
-        /// <summary>
-        /// A list of all the bulletml samples we have loaded
-        /// </summary>
+        // A list of all the bulletml samples we have loaded
         private List<BulletPattern> _myPatterns = new List<BulletPattern>();
 
-        /// <summary>
-        /// The names of all the bulletml patterns that are loaded, stored so we can display what is being fired
-        /// </summary>
+        // The names of all the bulletml patterns that are loaded, stored so we can display what is being fired
         private List<string> _patternNames = new List<string>();
 
-        /// <summary>
-        /// The current Bullet ML pattern to use to shoot bullets
-        /// </summary>
+        // The current Bullet ML pattern to use to shoot bullets
         private int _currentPattern = 0;
 
         private float _speed;
+        private bool _ready;
+        private float _rotationIncrementor;
 
         private Vector2 _motion;
 
@@ -45,6 +42,9 @@ namespace Danmaku_no_Kyojin.Entities
         private float _totalHealth;
         private float _health;
         private Texture2D _healthBar;
+
+        // Audio
+        private SoundEffect _deadSound = null;
 
         public int DefeatNumber { get; set; }
 
@@ -60,6 +60,7 @@ namespace Danmaku_no_Kyojin.Entities
             MoverManager = new MoverManager(Game);
             GameManager.GameDifficulty = Config.GameDifficultyDelegate;
             DefeatNumber = 0;
+            _speed = 1f;
         }
 
         public override void Initialize()
@@ -74,7 +75,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
-            _speed = 1;
+            _ready = false;
 
             _totalHealth = InitialHealth * ((DefeatNumber + 1) / 2f);
             _health = _totalHealth;
@@ -83,15 +84,21 @@ namespace Danmaku_no_Kyojin.Entities
 
             _timer = Config.BossInitialTimer;
 
+            Rotation = 0;
+            _rotationIncrementor = 0.001f;
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/enemy");
-            _healthBar = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
-
+            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Entities/enemy");
+            _healthBar = Game.Content.Load<Texture2D>(@"Graphics/Pictures/pixel");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+
+            // Audio
+            if (_deadSound == null)
+                _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
 
             List<Point> vertices = new List<Point>()
                 {
@@ -105,7 +112,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Position = new Vector2(
                 Game.GraphicsDevice.Viewport.Width / 2f,
-                75 + Sprite.Height / 2f);
+                -Sprite.Height);
 
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML\", "*.xml", SearchOption.AllDirectories))
@@ -129,75 +136,83 @@ namespace Danmaku_no_Kyojin.Entities
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
 
-            if (Position.X > Game.GraphicsDevice.Viewport.Width - Sprite.Width - (Speed * dt) ||
-                Position.X < Sprite.Width + (Speed * dt))
-                _motion *= -1;
-
-            Rotation += 1f;
-
-            //Position += _motion * Speed * dt;
-
-            if (_health <= 0)
+            if (Position.Y < (75 + Sprite.Height / 2f))
             {
-                IsAlive = false;
-                MoverManager.movers.Clear();
+                Position.Y += 1 * Speed * dt;
+
+                if (Position.Y >= (75 + Sprite.Height / 2f))
+                    _ready = true;
             }
-
-
-            if (Config.Debug)
+            else
             {
-                //check input to increment/decrement the current bullet pattern
-                if (InputHandler.KeyPressed(Keys.A))
-                {
-                    //decrement the pattern
-                    if (0 >= _currentPattern)
-                    {
-                        //if it is at the beginning, move to the end
-                        _currentPattern = _myPatterns.Count - 1;
-                    }
-                    else
-                    {
-                        _currentPattern--;
-                    }
+                Rotation += _rotationIncrementor;
+                if (_rotationIncrementor < 1f)
+                    _rotationIncrementor += 0.001f;
 
+
+                if (_health <= 0)
+                {
+                    IsAlive = false;
+                    _deadSound.Play();
+                    MoverManager.movers.Clear();
+                }
+
+
+                if (Config.Debug)
+                {
+                    //check input to increment/decrement the current bullet pattern
+                    if (InputHandler.KeyPressed(Keys.A))
+                    {
+                        //decrement the pattern
+                        if (0 >= _currentPattern)
+                        {
+                            //if it is at the beginning, move to the end
+                            _currentPattern = _myPatterns.Count - 1;
+                        }
+                        else
+                        {
+                            _currentPattern--;
+                        }
+
+                        AddBullet(true);
+                    }
+                    else if (InputHandler.KeyPressed(Keys.X))
+                    {
+                        //increment the pattern
+                        if ((_myPatterns.Count - 1) <= _currentPattern)
+                        {
+                            //if it is at the beginning, move to the end
+                            _currentPattern = 0;
+                        }
+                        else
+                        {
+                            _currentPattern++;
+                        }
+
+                        AddBullet(true);
+                    }
+                    else if (Config.Debug && InputHandler.KeyPressed(Keys.LeftControl))
+                    {
+                        AddBullet(false);
+                    }
+                }
+
+                _timer -= gameTime.ElapsedGameTime;
+                if (_timer < TimeSpan.Zero)
+                {
+                    _timer = Config.BossInitialTimer;
+                    /*
+                    if (MoverManager.movers.Count < 10)
+                        AddBullet(false);
+                    */
+                }
+
+                if (MoverManager.movers.Count <= 1)
                     AddBullet(true);
-                }
-                else if (InputHandler.KeyPressed(Keys.X))
-                {
-                    //increment the pattern
-                    if ((_myPatterns.Count - 1) <= _currentPattern)
-                    {
-                        //if it is at the beginning, move to the end
-                        _currentPattern = 0;
-                    }
-                    else
-                    {
-                        _currentPattern++;
-                    }
 
-                    AddBullet(true);
-                }
-                else if (InputHandler.KeyPressed(Keys.LeftControl))
-                {
-                    AddBullet(false);
-                }
+                MoverManager.Update(gameTime);
+                MoverManager.FreeMovers();
             }
-
-            _timer -= gameTime.ElapsedGameTime;
-            if (_timer < TimeSpan.Zero)
-            {
-                _timer = Config.BossInitialTimer;
-                /*
-                if (MoverManager.movers.Count < 10)
-                    AddBullet(false);
-                */
-            }
-
-            if (MoverManager.movers.Count <= 1)
-                AddBullet(true);
-
-            MoverManager.Update(gameTime);
-            MoverManager.FreeMovers();
 
             base.Update(gameTime);
         }
@@ -231,7 +246,8 @@ namespace Danmaku_no_Kyojin.Entities
 
         public void TakeDamage(float damage)
         {
-            _health -= damage;
+            if(_ready)
+                _health -= damage;
         }
 
         private void AddBullet(bool clear)
@@ -252,6 +268,11 @@ namespace Danmaku_no_Kyojin.Entities
         public string GetCurrentPatternName()
         {
             return Path.GetFileNameWithoutExtension(_patternNames[_currentPattern].ToUpper());
+        }
+
+        public bool IsReady()
+        {
+            return _ready;
         }
     }
 }

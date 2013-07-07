@@ -60,9 +60,12 @@ namespace Danmaku_no_Kyojin.Screens
             // Music
             if (MediaPlayer.State != MediaState.Playing)
             {
+                MediaPlayer.Volume = Config.MusicVolume/100f;
                 MediaPlayer.IsRepeating = true;
                 MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Menu"));
             }
+
+            SoundEffect.MasterVolume = Config.SoundVolume/100f;
 
             base.Initialize();
         }
@@ -82,7 +85,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
-            if (InputHandler.KeyPressed(Keys.Escape))
+            if (InputHandler.PressedCancel())
                 Game.Exit();
 
             if (InputHandler.PressedUp())

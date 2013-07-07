@@ -61,7 +61,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             ControlManager.Update(gameTime, PlayerIndex.One);
 
-            if (InputHandler.KeyPressed(Keys.Escape))
+            if (InputHandler.PressedCancel())
                 StateManager.ChangeState(GameRef.TitleScreen);
 
             if (InputHandler.PressedUp())

@@ -111,12 +111,6 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="ProjectMercury">
-      <HintPath>..\Libs\ProjectMercury.dll</HintPath>
-    </Reference>
-    <Reference Include="ProjectMercury.Design">
-      <HintPath>..\Libs\ProjectMercury.Design.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
