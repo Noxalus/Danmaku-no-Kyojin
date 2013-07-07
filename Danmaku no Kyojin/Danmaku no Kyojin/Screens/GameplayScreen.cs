@@ -37,7 +37,9 @@ namespace Danmaku_no_Kyojin.Screens
         private int _bloomSettingsIndex = 0;
 
         // Background
-        private Texture2D _background;
+        private Texture2D _backgroundImage;
+        private Rectangle _backgroundMainRectangle;
+        private Rectangle _backgroundTopRectangle;
 
         public GameplayScreen(Game game, GameStateManager manager)
             : base(game, manager)
@@ -56,6 +58,9 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
+            _backgroundMainRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
+            _backgroundTopRectangle = new Rectangle(0, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
+
             _playTime = TimeSpan.Zero;
 
             _enemy = new Boss(GameRef);
@@ -93,7 +98,7 @@ namespace Danmaku_no_Kyojin.Screens
                 hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hurt");
             }
 
-            _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
 
             base.LoadContent();
         }
@@ -105,6 +110,15 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
+            // Move the background
+            if (_backgroundMainRectangle.Y >= Config.Resolution.Y)
+                _backgroundMainRectangle.Y = _backgroundTopRectangle.Y - Config.Resolution.Y;
+            if (_backgroundTopRectangle.Y >= Config.Resolution.Y)
+                _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - Config.Resolution.Y;
+
+            _backgroundMainRectangle.Y += (int)(250 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            _backgroundTopRectangle.Y += (int)(250 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
             HandleInput();
 
             _timer.Update(gameTime);
@@ -220,8 +234,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
 
-            GameRef.SpriteBatch.Draw(_background, new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y),
-                                     Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, Color.White);
 
             /*
             GameRef.SpriteBatch.Draw(_background, new Rectangle(

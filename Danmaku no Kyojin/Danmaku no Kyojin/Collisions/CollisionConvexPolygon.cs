@@ -156,6 +156,11 @@ namespace Danmaku_no_Kyojin.Collisions
             );
         }
 
+        public override Vector2 GetCenter()
+        {
+            return Vector2.Zero;
+        }
+
         private void ComputeAxes()
         {
             // We start by deleting former axis

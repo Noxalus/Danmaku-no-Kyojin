@@ -68,7 +68,7 @@ namespace Danmaku_no_Kyojin.Collisions
             }
         }
 
-        public Vector2 GetCenter()
+        public override Vector2 GetCenter()
         {
             return new Vector2(
                 Parent.X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),

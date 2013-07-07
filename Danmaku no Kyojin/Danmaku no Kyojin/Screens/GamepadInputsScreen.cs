@@ -5,13 +5,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin.Screens
 {
-    public class GamepadInputsScreen : BaseGameState
+    public class OptionsScreen : BaseGameState
     {
         #region Field region
 
         private string _title;
-        private readonly string[] _menuText;
-        private int _menuIndex;
+        private string[] _messages;
 
         private Texture2D _background;
         private SpriteFont _titleFont;
@@ -20,16 +19,14 @@ namespace Danmaku_no_Kyojin.Screens
 
         #region Constructor region
 
-        public GamepadInputsScreen(Game game, GameStateManager manager)
+        public OptionsScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
             _title = "Options";
-            _menuText = new string[]
+            _messages = new string[]
                 {
-                    "1P Control",
-                    "2P Control",
-                    "Sound volume",
-                    "Music volume"
+                    "This functionnality is not implemented yet !",
+                    "[Press Escape to go back to the title screen]"
                 };
         }
 
@@ -40,8 +37,6 @@ namespace Danmaku_no_Kyojin.Screens
         public override void Initialize()
         {
             base.Initialize();
-
-            _menuIndex = 0;
         }
 
         protected override void LoadContent()
@@ -78,6 +73,15 @@ namespace Danmaku_no_Kyojin.Screens
                     Game.GraphicsDevice.Viewport.Width / 2f - _titleFont.MeasureString(_title).X / 2,
                     Game.GraphicsDevice.Viewport.Height / 2f - (_titleFont.MeasureString(_title).Y * 2)),
                 Color.White);
+
+            for (int i = 0; i < _messages.Length; i++)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _messages[i],
+                new Vector2(
+                    Game.GraphicsDevice.Viewport.Width / 2f - ControlManager.SpriteFont.MeasureString(_messages[i]).X / 2,
+                    Game.GraphicsDevice.Viewport.Height / 2f - ControlManager.SpriteFont.MeasureString(_messages[i]).Y / 2 + 20 * i),
+                Color.White);
+            }
 
             GameRef.SpriteBatch.End();
 

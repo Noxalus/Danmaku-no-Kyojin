@@ -21,6 +21,9 @@ namespace Danmaku_no_Kyojin.Entities
         private Config.Controller _controller;
 
         private Texture2D _bulletSprite;
+        private Texture2D _hitboxSprite;
+
+        private float _hitboxRadius;
 
         private float _velocity;
         private Vector2 _direction;
@@ -86,6 +89,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             _bulletTimeTimer = Config.DefaultBulletTimeTimer;
 
+            _hitboxRadius = (float)Math.PI * 1.5f * 2;
+
             base.Initialize();
         }
 
@@ -95,8 +100,9 @@ namespace Danmaku_no_Kyojin.Entities
 
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
+            _hitboxSprite = this.Game.Content.Load<Texture2D>("Graphics/Pictures/hitbox");
             Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
-            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), (float)Math.PI * 1.5f);
+            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), _hitboxRadius/2f);
 
             _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
 
@@ -241,6 +247,17 @@ namespace Danmaku_no_Kyojin.Entities
                 Game.Graphics.GraphicsDevice.Clear(Color.Red);
 
             Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+
+            // hitbox
+            if (SlowMode)
+            {
+                Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
+                    (int)(CollisionBox.GetCenter().X - _hitboxRadius / 2f),
+                    (int)(CollisionBox.GetCenter().Y - _hitboxRadius / 2f),
+                    (int)_hitboxRadius,
+                    (int)_hitboxRadius),
+                    Color.White);
+            }
 
             base.Draw(gameTime);
         }

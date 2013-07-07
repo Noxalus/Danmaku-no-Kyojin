@@ -22,9 +22,17 @@ Content\Graphics\Shaders\Bloom.xnb
 Content\Graphics\Shaders\BloomExtract.xnb
 Content\Graphics\Shaders\BloomCombine.xnb
 Content\Graphics\Shaders\GaussianBlur.xnb
-Content\Audio\DnK.xgs
-Content\Audio\Wave Bank.xwb
-Content\Audio\Sound Bank.xsb
+Content\Audio\Musics\Menu.xnb
+Content\Audio\Musics\Background.xnb
+Content\Audio\SE\buy.xnb
+Content\Audio\SE\choose.xnb
+Content\Audio\SE\hurt.xnb
+Content\Audio\SE\select.xnb
+Content\Audio\SE\boss_shoot.xnb
+Content\Graphics\Pictures\hitbox.xnb
+Content\Audio\SE\pass.xnb
+Content\Audio\Musics\Menu.wma
+Content\Audio\Musics\Background.wma
 Content\Graphics\Pictures\logo.png
 Content\XML\sample.xml
 Content\XML\3way.xml
@@ -75,7 +83,6 @@ Content\XML\Samples\[ESP_RADE]_round_5_boss_gara_5.xml
 Content\XML\Samples\[ESP_RADE]_round_5_boss_kakusi_hakkyou.xml
 Content\XML\Samples\[G-Wange]_round_trip_bit.xml
 Content\XML\Samples\[Garegga]_black_heart_mk2_winder.xml
-Content\XML\Samples\[Guwange]_round_2_boss_circle_fire.xml
 Content\XML\Samples\[Guwange]_round_3_boss_fast_3way.xml
 Content\XML\Samples\[Guwange]_round_4_boss_eye_ball.xml
 Content\XML\Samples\[G_DARIUS]_homing_laser.xml
@@ -85,12 +92,9 @@ Content\XML\Samples\[Ketui_LT]_3boss_kunekune.xml
 Content\XML\Samples\[Ketui_LT]_3boss_roll_and_aim.xml
 Content\XML\Samples\[MDA]_10flower_2.xml
 Content\XML\Samples\[MDA]_14b_2-3w.xml
-Content\XML\Samples\[MDA]_2f.xml
 Content\XML\Samples\[MDA]_75l-42.xml
-Content\XML\Samples\[MDA]_acc_n_dec.xml
 Content\XML\Samples\[MDA]_circular.xml
 Content\XML\Samples\[MDA]_circular_model.xml
-Content\XML\Samples\[MDA]_circular_sun.xml
 Content\XML\Samples\[MDA]_double_w.xml
 Content\XML\Samples\[MDA]_fukuro.xml
 Content\XML\Samples\[MDA]_gnnnyari.xml

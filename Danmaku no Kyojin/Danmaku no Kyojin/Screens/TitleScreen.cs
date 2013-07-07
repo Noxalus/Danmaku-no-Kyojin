@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Danmaku_no_Kyojin.Screens
 {
@@ -23,6 +24,9 @@ namespace Danmaku_no_Kyojin.Screens
         private Rectangle _backgroundTopRectangle;
         private Rectangle _backgroundTopRightRectangle;
 
+        // Audio
+        private SoundEffect _passSound = null;
+
         #endregion
 
         #region Constructor region
@@ -30,12 +34,11 @@ namespace Danmaku_no_Kyojin.Screens
         public TitleScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
-            _menuText = new string[] { "1 Player", "2 Players", "Shop", "Leaderboard", "Options", "Exit" };
+            _menuText = new string[] { "1 Player", "2 Players", "Shop", "Options", "Exit" };
             _menuDescription = new string[] { 
                 "Playing game with only one player", 
                 "Playing game with your best friend", 
                 "Get new abilities to crush more enemies",
-                "A list of scores to know who have the biggest one", 
                 "You can change inputs here", 
                 "Warning: I've never tested this button !", 
             };
@@ -68,6 +71,9 @@ namespace Danmaku_no_Kyojin.Screens
         {
             _logo = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo");
             _backgroundImage = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/background");
+
+            if (_passSound == null)
+                _passSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/pass");
 
             base.LoadContent();
         }
@@ -114,22 +120,19 @@ namespace Danmaku_no_Kyojin.Screens
                 // Improvements
                 else if (_menuIndex == 2)
                     StateManager.ChangeState(GameRef.ImprovementScreen);
-                // Leaderbord
-                else if (_menuIndex == 3)
-                    StateManager.ChangeState(GameRef.LeaderboardScreen);
                 // Options
-                else if (_menuIndex == 4)
+                else if (_menuIndex == 3)
                     StateManager.ChangeState(GameRef.OptionsScreen);
                 // Exit
-                else if (_menuIndex == 5)
+                else if (_menuIndex == 4)
                     Game.Exit();
             }
 
-            if (_backgroundMainRectangle.X + _backgroundImage.Width <= 0)
-                _backgroundMainRectangle.X = _backgroundRightRectangle.X + _backgroundImage.Width;
+            if (_backgroundMainRectangle.X + Config.Resolution.X <= 0)
+                _backgroundMainRectangle.X = _backgroundRightRectangle.X + Config.Resolution.X;
 
-            if (_backgroundRightRectangle.X + _backgroundImage.Width <= 0)
-                _backgroundRightRectangle.X = _backgroundMainRectangle.X + _backgroundImage.Width;
+            if (_backgroundRightRectangle.X + Config.Resolution.X <= 0)
+                _backgroundRightRectangle.X = _backgroundMainRectangle.X + Config.Resolution.X;
 
             /*
             if (_backgroundMainRectangle.Y + _backgroundImage.Height <= 0)
@@ -139,17 +142,9 @@ namespace Danmaku_no_Kyojin.Screens
                 _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
             */
 
-            if (_backgroundMainRectangle.Y > Config.Resolution.Y)
-                _backgroundMainRectangle.Y = _backgroundTopRectangle.Y - _backgroundImage.Height;
 
-            if (_backgroundTopRectangle.Y > Config.Resolution.Y)
-                _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - _backgroundImage.Height;
-
-
-            /*
-            _backgroundMainRectangle.X -= 1;
-            _backgroundRightRectangle.X -= 1;
-            */
+            _backgroundMainRectangle.X -= (int)(70 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            _backgroundRightRectangle.X -= (int)(70 * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (!Config.Cheat)
             {
@@ -181,6 +176,8 @@ namespace Danmaku_no_Kyojin.Screens
                 if (_passStep == 10)
                 {
                     Config.Cheat = true;
+                    _passSound.Play();
+                    //_passSound.Dispose();
                 }
             }
             else
@@ -217,10 +214,10 @@ namespace Danmaku_no_Kyojin.Screens
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f) + 1,
-                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i) + 1), Color.Black);
+                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (50 * i) + 1), Color.Black);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f),
-                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (20 * i)), textColor);
+                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (50 * i)), textColor);
             }
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + _menuDescription[_menuIndex] + "]", new Vector2(

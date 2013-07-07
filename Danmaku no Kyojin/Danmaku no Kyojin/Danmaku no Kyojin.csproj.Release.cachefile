@@ -28,6 +28,8 @@ Content\Audio\SE\choose.xnb
 Content\Audio\SE\hit.xnb
 Content\Audio\SE\hurt.xnb
 Content\Audio\SE\select.xnb
+Content\Audio\SE\boss_shoot.xnb
+Content\Graphics\Pictures\hitbox.xnb
 Content\Audio\Musics\Menu.wma
 Content\Audio\Musics\Background.wma
 Content\Graphics\Pictures\logo.png

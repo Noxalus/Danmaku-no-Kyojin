@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Danmaku_no_Kyojin.BulletEngine
 {
@@ -15,6 +16,8 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
         private DnK _gameRef;
 
+        private SoundEffect _shoot;
+
         public MoverManager(DnK game)
         {
             _gameRef = game;
@@ -24,6 +27,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
         {
             Debug.Assert(null != playerDelegate);
             GetPlayerPosition = playerDelegate;
+            _shoot = _gameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_shoot");
         }
 
         /// <summary>
@@ -44,6 +48,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// </summary>
         public Bullet CreateBullet()
         {
+            _shoot.Play();   
             Mover mover = new Mover(_gameRef, this);
             movers.Add(mover); //Moverを登録
             mover.Initialize(); //初期化

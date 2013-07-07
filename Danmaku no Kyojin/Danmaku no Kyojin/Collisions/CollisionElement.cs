@@ -15,6 +15,8 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public abstract void Draw(SpriteBatch sp);
 
+        public abstract Vector2 GetCenter();
+
         protected CollisionElement(Entity parent, Vector2 relativePosition)
         {
             Parent = parent;
