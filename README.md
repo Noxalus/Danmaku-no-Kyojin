@@ -1,5 +1,7 @@
 # Danmaku-no-Kyojin
 
+![Danmaku no Kyojin](http://danmakunokyojin.free.fr/images/screen.jpg)
+
 Danmaku no Kyojin (弾幕の巨人) is a 2D danmaku developed in C# with XNA.
 
 ## Project ideas
