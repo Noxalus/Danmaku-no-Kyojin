@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+
+<bulletml type="vertical"
+          xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+
+	<action label="top">
+		<repeat>
+			<times>10</times>
+			<action>
+				<actionRef label="aim"/>
+				<wait>30 * $rank</wait>
+			</action>
+		</repeat>
+	</action>
+
+	<!--shoot a stream of bullets at the player-->
+	<action label="aim">
+		<repeat>
+			<times>10</times>
+			<action>
+				<fire>
+					<speed type="sequence">0.3</speed>
+					<bullet label="test">
+						<speed>1</speed>
+					</bullet>
+				</fire>
+				<wait>12</wait>
+			</action>
+		</repeat>
+	</action>
+
+</bulletml>

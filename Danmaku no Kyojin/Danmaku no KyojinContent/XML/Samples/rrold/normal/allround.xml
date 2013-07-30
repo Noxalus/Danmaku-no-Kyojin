@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+
+<bulletml type="vertical"
+          xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+
+<action label="circle">
+		<repeat>
+			<times>10</times>
+			<action>
+				<fire>
+					<direction type="sequence">360/(4+$rank*36-1)</direction>
+					<speed>1</speed>
+					<bullet/>
+				</fire>
+			</action>
+		</repeat>
+		<wait>100</wait>
+	</action>
+	
+	<action label="top">
+		<repeat>
+			<times>10 * $rank</times>
+			<actionRef label="circle">
+			</actionRef>
+		</repeat>
+	</action>
+	
+	
+</bulletml>

@@ -115,7 +115,7 @@ namespace Danmaku_no_Kyojin.Entities
                 -Sprite.Height);
 
             //Get all the xml files
-            foreach (var source in Directory.GetFiles(@"Content\XML\", "*.xml", SearchOption.AllDirectories))
+            foreach (var source in Directory.GetFiles(@"Content\XML", "*.xml", SearchOption.AllDirectories))
             {
                 //store the name
                 _patternNames.Add(source);

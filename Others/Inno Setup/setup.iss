@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Danmaku no Kyojin"
-#define MyAppVersion "0.52"
+#define MyAppVersion "1.0"
 #define MyAppPublisher "Noxalus"
 #define MyAppURL "http://danmakunokyojin.free.fr"
 #define MyAppExeName "Danmaku no Kyojin.exe"
@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoAfterFile=D:\Danmaku no Kyojin\Installateur\DnK\README.txt
 OutputDir=D:\Danmaku no Kyojin\Installateur\output
-OutputBaseFilename=DnK-v0.52
+OutputBaseFilename=DnK-v1.0
 SetupIconFile=D:\Danmaku no Kyojin\Danmaku-no-Kyojin\Danmaku no Kyojin\Danmaku no Kyojin\Game.ico
 Compression=lzma
 SolidCompression=yes

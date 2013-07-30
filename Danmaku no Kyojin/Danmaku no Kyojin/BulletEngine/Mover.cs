@@ -1,6 +1,7 @@
 ﻿using Danmaku_no_Kyojin.Collisions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Danmaku_no_Kyojin.BulletEngine
 {
@@ -13,6 +14,9 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 		public bool used;
 		public bool bulletRoot;
+
+        private Rectangle _spriteRectangle;
+        private Random _rand = new Random(DateTime.Now.Millisecond);
 
 		#endregion //Members
 
@@ -44,11 +48,14 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 	    protected override void LoadContent()
 	    {
-            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
+            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/balls");
 
-            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+            Center = new Vector2(Sprite.Height / 2f, Sprite.Height / 2f);
 
-            CollisionBox = new CollisionCircle(this, Vector2.Zero, Sprite.Width / 2f);
+            CollisionBox = new CollisionCircle(this, Vector2.Zero, Sprite.Height / 2f);
+
+            int index = (int)(Sprite.Height * _rand.Next((Sprite.Width / Sprite.Height)));
+            _spriteRectangle = new Rectangle(index, 0, Sprite.Height, Sprite.Height);
 
             base.LoadContent();
 	    }
@@ -75,7 +82,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+            Game.SpriteBatch.Draw(Sprite, new Rectangle((int)(Position.X - Center.X), (int)(Position.Y - Center.Y), Sprite.Height, Sprite.Height), _spriteRectangle, Color.White);
 
             if (Config.DisplayCollisionBoxes)
             {
