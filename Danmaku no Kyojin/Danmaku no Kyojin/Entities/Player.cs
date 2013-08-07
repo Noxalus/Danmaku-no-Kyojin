@@ -11,6 +11,7 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework.Input;
 using Danmaku_no_Kyojin.Collisions;
 using System.Diagnostics;
+using Danmaku_no_Kyojin.Camera;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -43,18 +44,26 @@ namespace Danmaku_no_Kyojin.Entities
         public bool IsInvincible { get; set; }
         private TimeSpan _invincibleTime;
 
+        // HUD
         private int _score;
-
         private Texture2D _lifeIcon;
+
+        // Audio
+        private SoundEffect _shootSound = null;
+        private SoundEffect _deadSound = null;
+
+        // Camera
+        private CameraTest _camera;
 
         public int Score
         {
             get { return _score; }
         }
 
-        // Audio
-        private SoundEffect _shootSound = null;
-        private SoundEffect _deadSound = null;
+        public CameraTest Camera
+        {
+            get { return _camera; }
+        }
 
         #endregion
 
@@ -115,6 +124,8 @@ namespace Danmaku_no_Kyojin.Entities
                 _shootSound = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
             if (_deadSound == null)
                 _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
+
+            _camera = new CameraTest();
         }
 
         public override void Update(GameTime gameTime)
@@ -223,6 +234,7 @@ namespace Danmaku_no_Kyojin.Entities
             }
 
             UpdatePosition(dt);
+            _camera.Update(Position);
         }
 
         private void UpdatePosition(float dt)
@@ -249,7 +261,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
 
-            // hitbox
+            // Draw Hitbox
             if (SlowMode)
             {
                 Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(

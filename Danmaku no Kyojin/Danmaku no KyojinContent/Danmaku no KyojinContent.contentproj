@@ -1111,8 +1111,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Pictures\background.png">
-      <Name>background</Name>
+    <Compile Include="Graphics\Pictures\background2.png">
+      <Name>background2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -1311,6 +1311,13 @@
   <ItemGroup>
     <Compile Include="Graphics\Sprites\balls.png">
       <Name>balls</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Pictures\background.png">
+      <Name>background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

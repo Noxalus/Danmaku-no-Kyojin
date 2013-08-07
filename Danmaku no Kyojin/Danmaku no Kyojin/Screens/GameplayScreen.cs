@@ -15,6 +15,13 @@ namespace Danmaku_no_Kyojin.Screens
 {
     public class GameplayScreen : BaseGameState
     {
+        // Camera
+        Viewport defaultView;
+        Viewport leftView;
+        Viewport rightView;
+
+        private Texture2D _pixel;
+
         public List<Player> Players { get; set; }
         private Boss _enemy;
 
@@ -100,6 +107,15 @@ namespace Danmaku_no_Kyojin.Screens
 
             _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
 
+            defaultView = GraphicsDevice.Viewport;
+            leftView = defaultView;
+            rightView = defaultView;
+            leftView.Width = leftView.Width / 2;
+            rightView.Width = rightView.Width / 2;
+            rightView.X = leftView.Width;
+
+            _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
+
             base.LoadContent();
         }
 
@@ -116,8 +132,10 @@ namespace Danmaku_no_Kyojin.Screens
             if (_backgroundTopRectangle.Y >= Config.Resolution.Y)
                 _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - Config.Resolution.Y;
 
+            /*
             _backgroundMainRectangle.Y += (int)(250 * (float)gameTime.ElapsedGameTime.TotalSeconds);
             _backgroundTopRectangle.Y += (int)(250 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            */
 
             HandleInput();
 
@@ -238,8 +256,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
 
-            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
-            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, Color.White);
+            
 
             /*
             GameRef.SpriteBatch.Draw(_background, new Rectangle(
@@ -252,33 +269,48 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            GameRef.SpriteBatch.Begin();
+           
 
             foreach (Player p in Players)
             {
                 if (p.IsAlive)
                 {
+                    if (p.ID == 1)
+                        GraphicsDevice.Viewport = leftView;
+                    else
+                        GraphicsDevice.Viewport = rightView;
+
+                    GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, p.Camera.transform);
+
+                    Color randomColor = Color.White;//new Color(Rand.Next(255), Rand.Next(255), Rand.Next(255));
+                    GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, randomColor);
+                    GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, randomColor);
+
                     foreach (var bullet in p.GetBullets())
                     {
                         bullet.Draw(gameTime);
                     }
 
                     p.Draw(gameTime);
+
+                    if (_enemy.IsAlive)
+                    {
+                        _enemy.Draw(gameTime);
+                    }
+
+                    GameRef.SpriteBatch.End();
+
+                    GraphicsDevice.Viewport = defaultView;
                 }
             }
-
-            if (_enemy.IsAlive)
-            {
-                _enemy.Draw(gameTime);
-            }
-
-            GameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
 
             GameRef.SpriteBatch.Begin();
 
             _timer.Draw(gameTime);
+
+            GameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)(Config.Resolution.X / 2 - 2), 0, 2, Config.Resolution.Y), Color.Black);
 
             foreach (Player p in Players)
             {
