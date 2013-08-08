@@ -129,7 +129,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\Camera2D.cs" />
     <Compile Include="Collisions\CollisionCircle.cs" />
     <Compile Include="Collisions\CollisionElement.cs" />

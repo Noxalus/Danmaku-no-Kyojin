@@ -30,9 +30,6 @@ namespace Danmaku_no_Kyojin
 
         public static Texture2D Pixel;
 
-        // Camera
-        public Camera2D Camera;
-
         // Audio
         public SoundEffect Select;
         public SoundEffect Choose;
@@ -87,8 +84,6 @@ namespace Danmaku_no_Kyojin
 
         protected override void Initialize()
         {
-            Camera = new Camera2D(GraphicsDevice.Viewport, 1000, 1000, 1);
-
             StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
 
             base.Initialize();

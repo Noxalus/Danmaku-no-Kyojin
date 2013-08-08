@@ -23,6 +23,7 @@ namespace Danmaku_no_Kyojin.Screens
         private Texture2D _pixel;
 
         public List<Player> Players { get; set; }
+        private bool _singlePlayer;
         private Boss _enemy;
 
         private int _waveNumber;
@@ -73,6 +74,7 @@ namespace Danmaku_no_Kyojin.Screens
             _enemy = new Boss(GameRef);
 
             Players.Clear();
+            _singlePlayer = (Config.PlayersNumber == 1);
 
             for (int i = 1; i <= Config.PlayersNumber; i++)
             {
@@ -177,7 +179,7 @@ namespace Danmaku_no_Kyojin.Screens
                                 hit.Play();
                                 p.AddScore(Improvements.ScoreByHitData[PlayerData.ScoreByHitIndex].Key);
                             }
-                            
+
                             p.GetBullets().Remove(p.GetBullets()[i]);
                         }
                         else
@@ -256,8 +258,6 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
 
-            
-
             /*
             GameRef.SpriteBatch.Draw(_background, new Rectangle(
                 (int)(Config.Resolution.X / 2f), (int)(Config.Resolution.Y / 2f), 
@@ -269,39 +269,38 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-           
-
-            foreach (Player p in Players)
+            if (_singlePlayer)
             {
-                if (p.IsAlive)
+                GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Players[0].Camera.transform);
+
+                Color randomColor = Color.White;//new Color(Rand.Next(255), Rand.Next(255), Rand.Next(255));
+                GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, randomColor);
+
+                foreach (var bullet in Players[0].GetBullets())
                 {
-                    if (p.ID == 1)
-                        GraphicsDevice.Viewport = leftView;
-                    else
-                        GraphicsDevice.Viewport = rightView;
-
-                    GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, p.Camera.transform);
-
-                    Color randomColor = Color.White;//new Color(Rand.Next(255), Rand.Next(255), Rand.Next(255));
-                    GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, randomColor);
-                    GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, randomColor);
-
-                    foreach (var bullet in p.GetBullets())
-                    {
-                        bullet.Draw(gameTime);
-                    }
-
-                    p.Draw(gameTime);
-
-                    if (_enemy.IsAlive)
-                    {
-                        _enemy.Draw(gameTime);
-                    }
-
-                    GameRef.SpriteBatch.End();
-
-                    GraphicsDevice.Viewport = defaultView;
+                    bullet.Draw(gameTime);
                 }
+
+                Players[0].Draw(gameTime);
+
+                if (_enemy.IsAlive)
+                {
+                    _enemy.Draw(gameTime);
+                }
+
+                GameRef.SpriteBatch.End();
+            }
+            else
+            {
+                // Player 1
+                GraphicsDevice.Viewport = leftView;
+                DrawPlayerCamera(gameTime, Players[0]);
+
+                // Player 2
+                GraphicsDevice.Viewport = rightView;
+                DrawPlayerCamera(gameTime, Players[1]);
+
+                GraphicsDevice.Viewport = defaultView;
             }
 
             base.Draw(gameTime);
@@ -310,7 +309,8 @@ namespace Danmaku_no_Kyojin.Screens
 
             _timer.Draw(gameTime);
 
-            GameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)(Config.Resolution.X / 2 - 2), 0, 2, Config.Resolution.Y), Color.Black);
+            if (!_singlePlayer)
+                GameRef.SpriteBatch.Draw(_pixel, new Rectangle((int)(Config.Resolution.X / 2 - 2), 0, 2, Config.Resolution.Y), Color.Black);
 
             foreach (Player p in Players)
             {
@@ -358,6 +358,37 @@ namespace Danmaku_no_Kyojin.Screens
                                                        _enemy.GetCurrentPatternName()).X / 2 + 1,
                                                    Config.Resolution.Y - 26),
                                                Color.White);
+            }
+
+            GameRef.SpriteBatch.End();
+        }
+
+        private void DrawPlayerCamera(GameTime gameTime, Player p)
+        {
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, p.Camera.transform);
+
+            if (p.IsInvincible)
+                GraphicsDevice.Clear(Color.Red);
+            else
+            {
+                Color randomColor = Color.White;//new Color(Rand.Next(255), Rand.Next(255), Rand.Next(255));
+                GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, randomColor);
+
+                foreach (var bullet in p.GetBullets())
+                {
+                    bullet.Draw(gameTime);
+                }
+
+                if (Players[0].IsAlive)
+                    Players[0].Draw(gameTime);
+                if (Players[1].IsAlive)
+                    Players[1].Draw(gameTime);
+
+                if (_enemy.IsAlive)
+                {
+                    _enemy.Draw(gameTime);
+                }
+
             }
 
             GameRef.SpriteBatch.End();

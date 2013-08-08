@@ -53,14 +53,14 @@ namespace Danmaku_no_Kyojin.Entities
         private SoundEffect _deadSound = null;
 
         // Camera
-        private CameraTest _camera;
+        private Camera2D _camera;
 
         public int Score
         {
             get { return _score; }
         }
 
-        public CameraTest Camera
+        public Camera2D Camera
         {
             get { return _camera; }
         }
@@ -125,7 +125,11 @@ namespace Danmaku_no_Kyojin.Entities
             if (_deadSound == null)
                 _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
 
-            _camera = new CameraTest();
+            float xLag = Config.Resolution.X / 2;
+            if (Config.PlayersNumber > 1)
+                xLag /= 2;
+
+            _camera = new Camera2D(xLag);
         }
 
         public override void Update(GameTime gameTime)
@@ -145,96 +149,98 @@ namespace Danmaku_no_Kyojin.Entities
                     IsInvincible = false;
                 }
             }
-
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _direction = Vector2.Zero;
-
-            if (_controller == Config.Controller.Keyboard)
+            else
             {
-                // Keyboard
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Up"]))
-                    _direction.Y = -1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Right"]))
-                    _direction.X = 1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Down"]))
-                    _direction.Y = 1;
-                if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Left"]))
-                    _direction.X = -1;
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Slow"]))) ? true : false;
-                BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed)) ? true : false;
+                _direction = Vector2.Zero;
 
-                if (_direction != Vector2.Zero)
+                if (_controller == Config.Controller.Keyboard)
                 {
-                    _velocitySlowMode = Config.PlayerMaxSlowVelocity / 2;
-                    _velocity = Config.PlayerMaxVelocity / 2;
+                    // Keyboard
+                    if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Up"]))
+                        _direction.Y = -1;
+                    if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Right"]))
+                        _direction.X = 1;
+                    if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Down"]))
+                        _direction.Y = 1;
+                    if (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Left"]))
+                        _direction.X = -1;
+
+                    SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.KeyDown(Config.PlayerKeyboardInputs["Slow"]))) ? true : false;
+                    BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.MouseState.RightButton == ButtonState.Pressed)) ? true : false;
+
+                    if (_direction != Vector2.Zero)
+                    {
+                        _velocitySlowMode = Config.PlayerMaxSlowVelocity / 2;
+                        _velocity = Config.PlayerMaxVelocity / 2;
+                    }
+                    else
+                    {
+                        _velocitySlowMode = Config.PlayerMaxSlowVelocity;
+                        _velocity = Config.PlayerMaxVelocity;
+                    }
+
+                    // Mouse
+                    _distance.X = Position.X - InputHandler.MouseState.X;
+                    _distance.Y = Position.Y - InputHandler.MouseState.Y;
+
+                    Rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
+
+                    // Debug
+                    if (InputHandler.KeyDown(Keys.R))
+                        Rotation = 0;
+
+                    if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Fire(gameTime);
+                    }
                 }
-                else
+                else if (_controller == Config.Controller.GamePad)
                 {
-                    _velocitySlowMode = Config.PlayerMaxSlowVelocity;
-                    _velocity = Config.PlayerMaxVelocity;
+                    _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
+                    _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
+
+                    SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One))) ? true : false;
+                    BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One))) ? true : false;
+
+                    if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
+                    {
+                        Rotation =
+                            (float)
+                            Math.Atan2(InputHandler.GamePadStates[0].ThumbSticks.Right.Y * (-1),
+                                       InputHandler.GamePadStates[0].ThumbSticks.Right.X) + MathHelper.PiOver2;
+
+                        Fire(gameTime);
+                    }
                 }
 
-                // Mouse
-                _distance.X = Position.X - InputHandler.MouseState.X;
-                _distance.Y = Position.Y - InputHandler.MouseState.Y;
-
-                Rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
-
-                // Debug
-                if (InputHandler.KeyDown(Keys.R))
-                    Rotation = 0;
-
-                if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
+                if (BulletTime)
                 {
-                    Fire(gameTime);
+                    _bulletTimeTimer -= gameTime.ElapsedGameTime;
+
+                    if (_bulletTimeTimer <= TimeSpan.Zero)
+                    {
+                        _bulletTimeReloading = true;
+                        _bulletTimeTimer = TimeSpan.Zero;
+                    }
+
                 }
+
+                if (_bulletTimeReloading)
+                {
+                    _bulletTimeTimer += gameTime.ElapsedGameTime;
+
+                    if (_bulletTimeTimer >= Config.DefaultBulletTimeTimer)
+                    {
+                        _bulletTimeReloading = false;
+                        _bulletTimeTimer = Config.DefaultBulletTimeTimer;
+                    }
+                }
+
+                UpdatePosition(dt);
+                _camera.Update(Position);
             }
-            else if (_controller == Config.Controller.GamePad)
-            {
-                _direction.X = InputHandler.GamePadStates[0].ThumbSticks.Left.X;
-                _direction.Y = (-1) * InputHandler.GamePadStates[0].ThumbSticks.Left.Y;
-
-                SlowMode = (PlayerData.SlowModeEnabled && (InputHandler.ButtonDown(Config.PlayerGamepadInput[0], PlayerIndex.One))) ? true : false;
-                BulletTime = (PlayerData.BulletTimeEnabled && (!_bulletTimeReloading && InputHandler.ButtonDown(Config.PlayerGamepadInput[1], PlayerIndex.One))) ? true : false;
-
-                if (InputHandler.GamePadStates[0].ThumbSticks.Right.Length() > 0)
-                {
-                    Rotation =
-                        (float)
-                        Math.Atan2(InputHandler.GamePadStates[0].ThumbSticks.Right.Y * (-1),
-                                   InputHandler.GamePadStates[0].ThumbSticks.Right.X) + MathHelper.PiOver2;
-
-                    Fire(gameTime);
-                }
-            }
-
-            if (BulletTime)
-            {
-                _bulletTimeTimer -= gameTime.ElapsedGameTime;
-
-                if (_bulletTimeTimer <= TimeSpan.Zero)
-                {
-                    _bulletTimeReloading = true;
-                    _bulletTimeTimer = TimeSpan.Zero;
-                }
-
-            }
-
-            if (_bulletTimeReloading)
-            {
-                _bulletTimeTimer += gameTime.ElapsedGameTime;
-
-                if (_bulletTimeTimer >= Config.DefaultBulletTimeTimer)
-                {
-                    _bulletTimeReloading = false;
-                    _bulletTimeTimer = Config.DefaultBulletTimeTimer;
-                }
-            }
-
-            UpdatePosition(dt);
-            _camera.Update(Position);
         }
 
         private void UpdatePosition(float dt)
@@ -256,20 +262,20 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            if (IsInvincible)
-                Game.Graphics.GraphicsDevice.Clear(Color.Red);
-
-            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
-
-            // Draw Hitbox
-            if (SlowMode)
+            if (!IsInvincible)
             {
-                Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
-                    (int)(CollisionBox.GetCenter().X - _hitboxRadius / 2f),
-                    (int)(CollisionBox.GetCenter().Y - _hitboxRadius / 2f),
-                    (int)_hitboxRadius,
-                    (int)_hitboxRadius),
-                    Color.White);
+                Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+
+                // Draw Hitbox
+                if (SlowMode)
+                {
+                    Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
+                        (int)(CollisionBox.GetCenter().X - _hitboxRadius / 2f),
+                        (int)(CollisionBox.GetCenter().Y - _hitboxRadius / 2f),
+                        (int)_hitboxRadius,
+                        (int)_hitboxRadius),
+                        Color.White);
+                }
             }
 
             base.Draw(gameTime);
