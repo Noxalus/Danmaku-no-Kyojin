@@ -111,8 +111,8 @@ namespace Danmaku_no_Kyojin.Entities
             CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
 
             Position = new Vector2(
-                Game.GraphicsDevice.Viewport.Width / 2f,
-                -Sprite.Height);
+                Config.GameArea.X / 2f,
+                Config.GameArea.Y / 2f);
 
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML", "*.xml", SearchOption.AllDirectories))

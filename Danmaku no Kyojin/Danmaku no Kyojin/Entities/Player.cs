@@ -21,11 +21,14 @@ namespace Danmaku_no_Kyojin.Entities
         public int ID { get; set; }
         private Config.Controller _controller;
 
+        private Viewport _viewport;
+
         private Texture2D _bulletSprite;
         private Texture2D _hitboxSprite;
 
         private float _hitboxRadius;
 
+        private Vector2 _originPosition;
         private float _velocity;
         private Vector2 _direction;
         public bool SlowMode { get; set; }
@@ -67,12 +70,14 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        public Player(DnK game, int id, Config.Controller controller, Vector2 position)
+        public Player(DnK game, Viewport viewport, int id, Config.Controller controller, Vector2 position)
             : base(game)
         {
+            _viewport = viewport;
             ID = id;
             _controller = controller;
-            Position = position;
+            _originPosition = position;
+            Position = _originPosition;
             Center = Vector2.Zero;
         }
 
@@ -129,7 +134,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (Config.PlayersNumber > 1)
                 xLag /= 2;
 
-            _camera = new Camera2D(xLag);
+            _camera = new Camera2D(_viewport, Config.GameArea.X, Config.GameArea.Y, 1f);
         }
 
         public override void Update(GameTime gameTime)
@@ -146,6 +151,7 @@ namespace Danmaku_no_Kyojin.Entities
                 if (_invincibleTime.Milliseconds <= 0)
                 {
                     _invincibleTime = Config.PlayerInvicibleTimer;
+                    Position = _originPosition;
                     IsInvincible = false;
                 }
             }
@@ -239,8 +245,9 @@ namespace Danmaku_no_Kyojin.Entities
                 }
 
                 UpdatePosition(dt);
-                _camera.Update(Position);
             }
+
+            _camera.Update();
         }
 
         private void UpdatePosition(float dt)
@@ -256,8 +263,8 @@ namespace Danmaku_no_Kyojin.Entities
                 Position.Y += _direction.Y * _velocity * dt;
             }
 
-            Position.X = MathHelper.Clamp(Position.X, Sprite.Width / 2f, Config.Resolution.X - Sprite.Width / 2f);
-            Position.Y = MathHelper.Clamp(Position.Y, Sprite.Height / 2f, Config.Resolution.Y - Sprite.Height / 2f);
+            Position.X = MathHelper.Clamp(Position.X, Sprite.Width / 2f, Config.GameArea.X - Sprite.Width / 2f);
+            Position.Y = MathHelper.Clamp(Position.Y, Sprite.Height / 2f, Config.GameArea.Y - Sprite.Height / 2f);
         }
 
         public override void Draw(GameTime gameTime)

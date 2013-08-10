@@ -66,8 +66,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Initialize()
         {
-            _backgroundMainRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
-            _backgroundTopRectangle = new Rectangle(0, -Config.Resolution.Y, Config.Resolution.X, Config.Resolution.Y);
+            _backgroundMainRectangle = new Rectangle(0, 0, Config.GameArea.X, Config.GameArea.Y);
+            _backgroundTopRectangle = new Rectangle(0, -Config.GameArea.Y, Config.GameArea.X, Config.GameArea.Y);
 
             _playTime = TimeSpan.Zero;
 
@@ -76,13 +76,23 @@ namespace Danmaku_no_Kyojin.Screens
             Players.Clear();
             _singlePlayer = (Config.PlayersNumber == 1);
 
-            for (int i = 1; i <= Config.PlayersNumber; i++)
+
+
+            // First player
+            var player1 = new Player(GameRef, leftView, 1, Config.PlayersController[0],
+                                        new Vector2(Config.GameArea.X / 2f,
+                                                    Config.GameArea.Y - 150));
+            player1.Initialize();
+            Players.Add(player1);
+
+            // Second player
+            if (!_singlePlayer)
             {
-                var player = new Player(GameRef, i, Config.PlayersController[i - 1],
-                                        new Vector2(GameRef.Graphics.GraphicsDevice.Viewport.Width / 2f,
-                                                    GameRef.Graphics.GraphicsDevice.Viewport.Height - 150));
-                player.Initialize();
-                Players.Add(player);
+                var player2 = new Player(GameRef, rightView, 2, Config.PlayersController[1],
+                                        new Vector2(Config.GameArea.X / 2f,
+                                                    Config.GameArea.Y - 150));
+                player2.Initialize();
+                Players.Add(player2);
             }
 
             _enemy.Initialize();
@@ -109,14 +119,18 @@ namespace Danmaku_no_Kyojin.Screens
 
             _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
 
+            _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
+
             defaultView = GraphicsDevice.Viewport;
             leftView = defaultView;
             rightView = defaultView;
-            leftView.Width = leftView.Width / 2;
-            rightView.Width = rightView.Width / 2;
-            rightView.X = leftView.Width;
 
-            _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
+            if (!_singlePlayer)
+            {
+                leftView.Width = leftView.Width / 2;
+                rightView.Width = rightView.Width / 2;
+                rightView.X = leftView.Width;
+            }
 
             base.LoadContent();
         }
@@ -184,8 +198,8 @@ namespace Danmaku_no_Kyojin.Screens
                         }
                         else
                         {
-                            if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.Resolution.X ||
-                                p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.Resolution.Y)
+                            if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
+                                p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.GameArea.Y)
                             {
                                 p.GetBullets().Remove(p.GetBullets()[i]);
                             }
@@ -269,9 +283,12 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
+            Color backgroundColor = new Color(5, 5, 5);
+            GraphicsDevice.Clear(backgroundColor);
+
             if (_singlePlayer)
             {
-                GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Players[0].Camera.transform);
+                GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Players[0].Camera.GetTransformation());
 
                 Color randomColor = Color.White;//new Color(Rand.Next(255), Rand.Next(255), Rand.Next(255));
                 GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, randomColor);
@@ -292,13 +309,26 @@ namespace Danmaku_no_Kyojin.Screens
             }
             else
             {
-                // Player 1
-                GraphicsDevice.Viewport = leftView;
-                DrawPlayerCamera(gameTime, Players[0]);
+                if (Players[1].IsInvincible)
+                {
+                    // Player 2
+                    GraphicsDevice.Viewport = rightView;
+                    DrawPlayerCamera(gameTime, Players[1]);
 
-                // Player 2
-                GraphicsDevice.Viewport = rightView;
-                DrawPlayerCamera(gameTime, Players[1]);
+                    // Player 1
+                    GraphicsDevice.Viewport = leftView;
+                    DrawPlayerCamera(gameTime, Players[0]);
+                }
+                else
+                {
+                    // Player 1
+                    GraphicsDevice.Viewport = leftView;
+                    DrawPlayerCamera(gameTime, Players[0]);
+
+                    // Player 2
+                    GraphicsDevice.Viewport = rightView;
+                    DrawPlayerCamera(gameTime, Players[1]);
+                }
 
                 GraphicsDevice.Viewport = defaultView;
             }
@@ -365,7 +395,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         private void DrawPlayerCamera(GameTime gameTime, Player p)
         {
-            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, p.Camera.transform);
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, p.Camera.GetTransformation());
 
             if (p.IsInvincible)
                 GraphicsDevice.Clear(Color.Red);
@@ -379,10 +409,8 @@ namespace Danmaku_no_Kyojin.Screens
                     bullet.Draw(gameTime);
                 }
 
-                if (Players[0].IsAlive)
-                    Players[0].Draw(gameTime);
-                if (Players[1].IsAlive)
-                    Players[1].Draw(gameTime);
+                Players[0].Draw(gameTime);
+                Players[1].Draw(gameTime);
 
                 if (_enemy.IsAlive)
                 {

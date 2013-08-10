@@ -59,7 +59,7 @@ namespace Danmaku_no_Kyojin
         public const int PlayerLives = 5;
 
         // Game
-        public static readonly Point GameArea = new Point(1000, 1000);
+        public static readonly Point GameArea = new Point(2400, 1800);
 
         public static float GameDifficulty = 0.5f; 
         public static float GameDifficultyDelegate()

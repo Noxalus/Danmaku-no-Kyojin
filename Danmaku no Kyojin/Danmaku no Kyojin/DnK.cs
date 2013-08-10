@@ -44,6 +44,8 @@ namespace Danmaku_no_Kyojin
 
             ScreenRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
 
+            IsMouseVisible = true;
+
             Graphics.IsFullScreen = Config.FullScreen;
 
             Graphics.SynchronizeWithVerticalRetrace = true;
