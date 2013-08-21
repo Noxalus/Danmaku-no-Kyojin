@@ -130,11 +130,7 @@ namespace Danmaku_no_Kyojin.Entities
             if (_deadSound == null)
                 _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
 
-            float xLag = Config.Resolution.X / 2;
-            if (Config.PlayersNumber > 1)
-                xLag /= 2;
-
-            _camera = new Camera2D(_viewport, Config.GameArea.X, Config.GameArea.Y, 1f);
+            _camera = new Camera2D(_viewport, 1f);
         }
 
         public override void Update(GameTime gameTime)
@@ -247,7 +243,7 @@ namespace Danmaku_no_Kyojin.Entities
                 UpdatePosition(dt);
             }
 
-            _camera.Update();
+            _camera.Update(this.Position);
         }
 
         private void UpdatePosition(float dt)

@@ -73,10 +73,33 @@ namespace Danmaku_no_Kyojin.Screens
 
             _enemy = new Boss(GameRef);
 
-            Players.Clear();
             _singlePlayer = (Config.PlayersNumber == 1);
 
+            _waveNumber = 0;
 
+            _timer.Initialize();
+
+            base.Initialize();
+
+            _bloom.Initialize();
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Background"));
+
+            _timer.Initialize();
+
+            defaultView = GraphicsDevice.Viewport;
+            leftView = defaultView;
+            rightView = defaultView;
+
+            if (!_singlePlayer)
+            {
+                leftView.Width = leftView.Width / 2;
+                rightView.Width = rightView.Width / 2;
+                rightView.X = leftView.Width;
+            }
+
+            Players.Clear();
 
             // First player
             var player1 = new Player(GameRef, leftView, 1, Config.PlayersController[0],
@@ -96,18 +119,6 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _enemy.Initialize();
-            _waveNumber = 0;
-
-            _timer.Initialize();
-
-            base.Initialize();
-
-            _bloom.Initialize();
-
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Background"));
-
-            _timer.Initialize();
         }
 
         protected override void LoadContent()
@@ -121,16 +132,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
-            defaultView = GraphicsDevice.Viewport;
-            leftView = defaultView;
-            rightView = defaultView;
-
-            if (!_singlePlayer)
-            {
-                leftView.Width = leftView.Width / 2;
-                rightView.Width = rightView.Width / 2;
-                rightView.X = leftView.Width;
-            }
+            
 
             base.LoadContent();
         }

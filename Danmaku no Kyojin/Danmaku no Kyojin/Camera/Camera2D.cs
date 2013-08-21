@@ -12,7 +12,7 @@ namespace Danmaku_no_Kyojin.Camera
     public class Camera2D
     {
         private const float zoomUpperLimit = 5.0f;
-        private const float zoomLowerLimit = .1f;
+        private const float zoomLowerLimit = .01f;
 
         private float _zoom;
         private Matrix _transform;
@@ -23,16 +23,17 @@ namespace Danmaku_no_Kyojin.Camera
         private int _worldWidth;
         private int _worldHeight;
 
-        public Camera2D(Viewport viewport, int worldWidth,
-           int worldHeight, float initialZoom)
+        private Vector2 _center;
+
+        public Camera2D(Viewport viewport, float initialZoom)
         {
             _zoom = initialZoom;
             _rotation = 0.0f;
             _pos = Vector2.Zero;
             _viewportWidth = viewport.Width;
             _viewportHeight = viewport.Height;
-            _worldWidth = worldWidth;
-            _worldHeight = worldHeight;
+            _worldWidth = Config.GameArea.X;
+            _worldHeight = Config.GameArea.Y;
         }
 
         #region Properties
@@ -88,13 +89,23 @@ namespace Danmaku_no_Kyojin.Camera
 
         #endregion
 
-        public void Update()
+        public void Update(Vector2 position)
         {
             // Adjust zoom if the mouse wheel has moved
             if (InputHandler.ScrollUp())
-                Zoom += 0.1f;
+            {
+                if (InputHandler.KeyPressed(Keys.LeftControl))
+                    Zoom += 0.01f;
+                else
+                    Zoom += 0.1f;
+            }
             else if (InputHandler.ScrollDown())
-                Zoom -= 0.1f;
+            {
+                if (InputHandler.KeyPressed(Keys.LeftControl))
+                    Zoom -= 0.01f;
+                else
+                    Zoom -= 0.1f;
+            }
 
             // Move the camera when the arrow keys are pressed
             Vector2 movement = Vector2.Zero;
@@ -108,17 +119,19 @@ namespace Danmaku_no_Kyojin.Camera
             if (InputHandler.KeyDown(Keys.Down))
                 movement.Y += 1f;
 
-            this.Pos += movement * 20;
+            this.Pos = position;
+            this._center = new Vector2(position.X, position.Y);
+            //this.Pos += movement * 20;
         }
 
         public Matrix GetTransformation()
         {
             _transform =
-               Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
+               Matrix.CreateTranslation(new Vector3(-_center.X, -_center.Y, 0)) *
                Matrix.CreateRotationZ(Rotation) *
                Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-               Matrix.CreateTranslation(new Vector3(_viewportWidth * 0.5f,
-                   _viewportHeight * 0.5f, 0));
+               Matrix.CreateTranslation(new Vector3(_viewportWidth * 0.5f, _viewportHeight * 0.5f, 0)
+               );
 
             return _transform;
         }

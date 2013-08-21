@@ -206,7 +206,6 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.SpriteBatch.Begin();
 
-
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundRightRectangle, Color.White);
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundTopRectangle, Color.White);
@@ -225,10 +224,10 @@ namespace Danmaku_no_Kyojin.Screens
 
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f) + 1,
-                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (50 * i) + 1), Color.Black);
+                  Game.GraphicsDevice.Viewport.Height / 2f + (50 * i) + 1), Color.Black);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _menuText[i], new Vector2(
                   Game.GraphicsDevice.Viewport.Width / 2f - (ControlManager.SpriteFont.MeasureString(_menuText[i]).X / 2f),
-                  Game.GraphicsDevice.Viewport.Height / 2f - 50 + (50 * i)), textColor);
+                  Game.GraphicsDevice.Viewport.Height / 2f + (50 * i)), textColor);
             }
 
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, "[" + _menuDescription[_menuIndex] + "]", new Vector2(

@@ -22,7 +22,7 @@ namespace Danmaku_no_Kyojin
 
         // Screen
         public static bool FullScreen = false;
-        public static readonly Point Resolution = new Point(1920, 1080);
+        public static readonly Point Resolution = new Point(800, 600);
 
         // Bullet Time
         public const float DesiredTimeModifier = 2f;
