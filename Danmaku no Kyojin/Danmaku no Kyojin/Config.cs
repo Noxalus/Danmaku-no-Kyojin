@@ -22,7 +22,7 @@ namespace Danmaku_no_Kyojin
 
         // Screen
         public static bool FullScreen = false;
-        public static readonly Point Resolution = new Point(800, 600);
+        public static readonly Point Resolution = new Point(1280, 720);
 
         // Bullet Time
         public const float DesiredTimeModifier = 2f;
@@ -70,7 +70,7 @@ namespace Danmaku_no_Kyojin
         public static TimeSpan BossInitialTimer = TimeSpan.FromSeconds(5);
 
         // Audio
-        public static int SoundVolume = 0;//80;
-        public static int MusicVolume = 0;//100;
+        public static int SoundVolume = 50;
+        public static int MusicVolume = 100;
     }
 }

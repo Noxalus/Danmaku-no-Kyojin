@@ -639,6 +639,7 @@
       <Importer>XmlImporter</Importer>
       <Processor>PassThroughProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="XML\Samples\[Original]_fujin_ranbu_fake.xml">
       <Name>[Original]_fujin_ranbu_fake</Name>

@@ -75,7 +75,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             Position = Vector2.Zero;
             _motion = new Vector2(1, 0);
-            _ready = false;
+            _ready = true;
 
             _totalHealth = InitialHealth * ((DefeatNumber + 1) / 2f);
             _health = _totalHealth;
@@ -115,7 +115,7 @@ namespace Danmaku_no_Kyojin.Entities
                 Config.GameArea.Y / 2f);
 
             //Get all the xml files
-            foreach (var source in Directory.GetFiles(@"Content\XML", "*.xml", SearchOption.AllDirectories))
+            foreach (var source in Directory.GetFiles(@"Content\XML", "sample.xml", SearchOption.AllDirectories))
             {
                 //store the name
                 _patternNames.Add(source);
@@ -136,7 +136,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
 
-            if (Position.Y < (75 + Sprite.Height / 2f))
+            if (false/*Position.Y < (75 + Sprite.Height / 2f)*/)
             {
                 Position.Y += 1 * Speed * dt;
 
@@ -148,7 +148,6 @@ namespace Danmaku_no_Kyojin.Entities
                 Rotation += _rotationIncrementor * dt;
                 if (_rotationIncrementor < 1f)
                     _rotationIncrementor += 0.001f;
-
 
                 if (_health <= 0)
                 {
