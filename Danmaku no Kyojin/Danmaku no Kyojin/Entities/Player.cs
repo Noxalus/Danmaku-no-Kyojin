@@ -184,8 +184,8 @@ namespace Danmaku_no_Kyojin.Entities
                     }
 
                     // Mouse
-                    _distance.X = Position.X - InputHandler.MouseState.X;
-                    _distance.Y = Position.Y - InputHandler.MouseState.Y;
+                    _distance.X = (_viewport.Width / 2) - InputHandler.MouseState.X;
+                    _distance.Y = (_viewport.Height / 2) - InputHandler.MouseState.Y;
 
                     Rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
