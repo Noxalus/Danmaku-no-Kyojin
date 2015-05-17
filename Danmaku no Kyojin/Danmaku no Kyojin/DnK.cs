@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Screens;
 using Danmaku_no_Kyojin.Utils;
-using Danmaku_no_Kyojin.Camera;
 using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin
@@ -16,15 +15,16 @@ namespace Danmaku_no_Kyojin
         readonly GameStateManager _stateManager;
 
         // Screens
-        public TitleScreen TitleScreen;
-        public ImprovementScreen ImprovementScreen;
-        public LeaderboardScreen LeaderboardScreen;
-        public OptionsScreen OptionsScreen;
-        public KeyboardInputsScreen KeyboardInputsScreen;
-        public GamepadInputsScreen GamepadInputsScreen;
-        public GameConfigurationScreen GameConfigurationScreen;
-        public GameplayScreen GameplayScreen;
-        public GameOverScreen GameOverScreen;
+        public readonly TitleScreen TitleScreen;
+        public readonly TestScreen TestScreen;
+        public readonly ImprovementScreen ImprovementScreen;
+        public readonly LeaderboardScreen LeaderboardScreen;
+        public readonly OptionsScreen OptionsScreen;
+        public readonly KeyboardInputsScreen KeyboardInputsScreen;
+        public readonly GamepadInputsScreen GamepadInputsScreen;
+        public readonly GameConfigurationScreen GameConfigurationScreen;
+        public readonly GameplayScreen GameplayScreen;
+        public readonly GameOverScreen GameOverScreen;
 
         public Rectangle ScreenRectangle;
 
@@ -41,6 +41,7 @@ namespace Danmaku_no_Kyojin
                 PreferredBackBufferWidth = Config.Resolution.X,
                 PreferredBackBufferHeight = Config.Resolution.Y
             };
+
 
             ScreenRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
 
@@ -68,6 +69,7 @@ namespace Danmaku_no_Kyojin
 
             // Screens
             TitleScreen = new TitleScreen(this, _stateManager);
+            TestScreen = new TestScreen(this, _stateManager);
             GameConfigurationScreen = new GameConfigurationScreen(this, _stateManager);
             GameplayScreen = new GameplayScreen(this, _stateManager);
             LeaderboardScreen = new LeaderboardScreen(this, _stateManager);

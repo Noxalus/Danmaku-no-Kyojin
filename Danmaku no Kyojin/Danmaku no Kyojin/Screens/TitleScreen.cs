@@ -183,10 +183,14 @@ namespace Danmaku_no_Kyojin.Screens
                     _passSound.Play();
                 }
             }
-            else
+            else if (InputHandler.KeyDown(Keys.F9))
             {
-                if (InputHandler.KeyDown(Keys.F9))
-                    Config.Debug = !Config.Debug;
+                Config.Debug = !Config.Debug;
+            }
+            
+            if (InputHandler.KeyDown(Keys.F10))
+            {
+                StateManager.ChangeState(GameRef.TestScreen);
             }
 
             if (Config.Cheat)
