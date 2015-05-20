@@ -34,7 +34,7 @@ namespace Danmaku_no_Kyojin.Entities
             _borderTexture = this.Game.Content.Load<Texture2D>("Graphics/Sprites/laserBorder");
             _middleTexture = this.Game.Content.Load<Texture2D>("Graphics/Sprites/laserMiddle");
 
-            Center = new Vector2(_borderTexture.Width, _borderTexture.Height / 2f);
+            Origin = new Vector2(_borderTexture.Width, _borderTexture.Height / 2f);
 
             // TODO: Collision box
 

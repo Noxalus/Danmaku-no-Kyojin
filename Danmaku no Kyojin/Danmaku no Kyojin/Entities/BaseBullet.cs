@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Danmaku_no_Kyojin.Entities
 {
-    public abstract class BaseBullet : Entity
+    public abstract class BaseBullet : SpriteEntity
     {
-        protected Vector2 Direction;
+        public Vector2 Direction;
         protected float Velocity;
         public float Power { get; set; }
 

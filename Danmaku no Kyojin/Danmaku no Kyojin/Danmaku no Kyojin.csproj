@@ -129,16 +129,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Asset.cs" />
+    <Compile Include="Assets\Sound.cs" />
     <Compile Include="Camera\Camera2D.cs" />
     <Compile Include="Collisions\CollisionCircle.cs" />
     <Compile Include="Collisions\CollisionElement.cs" />
     <Compile Include="Collisions\CollisionConvexPolygon.cs" />
+    <Compile Include="Collisions\CollisionElements.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Controls\GameState.cs" />
     <Compile Include="Controls\GameStateManager.cs" />
     <Compile Include="Controls\InputHandler.cs" />
+    <Compile Include="Entities\Line.cs" />
+    <Compile Include="Entities\SpriteEntity.cs" />
+    <Compile Include="Entities\Turret.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="Entities\BaseBullet.cs" />
     <Compile Include="Entities\Bullet.cs" />

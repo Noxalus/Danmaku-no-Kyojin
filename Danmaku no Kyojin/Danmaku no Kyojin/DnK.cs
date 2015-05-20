@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,6 +30,9 @@ namespace Danmaku_no_Kyojin
         public Rectangle ScreenRectangle;
 
         public static Texture2D Pixel;
+
+        // Random
+        public readonly Random Rand = new Random();
 
         // Audio
         public SoundEffect Select;

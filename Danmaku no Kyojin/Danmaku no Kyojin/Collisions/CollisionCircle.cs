@@ -71,8 +71,9 @@ namespace Danmaku_no_Kyojin.Collisions
         public override Vector2 GetCenter()
         {
             return new Vector2(
-                Parent.X + RelativePosition.X * (float)(Math.Sin(Parent.GetRotation()) * -1),
-                Parent.Y + RelativePosition.Y * (float)(Math.Cos(Parent.GetRotation())));
+                Parent.Position.X + RelativePosition.X * (float)(-Math.Sin(Parent.Rotation)),
+                Parent.Position.Y + RelativePosition.Y * (float)(Math.Cos(Parent.Rotation))
+            );
         }
 
         public Vector2 Project(Vector2 axis)

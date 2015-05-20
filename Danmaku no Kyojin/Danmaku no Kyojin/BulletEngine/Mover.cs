@@ -50,11 +50,11 @@ namespace Danmaku_no_Kyojin.BulletEngine
 	    {
             Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/balls");
 
-            Center = new Vector2(Sprite.Height / 2f, Sprite.Height / 2f);
+            CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Height / 2f));
 
-            CollisionBox = new CollisionCircle(this, Vector2.Zero, Sprite.Height / 2f);
+            Origin = new Vector2(Sprite.Height / 2f, Sprite.Height / 2f);
 
-            int index = (int)(Sprite.Height * _rand.Next((Sprite.Width / Sprite.Height)));
+            var index = (int)(Sprite.Height * _rand.Next((Sprite.Width / Sprite.Height)));
             _spriteRectangle = new Rectangle(index, 0, Sprite.Height, Sprite.Height);
 
             base.LoadContent();
@@ -82,12 +82,11 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(Sprite, new Rectangle((int)(Position.X - Center.X), (int)(Position.Y - Center.Y), Sprite.Height, Sprite.Height), _spriteRectangle, Color.White);
+            Game.SpriteBatch.Draw(Sprite, new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), Sprite.Height, Sprite.Height), _spriteRectangle, Color.White);
+            //Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
             if (Config.DisplayCollisionBoxes)
-            {
-                CollisionBox.Draw(Game.SpriteBatch);
-            }
+                CollisionBoxes.Draw(Game.SpriteBatch);
 
             base.Draw(gameTime);
         }

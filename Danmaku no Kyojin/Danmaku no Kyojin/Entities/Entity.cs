@@ -9,12 +9,11 @@ namespace Danmaku_no_Kyojin.Entities
         #region Fields
 
         protected readonly DnK Game;
-        protected Vector2 Position;
-        protected float Rotation;
-        protected CollisionElement CollisionBox;
-        protected Vector2 Center;
-        protected Texture2D Sprite;
-        protected Point Size;
+        private Vector2 _position;
+        private float _rotation;
+        private Vector2 _origin;
+        private Vector2 _scale;
+        private Point _size;
 
         public bool IsAlive { get; set; }
 
@@ -22,41 +21,54 @@ namespace Danmaku_no_Kyojin.Entities
 
         #region Accessors
 
-        public Vector2 GetPosition()
-        {
-            return Position;
-        }
-
         public float X
         {
             get { return Position.X; }
-            set { Position.X = value; }
+            set { _position.X = value; }
         }
 
         public float Y
         {
             get { return Position.Y; }
-            set { Position.Y = value; }
+            set { _position.Y = value; }
         }
 
-        public float GetRotation()
+        public Vector2 Position
         {
-            return Rotation;
+            get { return _position; }
+            set { _position = value; }
         }
 
-        public CollisionElement GetBoundingElement()
+        // Used as PositionDelegate for BulletEngine
+        public Vector2 GetPosition()
         {
-            return CollisionBox;
+            return _position;
         }
 
-        public Vector2 GetOrigin()
+        public float Rotation
         {
-            return new Vector2(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2);
+            get { return _rotation; }
+            set { _rotation = value; }
         }
 
-        public Point GetSize()
+        public CollisionElements CollisionBoxes { get; set; }
+
+        public Vector2 Origin
         {
-            return new Point(Sprite.Width, Sprite.Height);
+            get { return _origin; }
+            set { _origin = value; }
+        }
+
+        public Point Size
+        {
+            get { return _size; }
+            set { _size = value; }
+        }
+
+        public Vector2 Scale
+        {
+            get { return _scale; }
+            set { _scale = value; }
         }
 
         #endregion
@@ -64,6 +76,9 @@ namespace Danmaku_no_Kyojin.Entities
         protected Entity(DnK game)
         {
             Game = game;
+
+            CollisionBoxes = new CollisionElements();
+            _scale = new Vector2(1f, 1f);
         }
 
         public virtual void Initialize()
@@ -82,12 +97,12 @@ namespace Danmaku_no_Kyojin.Entities
         public virtual void Draw(GameTime gameTime)
         {
             if (Config.DisplayCollisionBoxes)
-                CollisionBox.Draw(Game.SpriteBatch);
+                CollisionBoxes.Draw(Game.SpriteBatch);
         }
 
         public bool Intersects(Entity entity)
         {
-            return CollisionBox.Intersects(entity.CollisionBox);
+            return CollisionBoxes.Intersects(entity.CollisionBoxes);
         }
     }
 }

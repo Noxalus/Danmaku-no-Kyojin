@@ -30,10 +30,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         // Audio
         private SoundEffect hit = null;
-
-        // Random
-        public static Random Rand = new Random();
-
+        
         // Timer (descending)
         private readonly Timer _timer;
 
@@ -71,7 +68,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             _playTime = TimeSpan.Zero;
 
-            _enemy = new Boss(GameRef);
+            _enemy = new Boss(GameRef, Players);
 
             _singlePlayer = (Config.PlayersNumber == 1);
 
@@ -187,7 +184,7 @@ namespace Danmaku_no_Kyojin.Screens
                     {
                         p.GetBullets()[i].Update(gameTime);
 
-                        if (_enemy.IsAlive && _enemy.GetBoundingElement().Intersects(p.GetBullets()[i].GetBoundingElement()))
+                        if (_enemy.IsAlive && _enemy.Intersects(p.GetBullets()[i]))
                         {
                             if (_enemy.IsReady())
                             {

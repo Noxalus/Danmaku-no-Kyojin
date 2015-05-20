@@ -58,6 +58,9 @@ namespace Danmaku_no_Kyojin.Entities
         // Camera
         private Camera2D _camera;
 
+        // Random
+        private static Random _random;
+
         public int Score
         {
             get { return _score; }
@@ -78,7 +81,8 @@ namespace Danmaku_no_Kyojin.Entities
             _controller = controller;
             _originPosition = position;
             Position = _originPosition;
-            Center = Vector2.Zero;
+            Origin = Vector2.Zero;
+            _random = new Random();
         }
 
         public override void Initialize()
@@ -106,6 +110,8 @@ namespace Danmaku_no_Kyojin.Entities
 
             _hitboxRadius = (float)Math.PI * 1.5f * 2;
 
+            _camera = new Camera2D(_viewport, 1f);
+
             base.Initialize();
         }
 
@@ -116,8 +122,7 @@ namespace Danmaku_no_Kyojin.Entities
             Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship");
             _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
             _hitboxSprite = this.Game.Content.Load<Texture2D>("Graphics/Pictures/hitbox");
-            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
-            CollisionBox = new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), _hitboxRadius/2f);
+            CollisionBoxes.Add(new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), _hitboxRadius/2f));
 
             _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
 
@@ -129,8 +134,6 @@ namespace Danmaku_no_Kyojin.Entities
                 _shootSound = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
             if (_deadSound == null)
                 _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
-
-            _camera = new Camera2D(_viewport, 1f);
         }
 
         public override void Update(GameTime gameTime)
@@ -250,31 +253,31 @@ namespace Danmaku_no_Kyojin.Entities
         {
             if (SlowMode)
             {
-                Position.X += _direction.X * _velocitySlowMode * dt;
-                Position.Y += _direction.Y * _velocitySlowMode * dt;
+                X += _direction.X * _velocitySlowMode * dt;
+                Y += _direction.Y * _velocitySlowMode * dt;
             }
             else
             {
-                Position.X += _direction.X * _velocity * dt;
-                Position.Y += _direction.Y * _velocity * dt;
+                X += _direction.X * _velocity * dt;
+                Y += _direction.Y * _velocity * dt;
             }
 
-            Position.X = MathHelper.Clamp(Position.X, Sprite.Width / 2f, Config.GameArea.X - Sprite.Width / 2f);
-            Position.Y = MathHelper.Clamp(Position.Y, Sprite.Height / 2f, Config.GameArea.Y - Sprite.Height / 2f);
+            X = MathHelper.Clamp(Position.X, Sprite.Width / 2f, Config.GameArea.X - Sprite.Width / 2f);
+            Y = MathHelper.Clamp(Position.Y, Sprite.Height / 2f, Config.GameArea.Y - Sprite.Height / 2f);
         }
 
         public override void Draw(GameTime gameTime)
         {
             if (!IsInvincible)
             {
-                Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+                Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
                 // Draw Hitbox
                 if (SlowMode)
                 {
                     Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
-                        (int)(CollisionBox.GetCenter().X - _hitboxRadius / 2f),
-                        (int)(CollisionBox.GetCenter().Y - _hitboxRadius / 2f),
+                        (int)(CollisionBoxes[0].GetCenter().X - _hitboxRadius / 2f),
+                        (int)(CollisionBoxes[0].GetCenter().Y - _hitboxRadius / 2f),
                         (int)_hitboxRadius,
                         (int)_hitboxRadius),
                         Color.White);
@@ -415,13 +418,20 @@ namespace Danmaku_no_Kyojin.Entities
                 BulletFrequence -= gameTime.ElapsedGameTime;
             else
             {
-                BulletFrequence = TimeSpan.FromTicks((long)(Improvements.ShootFrequencyData[PlayerData.ShootFrequencyIndex].Key * Config.PlayerShootFrequency.Ticks));
+                BulletFrequence = TimeSpan.FromTicks((long)(Improvements.ShootFrequencyData[Improvements.ShootFrequencyData.Count - 3].Key * Config.PlayerShootFrequency.Ticks));
 
                 var direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
 
                 // Straight
                 if (PlayerData.ShootTypeIndex != 1)
                 {
+                    // TODO: Add randomness to bullet direction
+                    /*
+                    float randomSpread = _random.NextFloat(-0.04f, 0.04f) + _random.NextFloat(-0.04f, 0.04f);
+                    Vector2 vel = MathUtil.FromPolar(aimAngle + randomSpread, 11f);
+                    Vector2 offset = Vector2.Transform(new Vector2(25, -8), aimQuat);
+                    */
+
                     var bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
                     bullet.WaveMode = false;
 

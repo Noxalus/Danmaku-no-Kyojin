@@ -12,10 +12,9 @@ namespace Danmaku_no_Kyojin.Collisions
     {
         #region Fields
 
-        private List<Point> Vertices { get; set; }
+        private List<Vector2> Vertices { get; set; }
         public bool IsFilled { get; set; }
         private List<Vector2> _axes;
-
         private List<Vector2> _circleAxes;
 
         #endregion
@@ -29,7 +28,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #endregion
 
-        public CollisionConvexPolygon(Entity parent, Vector2 relativePosition, List<Point> vertices)
+        public CollisionConvexPolygon(Entity parent, Vector2 relativePosition, List<Vector2> vertices)
             : base(parent, relativePosition)
         {
             Parent = parent;
@@ -57,12 +56,12 @@ namespace Danmaku_no_Kyojin.Collisions
             ComputeAxes();
 
             // loop over the axes of this polygon
-            for (int i = 0; i < _axes.Count; i++)
+            for (var i = 0; i < _axes.Count; i++)
             {
-                Vector2 axis = _axes[i];
+                var axis = _axes[i];
                 // project both shapes onto the axis
-                Vector2 p1 = this.Project(axis);
-                Vector2 p2 = element.Project(axis);
+                var p1 = Project(axis);
+                var p2 = element.Project(axis);
                 // do the projections overlap?
                 if (!Overlap(p1, p2))
                 {
@@ -70,13 +69,15 @@ namespace Danmaku_no_Kyojin.Collisions
                     return false;
                 }
             }
+            
+            /*
             // loop over element polygon's axes
             List<Vector2> axes = element.GetAxes();
             for (int i = 0; i < axes.Count; i++)
             {
                 Vector2 axis = axes[i];
                 // project both shapes onto the axis
-                Vector2 p1 = this.Project(axis);
+                Vector2 p1 = Project(axis);
                 Vector2 p2 = element.Project(axis);
                 // do the projections overlap?
                 if (!Overlap(p1, p2))
@@ -85,6 +86,8 @@ namespace Danmaku_no_Kyojin.Collisions
                     return false;
                 }
             }
+            */
+
             // if we get here then we know that every axis had overlap on it
             // so we can guarantee an intersection
             return true;
@@ -117,6 +120,9 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override void Draw(SpriteBatch sp)
         {
+            if (Vertices.Count == 0)
+                return;
+
             Vector2 previousPosition = GetPosition(Vertices[0]);
 
             for (int i = 1; i <= Vertices.Count; i++)
@@ -127,15 +133,18 @@ namespace Danmaku_no_Kyojin.Collisions
                     previousPosition.X,
                     previousPosition.Y,
                     position.X,
-                    position.Y, Color.White);
+                    position.Y, Color.Red);
 
                 Vector2 axis = Vector2.Normalize(position - previousPosition);
 
                 sp.DrawLine(
-                    previousPosition.X - ((previousPosition.X - position.X) / 2), previousPosition.Y - ((previousPosition.Y - position.Y) / 2),
-                    (previousPosition.X) + axis.Y * 2000, (previousPosition.Y) - axis.X * 2000,
+                    (previousPosition.X + position.X) / 2f, 
+                    (previousPosition.Y + position.Y) / 2f,
+                    (previousPosition.X) + axis.Y * 2000, 
+                    (previousPosition.Y) - axis.X * 2000,
                     Color.Red);
 
+                /*
                 if (_circleAxes.Count > 0)
                 {
                     sp.DrawLine(
@@ -143,17 +152,30 @@ namespace Danmaku_no_Kyojin.Collisions
                         (previousPosition.X) + _circleAxes[i - 1].X * 2000, (previousPosition.Y) - _circleAxes[i - 1].Y * -2000,
                         Color.Red);
                 }
+                */
 
                 previousPosition = position;
             }
         }
 
-        private Vector2 GetPosition(Point vertex)
+        private Vector2 GetPosition(Vector2 vertex)
         {
-            return new Vector2(
-                Parent.GetOrigin().X + vertex.X + (float)(Math.Sin(Parent.GetRotation()) * -1),
-                Parent.GetOrigin().Y + vertex.Y + (float)(Math.Cos(Parent.GetRotation()))
-            );
+            var angleCos = (float)Math.Cos(Parent.Rotation);
+            var angleSin = (float)Math.Sin(Parent.Rotation);
+
+            // Translate point back to origin  
+            vertex.X -= Parent.Origin.X;
+            vertex.Y -= Parent.Origin.Y;
+
+            // Rotate point
+            var newX = vertex.X * angleCos - vertex.Y * angleSin;
+            var newY = vertex.X * angleSin + vertex.Y * angleCos;
+
+            // Translate point back
+            vertex.X = newX + Parent.Position.X;
+            vertex.Y = newY + Parent.Position.Y;
+
+            return vertex;
         }
 
         public override Vector2 GetCenter()
@@ -163,6 +185,9 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private void ComputeAxes()
         {
+            if (Vertices.Count == 0)
+                return;
+
             // We start by deleting former axis
             _axes.Clear();
 
@@ -174,7 +199,9 @@ namespace Danmaku_no_Kyojin.Collisions
 
                 Vector2 edge = position - previousPosition;
                 var normal = new Vector2(edge.Y, -edge.X);
-                _axes.Add(normal);
+
+                if (!_axes.Contains(normal))
+                    _axes.Add(normal);
 
                 previousPosition = position;
             }
@@ -197,14 +224,14 @@ namespace Danmaku_no_Kyojin.Collisions
         public bool Overlap(Vector2 p1, Vector2 p2)
         {
             // P = (X, Y) with X = min and Y = max
-            if (!((p1.Y > p2.X && p1.X < p2.Y) || (p2.Y > p1.X && p2.Y < p1.X)))
-                return false;
-
-            return true;
+            return (p1.Y > p2.X && p1.X < p2.Y) || (p2.Y > p1.X && p2.Y < p1.X);
         }
 
         public Vector2 Project(Vector2 axis)
         {
+            if (Vertices.Count == 0)
+                return Vector2.Zero;
+
             float min = Vector2.Dot(new Vector2(GetPosition(Vertices[0]).X, GetPosition(Vertices[0]).Y), axis);
             float max = min;
             for (int i = 1; i < Vertices.Count; i++)

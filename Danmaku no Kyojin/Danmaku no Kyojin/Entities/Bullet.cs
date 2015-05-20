@@ -14,21 +14,20 @@ namespace Danmaku_no_Kyojin.Entities
         public Bullet(DnK game, Texture2D sprite, Vector2 position, Vector2 direction, float velocity)
             : base(game, sprite, position, direction, velocity)
         {
-            Rotation = 0;
-            Center = new Vector2(Sprite.Width / 2f, Sprite.Height / 2f);
+            Rotation = (float)Math.Atan2(direction.Y, direction.X) - MathHelper.PiOver2;
             _distance = 0;
 
             WaveMode = false;
 
-            List<Point> vertices = new List<Point>()
+            var vertices = new List<Vector2>
                 {
-                    new Point(0, 0),
-                    new Point(sprite.Width, 0),
-                    new Point(sprite.Width, sprite.Height),
-                    new Point(0, sprite.Height),
+                    new Vector2(0, 0),
+                    new Vector2(sprite.Width, 0),
+                    new Vector2(sprite.Width, sprite.Height),
+                    new Vector2(0, sprite.Height),
                 };
 
-            CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
+            CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, sprite.Width / 2f));
 
             Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
         }
@@ -43,16 +42,16 @@ namespace Danmaku_no_Kyojin.Entities
                 Direction.X = (float)Math.Cos(_distance);
             }
 
-            Rotation = (Rotation + 0.25f) % 360;
+            //Rotation = (Rotation + 0.25f) % 360;
 
             Position += Direction * Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
-            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Center, 1f, SpriteEffects.None, 0f);
+            base.Draw(gameTime);
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
+using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace Danmaku_no_Kyojin.Shapes
@@ -41,27 +43,29 @@ namespace Danmaku_no_Kyojin.Shapes
             _graphicsDevice = graphicsDevice;
             _vertices = vertices;
             _triangulated = false;
-            _position = new Vector2(0f, 0f);
-            _origin = new Vector2(0, 0);
-            _scale = new Vector2(1, 1);
-            _rotation = 0f;
 
             _effect = new BasicEffect(_graphicsDevice)
             {
                 Projection = Matrix.CreateOrthographicOffCenter(
                 0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1),
                 VertexColorEnabled = true,
-                //DiffuseColor = new Vector3(1, 0, 0)
+                /*
+                DiffuseColor = new Vector3(0, 1, 0),
+                Alpha = 0.5f
+                */
             };
         }
 
-        public void Origin(Vector2 value)
+        public void AddVertices(Vector2[] vertices)
         {
-            _origin = value;
-        }
-        public void Position(Vector2 value)
-        {
-            _position = value;
+            // TODO: Check that all vertices don't already exist
+
+            // Increase the size of vertices array field and add the new vertices
+            int originalLength = _vertices.Length;
+            Array.Resize(ref _vertices, originalLength + vertices.Length);
+            Array.Copy(vertices, 0, _vertices, originalLength, vertices.Length);
+
+            _triangulated = false;
         }
 
         /// <summary>
@@ -84,13 +88,17 @@ namespace Danmaku_no_Kyojin.Shapes
             var verts = new VertexPositionColor[_triangulatedVertices.Length];
 
             for (var i = 0; i < _triangulatedVertices.Length; i++)
-                verts[i] = new VertexPositionColor(new Vector3(_triangulatedVertices[i], 0f), Color.White);
+            {
+                verts[i] = new VertexPositionColor(new Vector3(_triangulatedVertices[i], 0f), new Color(0f, 1f, 0f, 0.5f));
+            }
 
+            /*
             verts[0].Color = Color.Red;
             verts[1].Color = Color.Blue;
             verts[2].Color = Color.Yellow;
             verts[3].Color = Color.Violet;
             verts[_triangulatedVertices.Length - 1].Color = Color.Green;
+            */
 
             _vertexBuffer = new VertexBuffer(
                 _graphicsDevice,
@@ -131,19 +139,7 @@ namespace Danmaku_no_Kyojin.Shapes
             _triangulated = true;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _position.Y += dt * 50;
-            //_rotation += (dt * 2) % (float)Math.PI;
-        }
-
-        /// <summary>
-        /// Draw the polygon. If you haven't called Triangulate yet, I wil do it for you.
-        /// </summary>
-        /// <param name="view"></param>
-        public void Draw(Matrix viewMatrix, bool wireframe)
+        public void Draw(Matrix viewMatrix, Vector2 position, Vector2 origin, float rotation, Vector2 scale)
         {
             try
             {
@@ -152,34 +148,22 @@ namespace Danmaku_no_Kyojin.Shapes
 
                 _graphicsDevice.SetVertexBuffer(_vertexBuffer);
                 _graphicsDevice.Indices = _indexBuffer;
+                _graphicsDevice.BlendState = BlendState.Additive;
 
-                if (wireframe)
-                    _graphicsDevice.RasterizerState = _wireframe;
-                else
-                {
-                    _graphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-                }
+                _graphicsDevice.RasterizerState = InputHandler.KeyDown(Keys.W) ? _wireframe : RasterizerState.CullCounterClockwise;
+
+                var worldMatrix = Matrix.CreateTranslation(new Vector3(-origin, 0))
+                    * Matrix.CreateScale(new Vector3(scale, 0))
+                    * Matrix.CreateRotationZ(rotation)
+                    * Matrix.CreateTranslation(new Vector3(position, 0));
 
                 _effect.View = viewMatrix;
-                var worldMatrix = Matrix.CreateTranslation(new Vector3(-_origin, 0))
-                    * Matrix.CreateScale(new Vector3(_scale, 0))
-                    * Matrix.CreateRotationZ(_rotation)
-                    * Matrix.CreateTranslation(new Vector3(_position, 0));
-
                 _effect.World = worldMatrix;
-
+                
                 foreach (var pass in _effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-
-                    _graphicsDevice.DrawIndexedPrimitives(
-                        PrimitiveType.TriangleList,
-                        0,
-                        0,
-                        _numVertices,
-                        0,
-                        _numPrimitives
-                    );
+                    _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _numVertices, 0, _numPrimitives);
                 }
             }
             catch (Exception exception)

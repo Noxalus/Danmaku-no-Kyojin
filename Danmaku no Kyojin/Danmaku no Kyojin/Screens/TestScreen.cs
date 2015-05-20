@@ -19,18 +19,14 @@ namespace Danmaku_no_Kyojin.Screens
 
         private List<Player> Players { get; set; }
 
+        private Boss _boss;
+
         // Random
         public static readonly Random Rand = new Random();
 
         // Background
         private Texture2D _backgroundImage;
         private Rectangle _backgroundMainRectangle;
-        private Rectangle _backgroundTopRectangle;
-
-        private PolygonShape _polygonShape;
-        private Vector2[] _vertices;
-
-        private bool _wireframeMode;
 
         public TestScreen(Game game, GameStateManager manager)
             : base(game, manager)
@@ -41,7 +37,6 @@ namespace Danmaku_no_Kyojin.Screens
         public override void Initialize()
         {
             _backgroundMainRectangle = new Rectangle(0, 0, Config.GameArea.X, Config.GameArea.Y);
-            _backgroundTopRectangle = new Rectangle(0, -Config.GameArea.Y, Config.GameArea.X, Config.GameArea.Y);
 
             base.Initialize();
 
@@ -54,15 +49,13 @@ namespace Danmaku_no_Kyojin.Screens
             player1.Initialize();
             Players.Add(player1);
 
-            GenerateNewPolygonShape();
-
-            _wireframeMode = false;
+            _boss = new Boss(GameRef, Players);
+            _boss.Initialize();
         }
 
         protected override void LoadContent()
         {
             _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
-            _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
             base.LoadContent();
         }
@@ -73,12 +66,6 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
-            // Move the background
-            if (_backgroundMainRectangle.Y >= Config.Resolution.Y)
-                _backgroundMainRectangle.Y = _backgroundTopRectangle.Y - Config.Resolution.Y;
-            if (_backgroundTopRectangle.Y >= Config.Resolution.Y)
-                _backgroundTopRectangle.Y = _backgroundMainRectangle.Y - Config.Resolution.Y;
-
             HandleInput();
 
             if (InputHandler.PressedCancel())
@@ -89,7 +76,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             base.Update(gameTime);
 
-            foreach (Player p in Players)
+            foreach (var p in Players)
             {
                 if (p.IsAlive)
                 {
@@ -106,13 +93,39 @@ namespace Danmaku_no_Kyojin.Screens
                     for (int i = 0; i < p.GetBullets().Count; i++)
                     {
                         p.GetBullets()[i].Update(gameTime);
+
+                        if (_boss.Intersects(p.GetBullets()[i]))
+                        {
+                            _boss.TakeDamage(p.GetBullets()[i].Power);
+
+                            p.GetBullets().Remove(p.GetBullets()[i]);
+                        }
+
+                        if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
+                            p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.GameArea.Y)
+                        {
+                            p.GetBullets().Remove(p.GetBullets()[i]);
+                            continue;
+                        }
+
+                        // Collision with turrets
+                        for (int j = 0; j < _boss.Turrets.Count; j++)
+                        {
+                            if (_boss.Turrets[j].Intersects(p.GetBullets()[i]))
+                            {
+                                _boss.Turrets[j].Color = Color.Blue;
+                                _boss.DestroyTurret(_boss.Turrets[j], p.GetBullets()[i]);
+                                p.GetBullets().Remove(p.GetBullets()[i]);
+                                break;
+                            }
+                        }
                     }
 
                     p.Update(gameTime);
                 }
             }
 
-            _polygonShape.Update(gameTime);
+            _boss.Update(gameTime);
 
             if (Config.Debug && InputHandler.KeyPressed(Keys.C))
                 Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
@@ -120,27 +133,27 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Draw(GameTime gameTime)
         {
-
             ControlManager.Draw(GameRef.SpriteBatch);
 
-            GameRef.SpriteBatch.Begin(0, BlendState.Opaque);
+            var backgroundColor = new Color(50, 50, 50);
+            GraphicsDevice.Clear(backgroundColor);
 
+            // Draw game arena background
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, Players[0].Camera.GetTransformation());
+            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
             GameRef.SpriteBatch.End();
 
             GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            var backgroundColor = new Color(5, 5, 5);
-            GraphicsDevice.Clear(backgroundColor);
-
             GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Players[0].Camera.GetTransformation());
 
-            GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
+            Players[0].Draw(gameTime);
+
+            _boss.Draw(gameTime, Players[0].Camera.GetTransformation());
 
             foreach (var bullet in Players[0].GetBullets())
                 bullet.Draw(gameTime);
 
-            Players[0].Draw(gameTime);
-            
             GameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -149,12 +162,10 @@ namespace Danmaku_no_Kyojin.Screens
 
             // Text
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
-            "Position: " + Players.First().GetPosition().ToString(),
+            "Position: " + Players.First().GetPosition(),
             new Vector2(0, 20), Color.White);
 
-            PrintPolygonShapeVerticesPosition();
-
-            _polygonShape.Draw(Players[0].Camera.GetTransformation(), _wireframeMode);
+            //_boss.PrintPolygonShapeVerticesPosition();
 
             GameRef.SpriteBatch.End();
         }
@@ -167,143 +178,7 @@ namespace Danmaku_no_Kyojin.Screens
             if (InputHandler.KeyDown(Keys.Space))
             {
                 // Update polygon shape
-                GenerateNewPolygonShape();
-            }
-            else if (InputHandler.KeyPressed(Keys.W))
-            {
-                _wireframeMode = !_wireframeMode;
-            }
-        }
-
-        private void GenerateNewPolygonShape()
-        {
-            var iteration = 50;
-            var step = 20;
-            var bossPosition = new Vector2(0, 0);
-
-            _vertices = new Vector2[((iteration) + 2) * 2];
-            List<int> possibleDirections = new List<int>()
-            {
-                // 0 => Up, 1 => Up diagonal, 2 => Right, 3 => Down diagonal, 4 => Down
-                0, 1, 2, 3, 4
-            };
-
-            var vertexPosition = new Vector2(0f, 0f);
-            _vertices[0] = vertexPosition;
-
-            for (int i = 1; i < (_vertices.Length - 1) / 2; i++)
-            {
-                if (vertexPosition.Y <= step)
-                {
-                    possibleDirections.Remove(0);
-                    possibleDirections.Remove(1);
-                    possibleDirections.Remove(2);
-                }
-
-                var randomDirectionIndex = Rand.Next(possibleDirections.Count);
-                var randomDirection = possibleDirections[randomDirectionIndex];
-
-                // Reset the list of possible directions
-                possibleDirections = new List<int> { 0, 1, 2, 3, 4 };
-
-                // Up
-                if (randomDirection == 0)
-                {
-                    vertexPosition.Y -= step;
-
-                    // We don't want to go down for the next step
-                    possibleDirections.Remove(4);
-                }
-                // Up diagonal
-                else if (randomDirection == 1)
-                {
-                    vertexPosition.X += step;
-                    vertexPosition.Y -= step;
-                }
-                // Right
-                else if (randomDirection == 2)
-                {
-                    vertexPosition.X += step;
-                }
-                // Down diagonal
-                else if (randomDirection == 3)
-                {
-                    vertexPosition.X += step;
-                    vertexPosition.Y += step;
-                }
-                // Down
-                else if (randomDirection == 4)
-                {
-                    vertexPosition.Y += step;
-
-                    // We don't want to go up for the next step
-                    possibleDirections.Remove(0);
-                }
-
-                _vertices[i] = vertexPosition;
-            }
-
-            var origin = new Vector2(vertexPosition.X, vertexPosition.Y/2);
-
-
-            _vertices[(_vertices.Length / 2) - 1] = new Vector2(vertexPosition.X, 0f);
-
-            var bossWidth = vertexPosition.X;
-            // Perform Y-axis symetry
-            for (int i = (_vertices.Length - 1) / 2; i >= 0; i--)
-            {
-                var position = _vertices[i];
-                position.X = (bossWidth * 2) - position.X;
-
-                _vertices[((_vertices.Length / 2) + (_vertices.Length - 1) / 2) - i] = position;
-            }
-
-            _polygonShape = new PolygonShape(GameRef.GraphicsDevice, _vertices);
-            _polygonShape.Origin(origin);
-            _polygonShape.Position(new Vector2(
-                (Config.GameArea.X / 2f),
-                Config.GameArea.Y / 4f
-            ));
-        }
-
-        private void PrintPolygonShapeVerticesPosition()
-        {
-            var counter = 0;
-            Vector2 previousVertex = _vertices[0];
-            foreach (var vertex in _vertices)
-            {
-                var s = vertex.X + ", " + vertex.Y;
-
-                if (counter > 0)
-                {
-                    if (previousVertex.X != vertex.X)
-                    {
-                        // Left
-                        if (previousVertex.Y == vertex.Y)
-                            s += " (Right)";
-                        else if (previousVertex.Y > vertex.Y)
-                            s += " (Diagonal up)";
-                        else if (previousVertex.Y < vertex.Y)
-                            s += " (Diagonal down)";
-                    }
-                    else
-                    {
-                        if (previousVertex.Y > vertex.Y)
-                            s += " (Up)";
-                        else if (previousVertex.Y < vertex.Y)
-                            s += " (Down)";
-                    }
-                }
-
-                GameRef.SpriteBatch.DrawString(
-                    ControlManager.SpriteFont,
-                    s,
-                    new Vector2(0, 60 + (counter * 20)), 
-                    Color.White
-                );
-
-                previousVertex = vertex;
-                counter++;
+                _boss.GenerateNewPolygonShape();
             }
         }
     }

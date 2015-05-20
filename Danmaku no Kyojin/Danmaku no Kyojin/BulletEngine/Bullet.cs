@@ -11,7 +11,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
     /// This is the bullet class that outside assemblies will interact with.
     /// Just inherit from this class and override the abstract functions!
     /// </summary>
-    public abstract class Bullet : Entity
+    public abstract class Bullet : SpriteEntity
     {
         #region Members
 
