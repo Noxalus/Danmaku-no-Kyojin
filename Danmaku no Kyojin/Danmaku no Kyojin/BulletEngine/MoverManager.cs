@@ -48,8 +48,9 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// </summary>
         public Bullet CreateBullet()
         {
-            _shoot.Play();   
-            Mover mover = new Mover(_gameRef, this);
+            if (_shoot != null)
+                _shoot.Play();   
+            var mover = new Mover(_gameRef, this);
             movers.Add(mover); //Moverを登録
             mover.Initialize(); //初期化
             return mover;

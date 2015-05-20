@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin.Screens
 {
-    public class TestScreen : BaseGameState
+    public class DebugScreen : BaseGameState
     {
         // Camera
         Viewport _defaultView;
@@ -28,7 +28,7 @@ namespace Danmaku_no_Kyojin.Screens
         private Texture2D _backgroundImage;
         private Rectangle _backgroundMainRectangle;
 
-        public TestScreen(Game game, GameStateManager manager)
+        public DebugScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
             Players = new List<Player>();

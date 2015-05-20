@@ -192,7 +192,8 @@
     <Compile Include="BulletEngine\Tasks\Wait.cs" />
     <Compile Include="Entities\Timer.cs" />
     <Compile Include="Improvements.cs" />
-    <Compile Include="Screens\TestScreen.cs" />
+    <Compile Include="Screens\PatternTestScreen.cs" />
+    <Compile Include="Screens\DebugScreen.cs" />
     <Compile Include="Shapes\PolygonShape.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

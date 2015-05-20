@@ -17,7 +17,8 @@ namespace Danmaku_no_Kyojin
 
         // Screens
         public readonly TitleScreen TitleScreen;
-        public readonly TestScreen TestScreen;
+        public readonly DebugScreen DebugScreen;
+        public readonly PatternTestScreen PatternTestScreen;
         public readonly ImprovementScreen ImprovementScreen;
         public readonly LeaderboardScreen LeaderboardScreen;
         public readonly OptionsScreen OptionsScreen;
@@ -73,7 +74,8 @@ namespace Danmaku_no_Kyojin
 
             // Screens
             TitleScreen = new TitleScreen(this, _stateManager);
-            TestScreen = new TestScreen(this, _stateManager);
+            DebugScreen = new DebugScreen(this, _stateManager);
+            PatternTestScreen = new PatternTestScreen(this, _stateManager);
             GameConfigurationScreen = new GameConfigurationScreen(this, _stateManager);
             GameplayScreen = new GameplayScreen(this, _stateManager);
             LeaderboardScreen = new LeaderboardScreen(this, _stateManager);
