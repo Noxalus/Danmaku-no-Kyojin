@@ -71,10 +71,10 @@ namespace Danmaku_no_Kyojin.Entities
             get { return _turrets; }
         }
 
-        public Boss(DnK game, List<Player> players, int iteration = 50, float step = 25)
-            : base(game)
+        public Boss(DnK gameRef, List<Player> players, int iteration = 50, float step = 25)
+            : base(gameRef)
         {
-            MoverManager = new MoverManager(Game);
+            MoverManager = new MoverManager(GameRef);
             GameManager.GameDifficulty = Config.GameDifficultyDelegate;
             DefeatNumber = 0;
             _speed = 1f;
@@ -89,7 +89,7 @@ namespace Danmaku_no_Kyojin.Entities
         public override void Initialize()
         {
             int targetPlayerId = 0;
-            targetPlayerId = Game.Rand.Next(0, _players.Count);
+            targetPlayerId = GameRef.Rand.Next(0, _players.Count);
 
             MoverManager.Initialize(_players[targetPlayerId].GetPosition);
 
@@ -114,12 +114,13 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected override void LoadContent()
         {
-            //Sprite = Game.Content.Load<Texture2D>(@"Graphics/Entities/enemy");
-            _healthBar = Game.Content.Load<Texture2D>(@"Graphics/Pictures/pixel");
-
+            // TODO: Design a core sprite
+            //Sprite = GameRef.Content.Load<Texture2D>(@"Graphics/Entities/enemy");
+            _healthBar = GameRef.Pixel;
+            
             // Audio
             if (_deadSound == null)
-                _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
+                _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
 
             // TODO: Add multiple rectangle collision boxes on each boss's edges
             /*
@@ -146,7 +147,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _myPatterns.Add(pattern);
             }
 
-            _currentPattern = Game.Rand.Next(0, _patternNames.Count);
+            _currentPattern = GameRef.Rand.Next(0, _patternNames.Count);
             AddBullet(true);
 
             GenerateNewPolygonShape();
@@ -243,8 +244,8 @@ namespace Danmaku_no_Kyojin.Entities
 
                     if (InputHandler.KeyDown(Keys.OemPlus))
                     {
-                        _vertices.Remove(_vertices[Game.Rand.Next(_vertices.Count)]);
-                        _polygonShape = new PolygonShape(Game.GraphicsDevice, _vertices.ToArray());
+                        _vertices.Remove(_vertices[GameRef.Rand.Next(_vertices.Count)]);
+                        _polygonShape = new PolygonShape(GameRef.GraphicsDevice, _vertices.ToArray());
                     }
 
                     if (direction != Vector2.Zero)
@@ -293,8 +294,8 @@ namespace Danmaku_no_Kyojin.Entities
         public void Draw(GameTime gameTime, Matrix viewMatrix)
         {
             /*
-            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
-            Game.SpriteBatch.Draw(_healthBar, new Rectangle(
+            GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(_healthBar, new Rectangle(
                 (int)Position.X - Sprite.Width / 2, (int)Position.Y + Sprite.Height / 2 + 20,
                 (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
             */
@@ -307,15 +308,15 @@ namespace Danmaku_no_Kyojin.Entities
             }
 
             /*
-            Game.SpriteBatch.End();
+            GameRef.SpriteBatch.End();
             
-            Game.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
             */
             //_laser.Draw(gameTime);
             /*
-            Game.SpriteBatch.End();
+            GameRef.SpriteBatch.End();
 
-            Game.SpriteBatch.Begin();
+            GameRef.SpriteBatch.Begin();
             */
 
             foreach (var turret in _turrets)
@@ -382,7 +383,7 @@ namespace Danmaku_no_Kyojin.Entities
                     possibleDirections.Remove(2);
                 }
 
-                var randomDirectionIndex = Game.Rand.Next(possibleDirections.Count);
+                var randomDirectionIndex = GameRef.Rand.Next(possibleDirections.Count);
                 var randomDirection = possibleDirections[randomDirectionIndex];
 
                 // Reset the list of possible directions
@@ -455,7 +456,7 @@ namespace Danmaku_no_Kyojin.Entities
                     possibleDirections.Remove(4);
                 }
 
-                var randomDirectionIndex = Game.Rand.Next(possibleDirections.Count);
+                var randomDirectionIndex = GameRef.Rand.Next(possibleDirections.Count);
                 var randomDirection = possibleDirections[randomDirectionIndex];
 
                 // Reset the list of possible directions
@@ -518,7 +519,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             allVertices = new HashSet<Vector2>(allVertices).ToList();
 
-            _polygonShape = new PolygonShape(Game.GraphicsDevice, allVertices.ToArray());
+            _polygonShape = new PolygonShape(GameRef.GraphicsDevice, allVertices.ToArray());
             
             var cubeVertices = new List<Vector2>
             {
@@ -566,7 +567,7 @@ namespace Danmaku_no_Kyojin.Entities
                     }
                 }
 
-                Game.SpriteBatch.DrawString(
+                GameRef.SpriteBatch.DrawString(
                     ControlManager.SpriteFont,
                     s,
                     new Vector2(0, 60 + (counter * 20)),
@@ -584,11 +585,10 @@ namespace Danmaku_no_Kyojin.Entities
 
             foreach (var vertex in _vertices)
             {
-                if (true) //Game.Rand.NextDouble() > 0.75f)
+                if (true) //GameRef.Rand.NextDouble() > 0.75f)
                 {
-                    var turret = new Turret(Game, this, new Vector2(vertex.X, vertex.Y), _myPatterns[0]);
-                    turret.LoadContent();
-
+                    var turret = new Turret(GameRef, this, new Vector2(vertex.X, vertex.Y), _myPatterns[0]);
+                    turret.Initialize();
                     _turrets.Add(turret);
                 }
             }
@@ -604,13 +604,13 @@ namespace Danmaku_no_Kyojin.Entities
             var newPosition = turret.InitialPosition + bullet.Direction * 20f;
             _vertices[index] = newPosition;
 
-            var newTurret = new Turret(Game, this, newPosition, _myPatterns[0]);
-            newTurret.LoadContent();
+            var newTurret = new Turret(GameRef, this, newPosition, _myPatterns[0]);
+            newTurret.Initialize();
             _turrets.Add(newTurret);
 
             var allVertices = new HashSet<Vector2>(_vertices).ToList();
 
-            _polygonShape = new PolygonShape(Game.GraphicsDevice, allVertices.ToArray());
+            _polygonShape = new PolygonShape(GameRef.GraphicsDevice, allVertices.ToArray());
         }
     }
 }

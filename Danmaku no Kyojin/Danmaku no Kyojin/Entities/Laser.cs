@@ -17,7 +17,7 @@ namespace Danmaku_no_Kyojin.Entities
         private Vector2 _end;
         private float _thickness;
 
-        public Laser(DnK game, Vector2 start, Vector2 end, float thickness = 1) : base(game)
+        public Laser(DnK gameRef, Vector2 start, Vector2 end, float thickness = 1) : base(gameRef)
         {
             _start = start;
             _end = end;
@@ -31,8 +31,8 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected override void LoadContent()
         {
-            _borderTexture = this.Game.Content.Load<Texture2D>("Graphics/Sprites/laserBorder");
-            _middleTexture = this.Game.Content.Load<Texture2D>("Graphics/Sprites/laserMiddle");
+            //_borderTexture = this.GameRef.Content.Load<Texture2D>("Graphics/Sprites/laserBorder");
+            //_middleTexture = this.GameRef.Content.Load<Texture2D>("Graphics/Sprites/laserMiddle");
 
             Origin = new Vector2(_borderTexture.Width, _borderTexture.Height / 2f);
 
@@ -60,9 +60,9 @@ namespace Danmaku_no_Kyojin.Entities
 
             Color color = Color.White;
 
-            Game.SpriteBatch.Draw(_middleTexture, _start, null, color, rotation, middleOrigin, middleScale, SpriteEffects.None, 0f);
-            Game.SpriteBatch.Draw(_borderTexture, _start, null, color, rotation, capOrigin, thicknessScale, SpriteEffects.None, 0f);
-            Game.SpriteBatch.Draw(_borderTexture, _end, null, color, rotation + MathHelper.Pi, capOrigin, thicknessScale, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(_middleTexture, _start, null, color, rotation, middleOrigin, middleScale, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(_borderTexture, _start, null, color, rotation, capOrigin, thicknessScale, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(_borderTexture, _end, null, color, rotation + MathHelper.Pi, capOrigin, thicknessScale, SpriteEffects.None, 0f);
         }
     }
 }

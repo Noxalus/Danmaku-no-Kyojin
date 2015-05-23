@@ -11,6 +11,7 @@ using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework.Input;
 using Danmaku_no_Kyojin.Collisions;
 using System.Diagnostics;
+
 using Danmaku_no_Kyojin.Camera;
 
 namespace Danmaku_no_Kyojin.Entities
@@ -73,8 +74,8 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        public Player(DnK game, Viewport viewport, int id, Config.Controller controller, Vector2 position)
-            : base(game)
+        public Player(DnK gameRef, Viewport viewport, int id, Config.Controller controller, Vector2 position)
+            : base(gameRef)
         {
             _viewport = viewport;
             ID = id;
@@ -119,21 +120,21 @@ namespace Danmaku_no_Kyojin.Entities
         {
             base.LoadContent();
 
-            Sprite = Game.Content.Load<Texture2D>("Graphics/Entities/ship");
-            _bulletSprite = this.Game.Content.Load<Texture2D>("Graphics/Entities/ship_bullet");
-            _hitboxSprite = this.Game.Content.Load<Texture2D>("Graphics/Pictures/hitbox");
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/player");
+            _bulletSprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/player_bullet");
+            _hitboxSprite = GameRef.Content.Load<Texture2D>("Graphics/Pictures/player_hitbox");
             CollisionBoxes.Add(new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), _hitboxRadius/2f));
 
-            _lifeIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/life");
+            _lifeIcon = GameRef.Content.Load<Texture2D>("Graphics/Pictures/life_icon");
 
-            _bulletTimeBarLeft = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarLeft");
-            _bulletTimeBarContent = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarContent");
-            _bulletTimeBarRight = Game.Content.Load<Texture2D>("Graphics/Pictures/bulletTimeBarRight");
+            _bulletTimeBarLeft = GameRef.Content.Load<Texture2D>("Graphics/Pictures/gauge_left");
+            _bulletTimeBarContent = GameRef.Content.Load<Texture2D>("Graphics/Pictures/gauge_middle");
+            _bulletTimeBarRight = GameRef.Content.Load<Texture2D>("Graphics/Pictures/gauge_right");
 
             if (_shootSound == null)
-                _shootSound = Game.Content.Load<SoundEffect>(@"Audio/SE/hit");
+                _shootSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hit");
             if (_deadSound == null)
-                _deadSound = Game.Content.Load<SoundEffect>(@"Audio/SE/dead");
+                _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/dead");
         }
 
         public override void Update(GameTime gameTime)
@@ -270,12 +271,12 @@ namespace Danmaku_no_Kyojin.Entities
         {
             if (!IsInvincible)
             {
-                Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+                GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
                 // Draw Hitbox
                 if (SlowMode)
                 {
-                    Game.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
+                    GameRef.SpriteBatch.Draw(_hitboxSprite, new Rectangle(
                         (int)(CollisionBoxes[0].GetCenter().X - _hitboxRadius / 2f),
                         (int)(CollisionBoxes[0].GetCenter().Y - _hitboxRadius / 2f),
                         (int)_hitboxRadius,
@@ -301,12 +302,12 @@ namespace Danmaku_no_Kyojin.Entities
                 if (PlayerData.BulletTimeEnabled)
                     hudY = 80;
 
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, Config.Resolution.Y - hudY + 1), Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, Config.Resolution.Y - hudY), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(1, Config.Resolution.Y - hudY + 1), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(0, Config.Resolution.Y - hudY), Color.White);
 
                 for (int i = 0; i < _lives; i++)
                 {
-                    Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
+                    GameRef.SpriteBatch.Draw(_lifeIcon, new Vector2(
                         ControlManager.SpriteFont.MeasureString(lives).X + i * _lifeIcon.Width + 10, Config.Resolution.Y - (hudY - 7)), Color.White);
                 }
 
@@ -318,29 +319,29 @@ namespace Danmaku_no_Kyojin.Entities
                         (100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
 
                     // Text
-                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                    GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
                                                 new Vector2(1, Config.Resolution.Y - 39), Color.Black);
-                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                    GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture),
                                                 new Vector2(0, Config.Resolution.Y - 40), Color.White);
 
                     // Bar
-                    Game.SpriteBatch.Draw(_bulletTimeBarLeft,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarLeft,
                                           new Rectangle(0, Config.Resolution.Y - 50, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height),
                                           Color.White);
-                    Game.SpriteBatch.Draw(_bulletTimeBarContent,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarContent,
                                           new Rectangle(_bulletTimeBarLeft.Width, Config.Resolution.Y - 50, bulletTimeBarWidth,
                                                         _bulletTimeBarContent.Height), Color.White);
-                    Game.SpriteBatch.Draw(_bulletTimeBarRight,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarRight,
                                           new Rectangle(_bulletTimeBarLeft.Width + bulletTimeBarWidth, Config.Resolution.Y - 50,
                                                         _bulletTimeBarRight.Width, _bulletTimeBarRight.Height),
                                           Color.White);
                 }
 
                 // Score
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20), Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(0, Config.Resolution.Y - 21), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(1, Config.Resolution.Y - 20), Color.Black);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(0, Config.Resolution.Y - 21), Color.White);
             }
             else if (ID == 2)
             {
@@ -350,18 +351,18 @@ namespace Danmaku_no_Kyojin.Entities
                 if (PlayerData.BulletTimeEnabled)
                     hudY = 80;
 
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X + 1, 
                     Config.Resolution.Y - hudY + 1), 
                 Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, lives, new Vector2(
                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString(lives).X, 
                     Config.Resolution.Y - hudY), 
                 Color.White);
 
                 for (int i = 0; i < _lives; i++)
                 {
-                    Game.SpriteBatch.Draw(_lifeIcon, new Vector2(
+                    GameRef.SpriteBatch.Draw(_lifeIcon, new Vector2(
                         Config.Resolution.X - (ControlManager.SpriteFont.MeasureString(lives).X * 2) - i * _lifeIcon.Width + 10, 
                         Config.Resolution.Y - (hudY - 7)), 
                     Color.White);
@@ -375,25 +376,25 @@ namespace Danmaku_no_Kyojin.Entities
                         (100 * (float)(_bulletTimeTimer.TotalMilliseconds / Config.DefaultBulletTimeTimer.TotalMilliseconds));
 
                     // Text
-                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                    GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture), new Vector2(
                                                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString("100").X, 
                                                     Config.Resolution.Y - 39), 
                                                 Color.Black);
-                    Game.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                    GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                                                 bulletTimeBarWidth.ToString(CultureInfo.InvariantCulture), new Vector2(
                                                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString("100").X,
                                                     Config.Resolution.Y - 40), 
                                                 Color.White);
 
                     // Bar
-                    Game.SpriteBatch.Draw(_bulletTimeBarLeft,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarLeft,
                                           new Rectangle(Config.Resolution.X - bulletTimeBarWidth - _bulletTimeBarRight.Width - _bulletTimeBarLeft.Width, Config.Resolution.Y - 50, _bulletTimeBarLeft.Width, _bulletTimeBarLeft.Height),
                                           Color.White);
-                    Game.SpriteBatch.Draw(_bulletTimeBarContent,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarContent,
                                           new Rectangle(Config.Resolution.X - bulletTimeBarWidth - _bulletTimeBarRight.Width, Config.Resolution.Y - 50, bulletTimeBarWidth,
                                                         _bulletTimeBarContent.Height), Color.White);
-                    Game.SpriteBatch.Draw(_bulletTimeBarRight,
+                    GameRef.SpriteBatch.Draw(_bulletTimeBarRight,
                                           new Rectangle(Config.Resolution.X - _bulletTimeBarRight.Width, Config.Resolution.Y - 50,
                                                         _bulletTimeBarRight.Width, _bulletTimeBarRight.Height),
                                           Color.White);
@@ -401,11 +402,11 @@ namespace Danmaku_no_Kyojin.Entities
 
 
                 // Score
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString("000000000000").X + 1,
                     Config.Resolution.Y - 20),
                 Color.Black);
-                Game.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, score, new Vector2(
                     Config.Resolution.X - ControlManager.SpriteFont.MeasureString("000000000000").X,
                     Config.Resolution.Y - 21),
                 Color.White);
@@ -432,7 +433,7 @@ namespace Danmaku_no_Kyojin.Entities
                     Vector2 offset = Vector2.Transform(new Vector2(25, -8), aimQuat);
                     */
 
-                    var bullet = new Bullet(Game, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
+                    var bullet = new Bullet(GameRef, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
                     bullet.WaveMode = false;
 
                     AddBullet(bullet);
@@ -453,9 +454,9 @@ namespace Danmaku_no_Kyojin.Entities
                         directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 4), (float)Math.Cos(Rotation + Math.PI / 4) * -1);
                     }
 
-                    var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
+                    var bulletLeft = new Bullet(GameRef, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
 
-                    var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
+                    var bulletRight = new Bullet(GameRef, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
 
                     AddBullet(bulletLeft);
                     AddBullet(bulletRight);
@@ -475,10 +476,10 @@ namespace Danmaku_no_Kyojin.Entities
                         directionRight = new Vector2((float)Math.Sin(Rotation + Math.PI / 8), (float)Math.Cos(Rotation + Math.PI / 8) * -1);
                     }
 
-                    var bulletLeft = new Bullet(Game, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
+                    var bulletLeft = new Bullet(GameRef, _bulletSprite, positionLeft, directionLeft, Config.PlayerBulletVelocity);
                     bulletLeft.Power = 0.5f;
 
-                    var bulletRight = new Bullet(Game, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
+                    var bulletRight = new Bullet(GameRef, _bulletSprite, positionRight, directionRight, Config.PlayerBulletVelocity);
                     bulletRight.Power = 0.5f;
 
                     AddBullet(bulletLeft);
@@ -490,7 +491,7 @@ namespace Danmaku_no_Kyojin.Entities
                 {
                     var directionBehind = new Vector2((float)Math.Sin(Rotation) * -1, (float)Math.Cos(Rotation));
 
-                    var bullet = new Bullet(Game, _bulletSprite, Position, directionBehind, Config.PlayerBulletVelocity);
+                    var bullet = new Bullet(GameRef, _bulletSprite, Position, directionBehind, Config.PlayerBulletVelocity);
                     bullet.Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
                     bullet.WaveMode = false;
 

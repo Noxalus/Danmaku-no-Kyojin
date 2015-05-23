@@ -59,13 +59,12 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _background = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _keyboardIcon = GameRef.Content.Load<Texture2D>("Graphics/Pictures/keyboard_icon");
+            _gamepadIcon = GameRef.Content.Load<Texture2D>("Graphics/Pictures/gamepad_icon");
+            _volumeBar = GameRef.Pixel;
+
             _titleFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TitleFont");
-
-            _keyboardIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/keyboard_icon");
-            _gamepadIcon = Game.Content.Load<Texture2D>("Graphics/Pictures/gamepad_icon");
-
-            _volumeBar = Game.Content.Load<Texture2D>(@"Graphics/Pictures/pixel");
 
             base.LoadContent();
         }

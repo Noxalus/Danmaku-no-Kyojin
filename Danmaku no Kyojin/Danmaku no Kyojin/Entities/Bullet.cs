@@ -11,8 +11,8 @@ namespace Danmaku_no_Kyojin.Entities
         public bool WaveMode { get; set; }
         private float _distance;
 
-        public Bullet(DnK game, Texture2D sprite, Vector2 position, Vector2 direction, float velocity)
-            : base(game, sprite, position, direction, velocity)
+        public Bullet(DnK gameRef, Texture2D sprite, Vector2 position, Vector2 direction, float velocity)
+            : base(gameRef, sprite, position, direction, velocity)
         {
             Rotation = (float)Math.Atan2(direction.Y, direction.X) - MathHelper.PiOver2;
             _distance = 0;
@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
             base.Draw(gameTime);
         }

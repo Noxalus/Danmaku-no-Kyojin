@@ -25,21 +25,21 @@ namespace Danmaku_no_Kyojin.Entities
             get { return _initialPosition; }
         }
 
-        public Turret(DnK game, Boss parent, Vector2 initialPosition, BulletPattern partern) : base(game)
+        public Turret(DnK gameRef, Boss parent, Vector2 initialPosition, BulletPattern pattern)
+            : base(gameRef)
         {
             _initialPosition = initialPosition;
             X = InitialPosition.X;
             Y = InitialPosition.Y;
             _parent = parent;
-            _pattern = partern;
-            _timer = new TimeSpan(0, 0, (int)(Game.Rand.NextDouble() * 30));
+            _pattern = pattern;
+            _timer = new TimeSpan(0, 0, (int)(GameRef.Rand.NextDouble() * 30));
             _color = Color.White;
         }
 
-        public void LoadContent()
+        protected override void LoadContent()
         {
-            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/ball");
-
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type1");
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Width / 2f));
         }
 
@@ -57,7 +57,7 @@ namespace Danmaku_no_Kyojin.Entities
                 mover.Y = Position.Y;
                 mover.SetBullet(_pattern.RootNode);
 
-                _timer = new TimeSpan(0, 0, (int)(Game.Rand.NextDouble() * 30));
+                _timer = new TimeSpan(0, 0, (int)(GameRef.Rand.NextDouble() * 30));
             }
         }
 
@@ -85,7 +85,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(Sprite, Position, null, _color, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(Sprite, Position, null, _color, Rotation, Origin, 1f, SpriteEffects.None, 0f);
 
             base.Draw(gameTime);
         }

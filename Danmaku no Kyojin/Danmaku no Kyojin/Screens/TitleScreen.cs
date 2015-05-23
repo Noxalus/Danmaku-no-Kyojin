@@ -72,8 +72,8 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            _logo = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/logo");
-            _backgroundImage = GameRef.Content.Load<Texture2D>(@"Graphics/Pictures/background");
+            _logo = GameRef.Content.Load<Texture2D>("Graphics/Pictures/logo");
+            _backgroundImage = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
 
             if (_passSound == null)
                 _passSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/pass");

@@ -34,6 +34,9 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef = (DnK)game;
 
             playerIndexInControl = PlayerIndex.One;
+
+            var controlFont = GameRef.Content.Load<SpriteFont>("Graphics/Fonts/ControlFont");
+            ControlManager = new ControlManager(controlFont);
         }
 
         #endregion
@@ -42,11 +45,6 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            ContentManager content = Game.Content;
-
-            var controlFont = content.Load<SpriteFont>(@"Graphics\Fonts\ControlFont");
-            ControlManager = new ControlManager(controlFont);
-
             base.LoadContent();
         }
 

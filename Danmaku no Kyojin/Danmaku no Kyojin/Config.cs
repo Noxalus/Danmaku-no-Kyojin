@@ -58,7 +58,7 @@ namespace Danmaku_no_Kyojin
         public const float PlayerBulletVelocity = 1000f;
         public const int PlayerLives = 5;
 
-        // Game
+        // GameRef
         public static readonly Point GameArea = new Point(2400, 1800);
 
         public static float GameDifficulty = 0.5f; 

@@ -125,11 +125,8 @@ namespace Danmaku_no_Kyojin.Screens
                 hit = GameRef.Content.Load<SoundEffect>(@"Audio/SE/hurt");
             }
 
-            _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
-
-            _pixel = Game.Content.Load<Texture2D>("Graphics/Pictures/pixel");
-
-            
+            _backgroundImage = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _pixel = GameRef.Pixel;
 
             base.LoadContent();
         }
@@ -234,7 +231,7 @@ namespace Danmaku_no_Kyojin.Screens
                 _enemy.Initialize();
             }
 
-            // Game Over
+            // GameRef Over
             if ((!Players[0].IsAlive && (Config.PlayersNumber == 1 || (Config.PlayersNumber == 2 && !Players[1].IsAlive))) || _timer.IsFinished)
             {
                 UnloadContent();

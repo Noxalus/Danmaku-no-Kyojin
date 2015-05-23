@@ -61,7 +61,7 @@ namespace Danmaku_no_Kyojin.Screens
         {
             base.LoadContent();
 
-            _backgroundImage = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _backgroundImage = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
 
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML\Tests", "*.xml", SearchOption.AllDirectories))
@@ -116,8 +116,6 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, _player.Camera.GetTransformation());
             GameRef.SpriteBatch.Draw(_backgroundImage, _backgroundMainRectangle, Color.White);
             GameRef.SpriteBatch.End();
-
-            GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             
             GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _player.Camera.GetTransformation());
 

@@ -30,7 +30,8 @@ namespace Danmaku_no_Kyojin
 
         public Rectangle ScreenRectangle;
 
-        public static Texture2D Pixel;
+        // Useful pixel
+        public readonly Texture2D Pixel;
 
         // Random
         public readonly Random Rand = new Random();
@@ -47,13 +48,9 @@ namespace Danmaku_no_Kyojin
                 PreferredBackBufferHeight = Config.Resolution.Y
             };
 
-
             ScreenRectangle = new Rectangle(0, 0, Config.Resolution.X, Config.Resolution.Y);
-
             IsMouseVisible = true;
-
             Graphics.IsFullScreen = Config.FullScreen;
-
             Graphics.SynchronizeWithVerticalRetrace = true;
 
             // Pass through the FPS capping (60 FPS)
@@ -67,7 +64,19 @@ namespace Danmaku_no_Kyojin
 
             Content.RootDirectory = "Content";
 
+            Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Pixel.SetData(new [] { Color.White });
+        }
+
+        protected override void Initialize()
+        {
+            StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
+
+            // Manage inputs like keyboard or gamepad
             Components.Add(new InputHandler(this));
+
+            // Display FPS at the top left screen's corner
+            Components.Add(new FrameRateCounter(this));
 
             _stateManager = new GameStateManager(this);
             Components.Add(_stateManager);
@@ -87,15 +96,6 @@ namespace Danmaku_no_Kyojin
 
             _stateManager.ChangeState(TitleScreen);
 
-            // FPS
-            Components.Add(new FrameRateCounter(this));
-        }
-
-
-        protected override void Initialize()
-        {
-            StaticClassSerializer.Load(typeof(PlayerData), "data.bin");
-
             base.Initialize();
         }
 
@@ -114,7 +114,6 @@ namespace Danmaku_no_Kyojin
             _stateManager.Dispose();
             SpriteBatch.Dispose();
 
-
             StaticClassSerializer.Save(typeof(PlayerData), "data.bin");
 
             base.Dispose(disposing);
@@ -123,8 +122,6 @@ namespace Danmaku_no_Kyojin
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Pixel = Content.Load<Texture2D>("Graphics/Pictures/pixel");
 
             Select = Content.Load<SoundEffect>(@"Audio/SE/select");
             Choose = Content.Load<SoundEffect>(@"Audio/SE/choose");

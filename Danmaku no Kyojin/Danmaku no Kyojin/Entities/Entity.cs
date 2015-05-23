@@ -8,7 +8,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         #region Fields
 
-        protected readonly DnK Game;
+        protected readonly DnK GameRef;
         private Vector2 _position;
         private float _rotation;
         private Vector2 _origin;
@@ -73,9 +73,9 @@ namespace Danmaku_no_Kyojin.Entities
 
         #endregion
 
-        protected Entity(DnK game)
+        protected Entity(DnK gameRef)
         {
-            Game = game;
+            GameRef = gameRef;
 
             CollisionBoxes = new CollisionElements();
             _scale = new Vector2(1f, 1f);
@@ -97,7 +97,7 @@ namespace Danmaku_no_Kyojin.Entities
         public virtual void Draw(GameTime gameTime)
         {
             if (Config.DisplayCollisionBoxes)
-                CollisionBoxes.Draw(Game.SpriteBatch);
+                CollisionBoxes.Draw(GameRef.SpriteBatch);
         }
 
         public bool Intersects(Entity entity)

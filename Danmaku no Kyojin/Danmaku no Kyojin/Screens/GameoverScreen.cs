@@ -68,7 +68,7 @@ namespace Danmaku_no_Kyojin.Screens
 
         protected override void LoadContent()
         {
-            _background = Game.Content.Load<Texture2D>("Graphics/Pictures/background");
+            _background = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
             _titleFont = Game.Content.Load<SpriteFont>("Graphics/Fonts/TitleFont");
 
             base.LoadContent();

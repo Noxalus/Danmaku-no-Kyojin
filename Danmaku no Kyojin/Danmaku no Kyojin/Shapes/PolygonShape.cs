@@ -36,7 +36,7 @@ namespace Danmaku_no_Kyojin.Shapes
         /// A Polygon object that you will be able to draw.
         /// Animations are being implemented as we speak.
         /// </summary>
-        /// <param name="graphicsDevice">The graphicsdevice from a Game object</param>
+        /// <param name="graphicsDevice">The graphicsdevice from a GameRef object</param>
         /// <param name="vertices">The vertices in a clockwise order</param>
         public PolygonShape(GraphicsDevice graphicsDevice, Vector2[] vertices)
         {
