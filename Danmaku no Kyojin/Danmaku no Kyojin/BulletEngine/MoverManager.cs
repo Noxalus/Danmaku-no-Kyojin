@@ -64,7 +64,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
             Mover myMover = deadBullet as Mover;
             if (myMover != null)
             {
-                myMover.used = false;
+                myMover.Used = false;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
         {
             for (int i = 0; i < movers.Count; i++)
             {
-                if (!movers[i].used)
+                if (!movers[i].Used)
                 {
                     movers.Remove(movers[i]);
                     i--;

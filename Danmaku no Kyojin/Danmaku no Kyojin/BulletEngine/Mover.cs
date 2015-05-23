@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
+
 namespace Danmaku_no_Kyojin.BulletEngine
 {
 	/// <summary>
@@ -12,10 +13,9 @@ namespace Danmaku_no_Kyojin.BulletEngine
 	{
 		#region Members
 
-		public bool used;
-		public bool bulletRoot;
+		public bool Used;
+		public bool BulletRoot;
 
-        private Rectangle _spriteRectangle;
         private Random _rand = new Random(DateTime.Now.Millisecond);
 
 		#endregion //Members
@@ -26,11 +26,12 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 		#region Methods
 
-		/// <summary>
-        /// Initializes a new instance of the <see cref="Danmaku_no_Kyojin.BulletEngine.Mover"/> class.
-		/// </summary>
-		/// <param name="myBulletManager">My bullet manager.</param>
-		public Mover(DnK game, IBulletManager myBulletManager) : base(game, myBulletManager)
+	    /// <summary>
+	    /// Initializes a new instance of the <see cref="Danmaku_no_Kyojin.BulletEngine.Mover"/> class.
+	    /// </summary>
+	    /// <param name="gameRef">Game reference</param>
+	    /// <param name="myBulletManager">My bullet manager.</param>
+	    public Mover(DnK gameRef, IBulletManager myBulletManager) : base(gameRef, myBulletManager)
 		{
             Position = Vector2.Zero;
             Rotation = 0f;
@@ -40,22 +41,17 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
         public override void Initialize()
         {
-			used = true;
-			bulletRoot = false;
+			Used = true;
+			BulletRoot = false;
 
             base.Initialize();
 		}
 
 	    protected override void LoadContent()
 	    {
-            Sprite = Game.Content.Load<Texture2D>(@"Graphics/Sprites/balls");
-
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type1");
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Height / 2f));
-
             Origin = new Vector2(Sprite.Height / 2f, Sprite.Height / 2f);
-
-            var index = (int)(Sprite.Height * _rand.Next((Sprite.Width / Sprite.Height)));
-            _spriteRectangle = new Rectangle(index, 0, Sprite.Height, Sprite.Height);
 
             base.LoadContent();
 	    }
@@ -65,12 +61,12 @@ namespace Danmaku_no_Kyojin.BulletEngine
 			//BulletMLで自分を動かす
 			base.Update(gameTime);
 
-	        if (bulletRoot)
-	            used = false;
+	        if (BulletRoot)
+	            Used = false;
 
             if (X < 0 || X > Config.GameArea.X || Y < 0 || Y > Config.GameArea.Y)
 			{
-				used = false;
+				Used = false;
 			}
 		}
 
@@ -82,11 +78,10 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(Sprite, new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), Sprite.Height, Sprite.Height), _spriteRectangle, Color.White);
-            //Game.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Direction, Origin, 1f, SpriteEffects.None, 0f);
 
             if (Config.DisplayCollisionBoxes)
-                CollisionBoxes.Draw(Game.SpriteBatch);
+                CollisionBoxes.Draw(GameRef.SpriteBatch);
 
             base.Draw(gameTime);
         }
