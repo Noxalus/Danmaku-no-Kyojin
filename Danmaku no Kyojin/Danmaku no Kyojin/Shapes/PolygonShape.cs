@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,16 +52,10 @@ namespace Danmaku_no_Kyojin.Shapes
             };
         }
 
-        public void AddVertices(Vector2[] vertices)
+        public void UpdateVertices(Vector2[] vertices)
         {
-            // TODO: Check that all vertices don't already exist
-
-            // Increase the size of vertices array field and add the new vertices
-            int originalLength = _vertices.Length;
-            Array.Resize(ref _vertices, originalLength + vertices.Length);
-            Array.Copy(vertices, 0, _vertices, originalLength, vertices.Length);
-
-            _triangulated = false;
+            _vertices = vertices;
+            Triangulate();
         }
 
         /// <summary>

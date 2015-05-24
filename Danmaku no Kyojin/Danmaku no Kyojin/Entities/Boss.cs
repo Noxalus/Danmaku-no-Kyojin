@@ -140,7 +140,7 @@ namespace Danmaku_no_Kyojin.Entities
             Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
             Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
             Origin = _structure.Origin;
-
+            
             GenerateTurrets();
 
             base.LoadContent();
@@ -213,7 +213,18 @@ namespace Danmaku_no_Kyojin.Entities
                     }
                     else if (InputHandler.KeyDown(Keys.Space))
                     {
-                        _structure.GenerateStructure();
+                        _structure.GenerateBaseStructure();
+
+                        CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
+                        Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
+                        Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
+                        Origin = _structure.Origin;
+
+                        GenerateTurrets();
+                    }
+                    else if (InputHandler.KeyPressed(Keys.OemPlus))
+                    {
+                        _structure.Iterate();
 
                         CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
                         Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
@@ -242,11 +253,6 @@ namespace Danmaku_no_Kyojin.Entities
                     else if (InputHandler.KeyDown(Keys.PageDown))
                     {
                         Rotation -= dt * 0.01f;
-                    }
-
-                    if (InputHandler.KeyDown(Keys.OemPlus))
-                    {
-                        _structure.Iterate();
                     }
 
                     if (direction != Vector2.Zero)
