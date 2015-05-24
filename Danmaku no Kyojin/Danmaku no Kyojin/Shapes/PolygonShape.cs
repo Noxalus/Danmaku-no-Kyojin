@@ -9,10 +9,10 @@ namespace Danmaku_no_Kyojin.Shapes
 {
     public class PolygonShape
     {
-        private GraphicsDevice _graphicsDevice;
+        private readonly GraphicsDevice _graphicsDevice;
         private Vector2[] _vertices;
         private bool _triangulated;
-        private BasicEffect _effect;
+        private readonly BasicEffect _effect;
 
         private Vector2[] _triangulatedVertices;
         private int[] _indices;
@@ -21,12 +21,7 @@ namespace Danmaku_no_Kyojin.Shapes
         IndexBuffer _indexBuffer;
         int _numVertices, _numPrimitives;
 
-        private Vector2 _position;
-        private Vector2 _origin;
-        private Vector2 _scale;
-        private float _rotation;
-
-        RasterizerState _wireframe = new RasterizerState
+        readonly RasterizerState _wireframe = new RasterizerState
         {
             CullMode = CullMode.CullCounterClockwiseFace,
             FillMode = FillMode.WireFrame
@@ -91,14 +86,6 @@ namespace Danmaku_no_Kyojin.Shapes
             {
                 verts[i] = new VertexPositionColor(new Vector3(_triangulatedVertices[i], 0f), new Color(0f, 1f, 0f, 0.5f));
             }
-
-            /*
-            verts[0].Color = Color.Red;
-            verts[1].Color = Color.Blue;
-            verts[2].Color = Color.Yellow;
-            verts[3].Color = Color.Violet;
-            verts[_triangulatedVertices.Length - 1].Color = Color.Green;
-            */
 
             _vertexBuffer = new VertexBuffer(
                 _graphicsDevice,

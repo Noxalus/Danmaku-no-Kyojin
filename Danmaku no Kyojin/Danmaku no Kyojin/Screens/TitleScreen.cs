@@ -255,7 +255,6 @@ namespace Danmaku_no_Kyojin.Screens
             GameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
-
         }
 
         #endregion

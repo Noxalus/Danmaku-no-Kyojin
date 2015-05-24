@@ -46,11 +46,10 @@ namespace Danmaku_no_Kyojin.Entities
         // Players
         private List<Player> _players;
 
-        // Polygon shape
-        private PolygonShape _polygonShape;
+        // Structure
+        private BossStructure _structure;
         private int _iteration;
         private float _step;
-        private List<Vector2> _vertices;
 
         // Turrets
         private List<Turret> _turrets; 
@@ -81,8 +80,6 @@ namespace Danmaku_no_Kyojin.Entities
             _players = players;
             _iteration = iteration;
             _step = step;
-
-            _vertices = new List<Vector2>();
             _turrets = new List<Turret>();
         }
 
@@ -122,19 +119,6 @@ namespace Danmaku_no_Kyojin.Entities
             if (_deadSound == null)
                 _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
 
-            // TODO: Add multiple rectangle collision boxes on each boss's edges
-            /*
-            var vertices = new List<Point>()
-                {
-                    new Point(0, (int)(Sprite.Height / 2.74f)),
-                    new Point(Sprite.Width / 2, 0),
-                    new Point(Sprite.Width, (int)(Sprite.Height / 2.74f)),
-                    new Point(Sprite.Width / 2, Sprite.Height)
-                };
-
-            CollisionBox = new CollisionConvexPolygon(this, Vector2.Zero, vertices);
-            */
-
             //Get all the xml files
             foreach (var source in Directory.GetFiles(@"Content\XML", "basic_turret.xml", SearchOption.AllDirectories))
             {
@@ -150,7 +134,14 @@ namespace Danmaku_no_Kyojin.Entities
             _currentPattern = GameRef.Rand.Next(0, _patternNames.Count);
             AddBullet(true);
 
-            GenerateNewPolygonShape();
+            _structure = new BossStructure(GameRef, _iteration, _step);
+
+            CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
+            Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
+            Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
+            Origin = _structure.Origin;
+
+            GenerateTurrets();
 
             base.LoadContent();
         }
@@ -220,6 +211,17 @@ namespace Danmaku_no_Kyojin.Entities
                     {
                         AddBullet(false);
                     }
+                    else if (InputHandler.KeyDown(Keys.Space))
+                    {
+                        _structure.GenerateStructure();
+
+                        CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
+                        Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
+                        Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
+                        Origin = _structure.Origin;
+
+                        GenerateTurrets();
+                    }
 
                     var velocity = 0f;
                     var direction = Vector2.Zero;
@@ -244,8 +246,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                     if (InputHandler.KeyDown(Keys.OemPlus))
                     {
-                        _vertices.Remove(_vertices[GameRef.Rand.Next(_vertices.Count)]);
-                        _polygonShape = new PolygonShape(GameRef.GraphicsDevice, _vertices.ToArray());
+                        _structure.Iterate();
                     }
 
                     if (direction != Vector2.Zero)
@@ -300,7 +301,7 @@ namespace Danmaku_no_Kyojin.Entities
                 (int)(100f * (_health / _totalHealth)), 10), Color.Blue);
             */
 
-            _polygonShape.Draw(viewMatrix, Position, Origin, Rotation, Scale);
+            _structure.Draw(viewMatrix, Position, Origin, Rotation, Scale);
 
             foreach (var mover in MoverManager.movers)
             {
@@ -360,230 +361,11 @@ namespace Danmaku_no_Kyojin.Entities
             return _ready;
         }
 
-        public void GenerateNewPolygonShape()
-        {
-            _vertices = new List<Vector2>();
-            var possibleDirections = new List<int>()
-            {
-                // 0 => Up, 1 => Up diagonal, 2 => Right, 3 => Down diagonal, 4 => Down
-                0, 1, 2, 3, 4
-            };
-
-            var vertexPosition = Vector2.Zero;
-            
-            // Generate the bottom part
-            _vertices.Add(vertexPosition);
-            var bossHeight = 0f;
-            for (int i = 1; i < _iteration; i++)
-            {
-                if (vertexPosition.Y <= _step)
-                {
-                    possibleDirections.Remove(0);
-                    possibleDirections.Remove(1);
-                    possibleDirections.Remove(2);
-                }
-
-                var randomDirectionIndex = GameRef.Rand.Next(possibleDirections.Count);
-                var randomDirection = possibleDirections[randomDirectionIndex];
-
-                // Reset the list of possible directions
-                possibleDirections = new List<int> { 0, 1, 2, 3, 4 };
-
-                // Up
-                if (randomDirection == 0)
-                {
-                    vertexPosition.Y -= _step;
-
-                    // We don't want to go down for the next step
-                    possibleDirections.Remove(4);
-                }
-                // Up diagonal
-                else if (randomDirection == 1)
-                {
-                    vertexPosition.X += _step;
-                    vertexPosition.Y -= _step;
-                }
-                // Right
-                else if (randomDirection == 2)
-                {
-                    vertexPosition.X += _step;
-                }
-                // Down diagonal
-                else if (randomDirection == 3)
-                {
-                    vertexPosition.X += _step;
-                    vertexPosition.Y += _step;
-                }
-                // Down
-                else if (randomDirection == 4)
-                {
-                    vertexPosition.Y += _step;
-
-                    // We don't want to go up for the next step
-                    possibleDirections.Remove(0);
-                }
-
-                if (vertexPosition.Y > bossHeight)
-                    bossHeight = vertexPosition.Y;
-
-                _vertices.Add(vertexPosition);
-            }
-
-            var origin = new Vector2(vertexPosition.X, vertexPosition.Y / 2f);
-
-
-            var bossWidth = vertexPosition.X;
-            
-            // Perform Y-axis symetry
-            for (var i = _iteration - 1; i >= 0; i--)
-            {
-                var position = _vertices[i];
-                position.X = (bossWidth * 2) - position.X;
-
-                _vertices.Add(position);
-            }
-
-            // Generate the top part
-            vertexPosition = Vector2.Zero;
-            var topLeftVertices = new List<Vector2>();
-            topLeftVertices.Add(vertexPosition);
-            while (vertexPosition.X < bossWidth)
-            {
-                if (vertexPosition.Y >= -_step)
-                {
-                    possibleDirections.Remove(2);
-                    possibleDirections.Remove(3);
-                    possibleDirections.Remove(4);
-                }
-
-                var randomDirectionIndex = GameRef.Rand.Next(possibleDirections.Count);
-                var randomDirection = possibleDirections[randomDirectionIndex];
-
-                // Reset the list of possible directions
-                possibleDirections = new List<int> { 0, 1, 2, 3, 4 };
-
-                // Up
-                if (randomDirection == 0)
-                {
-                    vertexPosition.Y -= _step;
-
-                    // We don't want to go down for the next step
-                    possibleDirections.Remove(4);
-                }
-                // Up diagonal
-                else if (randomDirection == 1)
-                {
-                    vertexPosition.X += _step;
-                    vertexPosition.Y -= _step;
-                }
-                // Right
-                else if (randomDirection == 2)
-                {
-                    vertexPosition.X += _step;
-                }
-                // Down diagonal
-                else if (randomDirection == 3)
-                {
-                    vertexPosition.X += _step;
-                    vertexPosition.Y += _step;
-                }
-                // Down
-                else if (randomDirection == 4)
-                {
-                    vertexPosition.Y += _step;
-
-                    // We don't want to go up for the next step
-                    possibleDirections.Remove(0);
-                }
-
-                topLeftVertices.Add(vertexPosition);
-            }
-
-            // Perform Y-axis symetry
-            var topRightVertices = new List<Vector2>();
-            for (var i = topLeftVertices.Count - 1; i >= 0; i--)
-            {
-                var position = topLeftVertices[i];
-                position.X = (bossWidth * 2) - position.X;
-
-                topRightVertices.Add(position);
-            }
-
-            var allVertices = new List<Vector2>(_vertices.Count + topRightVertices.Count + topLeftVertices.Count);
-            topLeftVertices.Reverse();
-            topRightVertices.Reverse();
-            allVertices.AddRange(topLeftVertices);
-            allVertices.AddRange(_vertices);
-            allVertices.AddRange(topRightVertices);
-            _vertices = allVertices;
-
-            allVertices = new HashSet<Vector2>(allVertices).ToList();
-
-            _polygonShape = new PolygonShape(GameRef.GraphicsDevice, allVertices.ToArray());
-            
-            var cubeVertices = new List<Vector2>
-            {
-                new Vector2(0, 0),
-                new Vector2(100, 0),
-                new Vector2(100, 100),
-                new Vector2(0, 100),
-            };
-
-            CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, cubeVertices));
-
-            Size = new Point((int)bossWidth, (int)bossHeight);
-            Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
-            Origin = origin;
-
-            GenerateTurrets();
-        }
-
-        public void PrintPolygonShapeVerticesPosition()
-        {
-            var counter = 0;
-            Vector2 previousVertex = _vertices[0];
-            foreach (var vertex in _vertices)
-            {
-                var s = vertex.X + ", " + vertex.Y;
-
-                if (counter > 0)
-                {
-                    if (previousVertex.X != vertex.X)
-                    {
-                        // Left
-                        if (previousVertex.Y == vertex.Y)
-                            s += " (Right)";
-                        else if (previousVertex.Y > vertex.Y)
-                            s += " (Diagonal up)";
-                        else if (previousVertex.Y < vertex.Y)
-                            s += " (Diagonal down)";
-                    }
-                    else
-                    {
-                        if (previousVertex.Y > vertex.Y)
-                            s += " (Up)";
-                        else if (previousVertex.Y < vertex.Y)
-                            s += " (Down)";
-                    }
-                }
-
-                GameRef.SpriteBatch.DrawString(
-                    ControlManager.SpriteFont,
-                    s,
-                    new Vector2(0, 60 + (counter * 20)),
-                    Color.White
-                );
-
-                previousVertex = vertex;
-                counter++;
-            }
-        }
-
         private void GenerateTurrets()
         {
             _turrets.Clear();
 
-            foreach (var vertex in _vertices)
+            foreach (var vertex in _structure.Vertices)
             {
                 if (true) //GameRef.Rand.NextDouble() > 0.75f)
                 {
@@ -596,21 +378,22 @@ namespace Danmaku_no_Kyojin.Entities
 
         public void DestroyTurret(Turret turret, BaseBullet bullet)
         {
+            /*
             _turrets.Remove(turret);
 
-            _vertices.Add(new Vector2());
-            var index = _vertices.FindIndex(vertex => vertex == turret.InitialPosition);
+            _structure.Vertices.Add(new Vector2());
+            var index = _structure.Vertices.FindIndex(vertex => vertex == turret.InitialPosition);
             
             var newPosition = turret.InitialPosition + bullet.Direction * 20f;
-            _vertices[index] = newPosition;
+            _structure.Vertices[index] = newPosition;
 
             var newTurret = new Turret(GameRef, this, newPosition, _myPatterns[0]);
             newTurret.Initialize();
             _turrets.Add(newTurret);
 
-            var allVertices = new HashSet<Vector2>(_vertices).ToList();
-
-            _polygonShape = new PolygonShape(GameRef.GraphicsDevice, allVertices.ToArray());
+            var allVertices = new HashSet<Vector2>(_structure.Vertices).ToList();
+            */
+            //_polygonShape = new PolygonShape(GameRef.GraphicsDevice, allVertices.ToArray());
         }
     }
 }

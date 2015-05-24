@@ -177,8 +177,6 @@ namespace Danmaku_no_Kyojin.Screens
         {
             if (InputHandler.KeyDown(Keys.Space))
             {
-                // Update polygon shape
-                _boss.GenerateNewPolygonShape();
             }
         }
     }

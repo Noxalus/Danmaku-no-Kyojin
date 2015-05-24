@@ -13,20 +13,20 @@ namespace Danmaku_no_Kyojin
     {
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch;
-        readonly GameStateManager _stateManager;
+        private GameStateManager _stateManager;
 
         // Screens
-        public readonly TitleScreen TitleScreen;
-        public readonly DebugScreen DebugScreen;
-        public readonly PatternTestScreen PatternTestScreen;
-        public readonly ImprovementScreen ImprovementScreen;
-        public readonly LeaderboardScreen LeaderboardScreen;
-        public readonly OptionsScreen OptionsScreen;
-        public readonly KeyboardInputsScreen KeyboardInputsScreen;
-        public readonly GamepadInputsScreen GamepadInputsScreen;
-        public readonly GameConfigurationScreen GameConfigurationScreen;
-        public readonly GameplayScreen GameplayScreen;
-        public readonly GameOverScreen GameOverScreen;
+        public TitleScreen TitleScreen;
+        public DebugScreen DebugScreen;
+        public PatternTestScreen PatternTestScreen;
+        public ImprovementScreen ImprovementScreen;
+        public LeaderboardScreen LeaderboardScreen;
+        public OptionsScreen OptionsScreen;
+        public KeyboardInputsScreen KeyboardInputsScreen;
+        public GamepadInputsScreen GamepadInputsScreen;
+        public GameConfigurationScreen GameConfigurationScreen;
+        public GameplayScreen GameplayScreen;
+        public GameOverScreen GameOverScreen;
 
         public Rectangle ScreenRectangle;
 

@@ -140,6 +140,7 @@
     <Compile Include="Controls\GameState.cs" />
     <Compile Include="Controls\GameStateManager.cs" />
     <Compile Include="Controls\InputHandler.cs" />
+    <Compile Include="Entities\BossStructure.cs" />
     <Compile Include="Entities\Line.cs" />
     <Compile Include="Entities\SpriteEntity.cs" />
     <Compile Include="Entities\Turret.cs" />
