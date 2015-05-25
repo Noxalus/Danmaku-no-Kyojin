@@ -1,4 +1,5 @@
-﻿using Danmaku_no_Kyojin.BulletEngine;
+﻿using System.Net.Configuration;
+using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Shapes;
@@ -120,7 +121,7 @@ namespace Danmaku_no_Kyojin.Entities
                 _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
 
             //Get all the xml files
-            foreach (var source in Directory.GetFiles(@"Content\XML", "basic_turret.xml", SearchOption.AllDirectories))
+            foreach (var source in Directory.GetFiles(@"Content\XML\Patterns", "*.xml", SearchOption.AllDirectories))
             {
                 //store the name
                 _patternNames.Add(source);
@@ -375,7 +376,10 @@ namespace Danmaku_no_Kyojin.Entities
             {
                 if (true) //GameRef.Rand.NextDouble() > 0.75f)
                 {
-                    var turret = new Turret(GameRef, this, new Vector2(vertex.X, vertex.Y), _myPatterns[0]);
+                    var patternIndex = GameRef.Rand.Next(_myPatterns.Count);
+                    var color = patternIndex == 0 ? Color.DarkBlue : Color.DarkRed;
+
+                    var turret = new Turret(GameRef, this, _players[0], new Vector2(vertex.X, vertex.Y), _myPatterns[patternIndex], color);
                     turret.Initialize();
                     _turrets.Add(turret);
                 }

@@ -8,6 +8,7 @@
       <fire>
         <bulletRef label="bullet1" />
       </fire>
+      <vanish/>
     </action>
   </repeat>
 </action>

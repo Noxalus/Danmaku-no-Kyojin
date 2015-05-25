@@ -10,6 +10,7 @@ namespace Danmaku_no_Kyojin.Entities
     {
         private Vector2 _initialPosition;
         private Boss _parent;
+        private Entity _target;
         private BulletPattern _pattern;
         private TimeSpan _timer;
         private Color _color;
@@ -25,21 +26,23 @@ namespace Danmaku_no_Kyojin.Entities
             get { return _initialPosition; }
         }
 
-        public Turret(DnK gameRef, Boss parent, Vector2 initialPosition, BulletPattern pattern)
+        public Turret(DnK gameRef, Boss parent, Entity target, Vector2 initialPosition, BulletPattern pattern, Color color)
             : base(gameRef)
         {
             _initialPosition = initialPosition;
             X = InitialPosition.X;
             Y = InitialPosition.Y;
             _parent = parent;
+            _target = target;
             _pattern = pattern;
             _timer = new TimeSpan(0, 0, (int)(GameRef.Rand.NextDouble() * 30));
-            _color = Color.White;
+            _color = color;
+            Scale = new Vector2(0.5f, 0.5f);
         }
 
         protected override void LoadContent()
         {
-            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type1");
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type2");
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Width / 2f));
         }
 
@@ -59,6 +62,9 @@ namespace Danmaku_no_Kyojin.Entities
 
                 _timer = new TimeSpan(0, 0, (int)(GameRef.Rand.NextDouble() * 30));
             }
+
+            // Rotate to target
+            Rotation = (float)Math.Atan2(Position.Y - _target.Position.Y, Position.X - _target.Position.X) - MathHelper.PiOver2;
         }
 
         private void UpdatePosition()
@@ -85,7 +91,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            GameRef.SpriteBatch.Draw(Sprite, Position, null, _color, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+            GameRef.SpriteBatch.Draw(Sprite, Position, null, _color, Rotation, Origin, Scale, SpriteEffects.None, 0f);
 
             base.Draw(gameTime);
         }

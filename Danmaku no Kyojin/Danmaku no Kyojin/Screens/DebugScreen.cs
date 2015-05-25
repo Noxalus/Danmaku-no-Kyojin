@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin.Screens
             player1.Initialize();
             Players.Add(player1);
 
-            _boss = new Boss(GameRef, Players);
+            _boss = new Boss(GameRef, Players, 4);
             _boss.Initialize();
         }
 
@@ -99,6 +99,7 @@ namespace Danmaku_no_Kyojin.Screens
                             _boss.TakeDamage(p.GetBullets()[i].Power);
 
                             p.GetBullets().Remove(p.GetBullets()[i]);
+                            continue;
                         }
 
                         if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
