@@ -96,7 +96,7 @@ namespace Danmaku_no_Kyojin.Shapes
             {
                 var indices = new short[_indices.Length];
 
-                for (int i = 0; i < _indices.Length; i++)
+                for (var i = 0; i < _indices.Length; i++)
                     indices[i] = (short)_indices[i];
 
                 _indexBuffer = new IndexBuffer(

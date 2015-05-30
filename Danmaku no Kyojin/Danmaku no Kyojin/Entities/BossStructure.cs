@@ -7,6 +7,7 @@ using System.Security.AccessControl;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Shapes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.GamerServices;
 
 namespace Danmaku_no_Kyojin.Entities
 {
@@ -18,6 +19,7 @@ namespace Danmaku_no_Kyojin.Entities
         private DnK _gameRef;
         public List<Vector2> Vertices { get; private set; }
 
+        private Entity _parent;
         private PolygonShape _polygonShape;
         private int _iteration;
         private float _step;
@@ -31,19 +33,25 @@ namespace Danmaku_no_Kyojin.Entities
         private Direction _bottomRightLastDirection;
         private Direction _topRightLastDirection;
 
+        // Collisions
+        private List<CollisionConvexPolygon> _leftCollisionBoxes;
+        private List<CollisionConvexPolygon> _rightCollisionBoxes;
+
         public Vector2 Origin { get; private set; }
 
-
+        public CollisionElements CollisionBoxes { get; private set; } 
 
         public Vector2 GetSize()
         {
             return _size;
         }
 
-        public BossStructure(DnK game, int iteration = 50, float step = 25)
+        public BossStructure(DnK game, Entity parent, int iteration = 50, float step = 25)
         {
             _gameRef = game;
+            _parent = parent;
             Vertices = new List<Vector2>();
+            CollisionBoxes = new CollisionElements();
 
             _iteration = iteration;
             _step = step;
@@ -57,6 +65,9 @@ namespace Danmaku_no_Kyojin.Entities
             _bottomRightLastDirection = Direction.Left;
             _topRightLastDirection = Direction.Left;
 
+            _leftCollisionBoxes = new List<CollisionConvexPolygon>();
+            _rightCollisionBoxes = new List<CollisionConvexPolygon>();
+
             _polygonShape = new PolygonShape(_gameRef.GraphicsDevice, null);
 
             GenerateBaseStructure();
@@ -69,6 +80,9 @@ namespace Danmaku_no_Kyojin.Entities
             _bottomLeftVertices.Clear();
             _bottomRightVertices.Clear();
             Vertices.Clear();
+            CollisionBoxes.Clear();
+            _leftCollisionBoxes.Clear();
+            _rightCollisionBoxes.Clear();
 
             // Add the origin point
             _bottomLeftVertices.Add(Vector2.Zero);
@@ -138,7 +152,7 @@ namespace Danmaku_no_Kyojin.Entities
             return vertex;
         }
 
-        private List<Vector2> GenerateSymmetry(List<Vector2> vertices, Symmetry symmetry, float pivot)
+        private List<Vector2> GenerateSymmetry(List<Vector2> vertices, Symmetry symmetry, float pivot, bool avoidDuplicates = true)
         {
             var symmetricVertices = new List<Vector2>();
 
@@ -152,7 +166,7 @@ namespace Danmaku_no_Kyojin.Entities
                         var position = vertices[i];
                         
                         // We want to avoid duplicates
-                        if (Math.Abs(position.X - initialX.X) < 0f)
+                        if (avoidDuplicates && Math.Abs(position.X - initialX.X) < 0f)
                             continue;
 
                         position.X = (pivot * 2) - position.X;
@@ -182,6 +196,11 @@ namespace Danmaku_no_Kyojin.Entities
             if (_topLeftVertices.Count > 0)
                 topVertex = _topLeftVertices.Last();
 
+            var previousDownPosition = bottomVertex;
+            var previousUpPosition = topVertex;
+            var collisionBoxesDownPositions = new List<Vector2>();
+            var collisionBoxesUpPositions = new List<Vector2>();
+
             for (var i = 0; i < iterationNumber; i++)
             {
                 var possibleDirections = new List<Direction>()
@@ -203,6 +222,14 @@ namespace Danmaku_no_Kyojin.Entities
                 }
 
                 bottomVertex = GenerateRandomPosition(bottomVertex, possibleDirections, ref _bottomRightLastDirection);
+
+                if (previousDownPosition.X < bottomVertex.X)
+                {
+                    collisionBoxesDownPositions.Add(previousDownPosition);
+                    collisionBoxesDownPositions.Add(bottomVertex);
+                }
+
+                previousDownPosition = bottomVertex;
 
                 if (bottomVertex.Y > maxY)
                     maxY = bottomVertex.Y;
@@ -228,6 +255,14 @@ namespace Danmaku_no_Kyojin.Entities
 
                     topVertex = GenerateRandomPosition(topVertex, possibleDirections, ref _topRightLastDirection);
 
+                    if (previousUpPosition.X < topVertex.X)
+                    {
+                        collisionBoxesUpPositions.Add(previousUpPosition);
+                        collisionBoxesUpPositions.Add(topVertex);
+                    }
+
+                    previousUpPosition = topVertex;
+
                     if (topVertex.Y < minY)
                         minY = topVertex.Y;
 
@@ -241,6 +276,55 @@ namespace Danmaku_no_Kyojin.Entities
 
             _size.Y = Math.Abs(minY - maxY);
             Origin = new Vector2(_size.X / 2f, _size.Y / 2f);
+
+            foreach (var cb in _rightCollisionBoxes)
+            {
+                for (int i = 0; i < cb.Vertices.Count; i++)
+                    cb.Vertices[i] = new Vector2(cb.Vertices[i].X + iterationNumber * 2 * _step, cb.Vertices[i].Y);
+            }
+
+            // Generate collision boxes
+            for (var i = 0; i < collisionBoxesDownPositions.Count - 1; i += 2)
+            {
+                var bottomRightVertex = collisionBoxesDownPositions[i + 1];
+                var bottomLeftVertex = collisionBoxesDownPositions[i];
+                var topLeftVertex = collisionBoxesUpPositions[i];
+                var topRightVertex = collisionBoxesUpPositions[i + 1];
+
+                var symmetricBottomRightVertex = new Vector2(_size.X - collisionBoxesDownPositions[i + 1].X, collisionBoxesDownPositions[i + 1].Y);
+                var symmetricBottomLeftVertex = new Vector2(_size.X - collisionBoxesDownPositions[i].X, collisionBoxesDownPositions[i].Y);
+                var symmetricTopLeftVertex = new Vector2(_size.X - collisionBoxesUpPositions[i].X, collisionBoxesUpPositions[i].Y);
+                var symmetricTopRightVertex = new Vector2(_size.X - collisionBoxesUpPositions[i + 1].X, collisionBoxesUpPositions[i + 1].Y);
+
+                var collisionVertices = new List<Vector2> { bottomRightVertex };
+                var symetricCollisionVertices = new List<Vector2> { symmetricBottomRightVertex };
+
+                if (!collisionVertices.Contains(bottomLeftVertex))
+                    collisionVertices.Add(bottomLeftVertex);
+
+                if (!collisionVertices.Contains(topLeftVertex))
+                    collisionVertices.Add(topLeftVertex);
+
+                if (!collisionVertices.Contains(topRightVertex))
+                    collisionVertices.Add(topRightVertex);
+
+                // Symmetric
+                if (!symetricCollisionVertices.Contains(symmetricBottomLeftVertex))
+                    symetricCollisionVertices.Add(symmetricBottomLeftVertex);
+
+                if (!symetricCollisionVertices.Contains(symmetricTopLeftVertex))
+                    symetricCollisionVertices.Add(symmetricTopLeftVertex);
+
+                if (!symetricCollisionVertices.Contains(symmetricTopRightVertex))
+                    symetricCollisionVertices.Add(symmetricTopRightVertex);
+
+                _leftCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, collisionVertices));
+                _rightCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, symetricCollisionVertices));
+            }
+
+            CollisionBoxes.Clear();
+            CollisionBoxes.AddRange(_leftCollisionBoxes);
+            CollisionBoxes.AddRange(_rightCollisionBoxes);
 
             // We want CCW order
             _topRightVertices.Reverse();

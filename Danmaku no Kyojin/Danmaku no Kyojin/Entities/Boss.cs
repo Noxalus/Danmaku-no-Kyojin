@@ -86,8 +86,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Initialize()
         {
-            int targetPlayerId = 0;
-            targetPlayerId = GameRef.Rand.Next(0, _players.Count);
+            int targetPlayerId = GameRef.Rand.Next(0, _players.Count);
 
             MoverManager.Initialize(_players[targetPlayerId].GetPosition);
 
@@ -135,14 +134,7 @@ namespace Danmaku_no_Kyojin.Entities
             _currentPattern = GameRef.Rand.Next(0, _patternNames.Count);
             AddBullet(true);
 
-            _structure = new BossStructure(GameRef, _iteration, _step);
-
-            CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
-            Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
-            Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
-            Origin = _structure.Origin;
-            
-            GenerateTurrets();
+            GenerateStructure();
 
             base.LoadContent();
         }
@@ -216,7 +208,7 @@ namespace Danmaku_no_Kyojin.Entities
                     {
                         _structure.GenerateBaseStructure();
 
-                        CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
+                        CollisionBoxes = _structure.CollisionBoxes;//.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
                         Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
                         Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
                         Origin = _structure.Origin;
@@ -227,7 +219,7 @@ namespace Danmaku_no_Kyojin.Entities
                     {
                         _structure.Iterate();
 
-                        CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, _structure.Vertices));
+                        CollisionBoxes = _structure.CollisionBoxes;
                         Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
                         Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
                         Origin = _structure.Origin;
@@ -368,8 +360,25 @@ namespace Danmaku_no_Kyojin.Entities
             return _ready;
         }
 
+        private void GenerateStructure()
+        {
+            _structure = new BossStructure(GameRef, this, _iteration, _step);
+
+            CollisionBoxes = _structure.CollisionBoxes;
+            Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
+            Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
+            Origin = _structure.Origin;
+
+            GenerateTurrets();
+        }
+
+        private void GenerateCollisionBoxes()
+        {
+        }
+
         private void GenerateTurrets()
         {
+            /*
             _turrets.Clear();
 
             foreach (var vertex in _structure.Vertices)
@@ -384,6 +393,7 @@ namespace Danmaku_no_Kyojin.Entities
                     _turrets.Add(turret);
                 }
             }
+            */
         }
 
         public void DestroyTurret(Turret turret, BaseBullet bullet)

@@ -12,10 +12,16 @@ namespace Danmaku_no_Kyojin.Collisions
     {
         #region Fields
 
-        private List<Vector2> Vertices { get; set; }
+        public List<Vector2> Vertices
+        {
+            get { return _vertices; }
+            set { _vertices = value; }
+        }
+
         public bool IsFilled { get; set; }
         private List<Vector2> _axes;
         private List<Vector2> _circleAxes;
+        private List<Vector2> _vertices;
 
         #endregion
 
@@ -70,7 +76,6 @@ namespace Danmaku_no_Kyojin.Collisions
                 }
             }
             
-            /*
             // loop over element polygon's axes
             List<Vector2> axes = element.GetAxes();
             for (int i = 0; i < axes.Count; i++)
@@ -86,7 +91,6 @@ namespace Danmaku_no_Kyojin.Collisions
                     return false;
                 }
             }
-            */
 
             // if we get here then we know that every axis had overlap on it
             // so we can guarantee an intersection
@@ -136,14 +140,14 @@ namespace Danmaku_no_Kyojin.Collisions
                     position.Y, Color.Red);
 
                 Vector2 axis = Vector2.Normalize(position - previousPosition);
-
+                /*
                 sp.DrawLine(
                     (previousPosition.X + position.X) / 2f, 
                     (previousPosition.Y + position.Y) / 2f,
                     (previousPosition.X) + axis.Y * 2000, 
                     (previousPosition.Y) - axis.X * 2000,
                     Color.Red);
-
+                */
                 /*
                 if (_circleAxes.Count > 0)
                 {
