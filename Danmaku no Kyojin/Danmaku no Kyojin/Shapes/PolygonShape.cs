@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,10 +44,8 @@ namespace Danmaku_no_Kyojin.Shapes
                 Projection = Matrix.CreateOrthographicOffCenter(
                 0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1),
                 VertexColorEnabled = true,
-                /*
                 DiffuseColor = new Vector3(0, 1, 0),
                 Alpha = 0.5f
-                */
             };
         }
 
@@ -79,9 +76,9 @@ namespace Danmaku_no_Kyojin.Shapes
 
             for (var i = 0; i < _triangulatedVertices.Length; i++)
             {
-                verts[i] = new VertexPositionColor(new Vector3(_triangulatedVertices[i], 0f), new Color(0f, 1f, 0f, 0.5f));
+                verts[i] = new VertexPositionColor(new Vector3(_triangulatedVertices[i], 0f), new Color(1f, 1f, 1f));
             }
-
+            
             _vertexBuffer = new VertexBuffer(
                 _graphicsDevice,
                 typeof(VertexPositionColor),
@@ -99,29 +96,35 @@ namespace Danmaku_no_Kyojin.Shapes
                 for (var i = 0; i < _indices.Length; i++)
                     indices[i] = (short)_indices[i];
 
-                _indexBuffer = new IndexBuffer(
-                    _graphicsDevice,
-                    IndexElementSize.SixteenBits,
-                    indices.Length * sizeof(short),
-                    BufferUsage.WriteOnly);
+                if (indices.Length > 0)
+                {
+                    _indexBuffer = new IndexBuffer(
+                        _graphicsDevice,
+                        IndexElementSize.SixteenBits,
+                        indices.Length*sizeof (short),
+                        BufferUsage.WriteOnly);
 
-                _indexBuffer.SetData(indices);
+                    _indexBuffer.SetData(indices);
+                }
             }
             else
             {
-                _indexBuffer = new IndexBuffer(
-                    _graphicsDevice,
-                    IndexElementSize.ThirtyTwoBits,
-                    _triangulatedVertices.Length * sizeof(int),
-                    BufferUsage.WriteOnly);
+                if (_triangulatedVertices.Length > 0)
+                {
+                    _indexBuffer = new IndexBuffer(
+                        _graphicsDevice,
+                        IndexElementSize.ThirtyTwoBits,
+                        _triangulatedVertices.Length*sizeof (int),
+                        BufferUsage.WriteOnly);
 
-                _indexBuffer.SetData(_triangulatedVertices);
+                    _indexBuffer.SetData(_triangulatedVertices);
+                }
             }
 
             _triangulated = true;
         }
 
-        public void Draw(Matrix viewMatrix, Vector2 position, Vector2 origin, float rotation, Vector2 scale)
+        public void Draw(Matrix viewMatrix, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale)
         {
             try
             {
@@ -141,6 +144,9 @@ namespace Danmaku_no_Kyojin.Shapes
 
                 _effect.View = viewMatrix;
                 _effect.World = worldMatrix;
+
+                _effect.DiffuseColor = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
+                _effect.Alpha = color.A / 255f;
                 
                 foreach (var pass in _effect.CurrentTechnique.Passes)
                 {
