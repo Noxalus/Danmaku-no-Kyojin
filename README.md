@@ -54,6 +54,7 @@ For its bloomy visual and particle effects.
 
 ## TODO List
 
+* Port the game from XNA 4.0 to MonoGame 3.4
 * Add random set of turrets to each boss
     * Basic turret: fires a simple bullet to player's position
     * Shootgun turret: fires multiple bullets to player's position
