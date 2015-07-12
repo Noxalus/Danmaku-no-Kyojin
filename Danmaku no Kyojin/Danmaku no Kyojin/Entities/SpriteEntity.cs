@@ -16,7 +16,7 @@ namespace Danmaku_no_Kyojin.Entities
         {
         }
 
-        public Texture2D Sprite
+        protected Texture2D Sprite
         {
             get { return _sprite; }
             set

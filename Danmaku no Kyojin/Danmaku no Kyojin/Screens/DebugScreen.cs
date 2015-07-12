@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
-using Danmaku_no_Kyojin.Shapes;
+using Danmaku_no_Kyojin.Entities.Boss;
+using Danmaku_no_Kyojin.Particles;
+using Danmaku_no_Kyojin.Shaders;
+using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,7 +20,6 @@ namespace Danmaku_no_Kyojin.Screens
         private Texture2D _pixel;
 
         private List<Player> Players { get; set; }
-
         private Boss _boss;
 
         // Random
@@ -28,29 +29,42 @@ namespace Danmaku_no_Kyojin.Screens
         private Texture2D _backgroundImage;
         private Rectangle _backgroundMainRectangle;
 
+        // Bloom
+        private BloomComponent _bloom;
+        private bool _useBloom;
+
         public DebugScreen(Game game, GameStateManager manager)
             : base(game, manager)
         {
             Players = new List<Player>();
+
+            // Bloom
+            _bloom = new BloomComponent(GameRef);
+            Components.Add(_bloom);
+            _bloom.Settings = new BloomSettings(null, 0.25f, 4, 2, 1, 1.5f, 1);
+            _useBloom = true;
         }
 
         public override void Initialize()
         {
             _backgroundMainRectangle = new Rectangle(0, 0, Config.GameArea.X, Config.GameArea.Y);
-
+            
             base.Initialize();
+
+            _bloom.Initialize();
 
             _defaultView = GraphicsDevice.Viewport;
 
             Players.Clear();
 
             // First player
-            var player1 = new Player(GameRef, _defaultView, 1, Config.PlayersController[0], new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y - 150));
+            var player1 = new Player(GameRef, _defaultView, 1, Config.PlayersController[0], new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y - Config.GameArea.Y / 4f));
             player1.Initialize();
             Players.Add(player1);
 
-            _boss = new Boss(GameRef, Players, 4);
+            _boss = new Boss(GameRef, Players, 20);
             _boss.Initialize();
+
         }
 
         protected override void LoadContent()
@@ -90,25 +104,51 @@ namespace Danmaku_no_Kyojin.Screens
                         gameTime = newGameTime;
                     }
 
-                    for (int i = 0; i < p.GetBullets().Count; i++)
+                    int i;
+                    for (i = 0; i < p.GetBullets().Count; i++)
                     {
-                        p.GetBullets()[i].Update(gameTime);
+                        var currentPlayerBullet = p.GetBullets()[i];
+                        currentPlayerBullet.Update(gameTime);
 
-                        if (_boss.Intersects(p.GetBullets()[i]))
+                        if (_boss.Intersects(currentPlayerBullet))
                         {
-                            _boss.TakeDamage(p.GetBullets()[i].Power);
+                            //_boss.TakeDamage(currentPlayerBullet.Power);
 
-                            p.GetBullets().Remove(p.GetBullets()[i]);
+                            for (var j = 0; j < 30; j++)
+                            {
+                                GameRef.ParticleManager.CreateParticle(GameRef.LineParticle,
+                                    currentPlayerBullet.Position, Color.LightBlue, 50, 1,
+                                    new ParticleState()
+                                    {
+                                        Velocity = GameRef.Rand.NextVector2(0, 9),
+                                        Type = ParticleType.Bullet,
+                                        LengthMultiplier = 1
+                                    });
+                            }
+
+                            p.GetBullets().Remove(currentPlayerBullet);
                             continue;
                         }
 
-                        if (p.GetBullets()[i].X < 0 || p.GetBullets()[i].X > Config.GameArea.X ||
-                            p.GetBullets()[i].Y < 0 || p.GetBullets()[i].Y > Config.GameArea.Y)
+                        if (currentPlayerBullet.X < 0 || currentPlayerBullet.X > Config.GameArea.X ||
+                            currentPlayerBullet.Y < 0 || currentPlayerBullet.Y > Config.GameArea.Y)
                         {
-                            p.GetBullets().Remove(p.GetBullets()[i]);
-                            continue;
+                            for (var j = 0; j < 30; j++)
+                            {
+                                GameRef.ParticleManager.CreateParticle(GameRef.LineParticle,
+                                    currentPlayerBullet.Position, Color.LightBlue, 50, 1,
+                                    new ParticleState()
+                                    {
+                                        Velocity = GameRef.Rand.NextVector2(0, 9),
+                                        Type = ParticleType.Bullet,
+                                        LengthMultiplier = 1
+                                    });
+                            }
+
+                            p.GetBullets().Remove(currentPlayerBullet);
                         }
 
+                        /*
                         // Collision with turrets
                         for (int j = 0; j < _boss.Turrets.Count; j++)
                         {
@@ -120,6 +160,7 @@ namespace Danmaku_no_Kyojin.Screens
                                 break;
                             }
                         }
+                        */
                     }
 
                     p.Update(gameTime);
@@ -127,13 +168,17 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _boss.Update(gameTime);
-
+            
             if (Config.Debug && InputHandler.KeyPressed(Keys.C))
                 Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
         }
 
         public override void Draw(GameTime gameTime)
         {
+            _bloom.BeginDraw();
+            if (!_useBloom)
+                base.Draw(gameTime);
+
             ControlManager.Draw(GameRef.SpriteBatch);
 
             var backgroundColor = new Color(50, 50, 50);
@@ -146,7 +191,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             GameRef.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Players[0].Camera.GetTransformation());
+            GameRef.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Players[0].Camera.GetTransformation());
 
             Players[0].Draw(gameTime);
 
@@ -155,19 +200,22 @@ namespace Danmaku_no_Kyojin.Screens
             foreach (var bullet in Players[0].GetBullets())
                 bullet.Draw(gameTime);
 
+            GameRef.ParticleManager.Draw(GameRef.SpriteBatch);
+
             GameRef.SpriteBatch.End();
 
-            base.Draw(gameTime);
+            if (_useBloom)
+                base.Draw(gameTime);
 
+            // Draw UI
             GameRef.SpriteBatch.Begin();
 
             // Text
+            /*
             GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
             "Position: " + Players.First().GetPosition(),
             new Vector2(0, 20), Color.White);
-
-            //_boss.PrintPolygonShapeVerticesPosition();
-
+            */
             GameRef.SpriteBatch.End();
         }
 
@@ -176,8 +224,9 @@ namespace Danmaku_no_Kyojin.Screens
         /// </summary>
         private void HandleInput()
         {
-            if (InputHandler.KeyDown(Keys.Space))
+            if (InputHandler.KeyPressed(Keys.B))
             {
+                _useBloom = !_useBloom;
             }
         }
     }

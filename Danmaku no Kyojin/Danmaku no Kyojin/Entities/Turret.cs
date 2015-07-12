@@ -8,8 +8,10 @@ namespace Danmaku_no_Kyojin.Entities
 {
     class Turret : SpriteEntity
     {
+        private MoverManager _moverManager;
+
         private Vector2 _initialPosition;
-        private Boss _parent;
+        private Entity _parent;
         private Entity _target;
         private BulletPattern _pattern;
         private TimeSpan _timer;
@@ -26,7 +28,14 @@ namespace Danmaku_no_Kyojin.Entities
             get { return _initialPosition; }
         }
 
-        public Turret(DnK gameRef, Boss parent, Entity target, Vector2 initialPosition, BulletPattern pattern, Color color)
+        public Turret(
+            DnK gameRef, 
+            Entity parent, 
+            Entity target,
+            MoverManager moverManager,
+            Vector2 initialPosition, 
+            BulletPattern pattern, 
+            Color color)
             : base(gameRef)
         {
             _initialPosition = initialPosition;
@@ -34,6 +43,7 @@ namespace Danmaku_no_Kyojin.Entities
             Y = InitialPosition.Y;
             _parent = parent;
             _target = target;
+            _moverManager = moverManager;
             _pattern = pattern;
             _timer = new TimeSpan(0, 0, (int)(GameRef.Rand.NextDouble() * 30));
             _color = color;
@@ -42,7 +52,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         protected override void LoadContent()
         {
-            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type2");
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/base_turret");
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Width / 2f));
         }
 
@@ -55,7 +65,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             if (_timer.Milliseconds <= 0)
             {
-                var mover = (Mover)_parent.MoverManager.CreateBullet();
+                var mover = (Mover)_moverManager.CreateBullet();
                 mover.X = Position.X;
                 mover.Y = Position.Y;
                 mover.SetBullet(_pattern.RootNode);

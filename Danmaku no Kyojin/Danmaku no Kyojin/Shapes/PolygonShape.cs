@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,10 +10,11 @@ namespace Danmaku_no_Kyojin.Shapes
 {
     public class PolygonShape
     {
-        private readonly GraphicsDevice _graphicsDevice;
+        private DnK _gameRef;
         private Vector2[] _vertices;
         private bool _triangulated;
         private readonly BasicEffect _effect;
+        private Effect _edgeEffect;
 
         private Vector2[] _triangulatedVertices;
         private int[] _indices;
@@ -33,16 +35,18 @@ namespace Danmaku_no_Kyojin.Shapes
         /// </summary>
         /// <param name="graphicsDevice">The graphicsdevice from a GameRef object</param>
         /// <param name="vertices">The vertices in a clockwise order</param>
-        public PolygonShape(GraphicsDevice graphicsDevice, Vector2[] vertices)
+        public PolygonShape(DnK game, Vector2[] vertices)
         {
-            _graphicsDevice = graphicsDevice;
+            _gameRef = game;
             _vertices = vertices;
             _triangulated = false;
 
-            _effect = new BasicEffect(_graphicsDevice)
+            _edgeEffect = _gameRef.Content.Load<Effect>("Graphics/Shaders/Edge");
+
+            _effect = new BasicEffect(_gameRef.GraphicsDevice)
             {
                 Projection = Matrix.CreateOrthographicOffCenter(
-                0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1),
+                0, _gameRef.GraphicsDevice.Viewport.Width, _gameRef.GraphicsDevice.Viewport.Height, 0, 0, 1),
                 VertexColorEnabled = true,
                 DiffuseColor = new Vector3(0, 1, 0),
                 Alpha = 0.5f
@@ -80,7 +84,7 @@ namespace Danmaku_no_Kyojin.Shapes
             }
             
             _vertexBuffer = new VertexBuffer(
-                _graphicsDevice,
+                _gameRef.GraphicsDevice,
                 typeof(VertexPositionColor),
                 verts.Length * VertexPositionColor.VertexDeclaration.VertexStride,
                 BufferUsage.WriteOnly
@@ -99,7 +103,7 @@ namespace Danmaku_no_Kyojin.Shapes
                 if (indices.Length > 0)
                 {
                     _indexBuffer = new IndexBuffer(
-                        _graphicsDevice,
+                        _gameRef.GraphicsDevice,
                         IndexElementSize.SixteenBits,
                         indices.Length*sizeof (short),
                         BufferUsage.WriteOnly);
@@ -112,7 +116,7 @@ namespace Danmaku_no_Kyojin.Shapes
                 if (_triangulatedVertices.Length > 0)
                 {
                     _indexBuffer = new IndexBuffer(
-                        _graphicsDevice,
+                        _gameRef.GraphicsDevice,
                         IndexElementSize.ThirtyTwoBits,
                         _triangulatedVertices.Length*sizeof (int),
                         BufferUsage.WriteOnly);
@@ -131,27 +135,34 @@ namespace Danmaku_no_Kyojin.Shapes
                 if (!_triangulated)
                     Triangulate();
 
-                _graphicsDevice.SetVertexBuffer(_vertexBuffer);
-                _graphicsDevice.Indices = _indexBuffer;
-                _graphicsDevice.BlendState = BlendState.Additive;
+                _gameRef.GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+                _gameRef.GraphicsDevice.Indices = _indexBuffer;
+                _gameRef.GraphicsDevice.BlendState = BlendState.Additive;
 
-                _graphicsDevice.RasterizerState = InputHandler.KeyDown(Keys.W) ? _wireframe : RasterizerState.CullCounterClockwise;
+                _gameRef.GraphicsDevice.RasterizerState = InputHandler.KeyDown(Keys.W) ? _wireframe : RasterizerState.CullCounterClockwise;
 
                 var worldMatrix = Matrix.CreateTranslation(new Vector3(-origin, 0))
                     * Matrix.CreateScale(new Vector3(scale, 0))
                     * Matrix.CreateRotationZ(rotation)
                     * Matrix.CreateTranslation(new Vector3(position, 0));
 
-                _effect.View = viewMatrix;
-                _effect.World = worldMatrix;
+                var projection = Matrix.CreateOrthographicOffCenter(
+                    0, _gameRef.GraphicsDevice.Viewport.Width, 
+                    _gameRef.GraphicsDevice.Viewport.Height, 0,
+                    0, 1
+                );
 
-                _effect.DiffuseColor = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
-                _effect.Alpha = color.A / 255f;
-                
-                foreach (var pass in _effect.CurrentTechnique.Passes)
+                _edgeEffect.Parameters["View"].SetValue(viewMatrix);
+                _edgeEffect.Parameters["World"].SetValue(worldMatrix);
+                _edgeEffect.Parameters["Projection"].SetValue(projection);
+
+                _edgeEffect.Parameters["DiffuseColor"].SetValue(new Vector3(color.R / 255f, color.G / 255f, color.B / 255f));
+                _edgeEffect.Parameters["Alpha"].SetValue(color.A / 255f);
+
+                foreach (var pass in _edgeEffect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _numVertices, 0, _numPrimitives);
+                    _gameRef.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _numVertices, 0, _numPrimitives);
                 }
             }
             catch (Exception exception)

@@ -1,16 +1,22 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.AccessControl;
 using Danmaku_no_Kyojin.Collisions;
+using Danmaku_no_Kyojin.Particles;
 using Danmaku_no_Kyojin.Shapes;
+using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.GamerServices;
 
-namespace Danmaku_no_Kyojin.Entities
+namespace Danmaku_no_Kyojin.Entities.Boss
 {
+    public struct BossStructureVertices
+    {
+        private List<Vector2> bottomRightVertices;
+        private List<Vector2> bottomLeftVertices;
+        private List<Vector2> topRightVertices;
+        private List<Vector2> topLeftVertices;
+    };
+
     class BossStructure
     {
         private enum Direction { Up, Down, Right, Left, UpLeft, DownLeft, UpRight, DownRight };
@@ -20,7 +26,7 @@ namespace Danmaku_no_Kyojin.Entities
         public List<Vector2> Vertices { get; private set; }
 
         private Entity _parent;
-        private PolygonShape _polygonShape;
+        private List<PolygonShape> _polygonShapes;
         private int _iteration;
         private float _step;
         private Vector2 _size;
@@ -46,6 +52,12 @@ namespace Danmaku_no_Kyojin.Entities
             return _size;
         }
 
+        // TODO: Update this constructor to take list of existing vertices
+        public BossStructure(DnK game, Entity parent, List<Vector2> vertices)
+        {
+            Vertices = vertices;
+        }
+
         public BossStructure(DnK game, Entity parent, int iteration = 50, float step = 25)
         {
             _gameRef = game;
@@ -68,7 +80,10 @@ namespace Danmaku_no_Kyojin.Entities
             _leftCollisionBoxes = new List<CollisionConvexPolygon>();
             _rightCollisionBoxes = new List<CollisionConvexPolygon>();
 
-            _polygonShape = new PolygonShape(_gameRef.GraphicsDevice, null);
+            _polygonShapes = new List<PolygonShape>()
+            {
+                new PolygonShape(_gameRef, null)
+            };
 
             GenerateBaseStructure();
         }
@@ -279,10 +294,27 @@ namespace Danmaku_no_Kyojin.Entities
 
             foreach (var cb in _rightCollisionBoxes)
             {
-                for (int i = 0; i < cb.Vertices.Count; i++)
+                for (var i = 0; i < cb.Vertices.Count; i++)
                     cb.Vertices[i] = new Vector2(cb.Vertices[i].X + iterationNumber * 2 * _step, cb.Vertices[i].Y);
             }
 
+            GenerateCollisionBoxes(collisionBoxesDownPositions, collisionBoxesUpPositions);
+
+            // We want CCW order
+            _topRightVertices.Reverse();
+            _topLeftVertices.Reverse();
+
+            Vertices.Clear();
+            Vertices.AddRange(_bottomLeftVertices);
+            Vertices.AddRange(_bottomRightVertices);
+            Vertices.AddRange(_topRightVertices);
+            Vertices.AddRange(_topLeftVertices);
+
+            _polygonShapes[0].UpdateVertices(Vertices.ToArray());
+        }
+
+        private void GenerateCollisionBoxes(List<Vector2> collisionBoxesDownPositions, List<Vector2> collisionBoxesUpPositions)
+        {
             // Generate collision boxes
             for (var i = 0; i < collisionBoxesDownPositions.Count - 1; i += 2)
             {
@@ -326,9 +358,91 @@ namespace Danmaku_no_Kyojin.Entities
             CollisionBoxes.AddRange(_leftCollisionBoxes);
             CollisionBoxes.AddRange(_rightCollisionBoxes);
 
-            // We want CCW order
-            _topRightVertices.Reverse();
-            _topLeftVertices.Reverse();
+            ComputeCollisionBoxesHp();
+        }
+
+        public PolygonShape Split(CollisionConvexPolygon collisionBox)
+        {
+            var minX = collisionBox.GetMinX();
+            var maxX = collisionBox.GetMaxX();
+            var collisionBoxCenter = collisionBox.GetCenter();
+            var destroyAll = false;
+
+            // Boss is dead
+            if (collisionBoxCenter.X > (_size.X / 2f - 2 * _step) + _parent.Position.X - _parent.Origin.X &&
+                collisionBoxCenter.X < (_size.X / 2f + 2 * _step) + _parent.Position.X - _parent.Origin.X)
+            {
+                destroyAll = true;
+            }
+
+            var newPolygonShapeVertices = new List<Vector2>();
+
+            var toDelete = new List<CollisionElement>();
+
+            if (!destroyAll)
+            {
+                // The part to remove is at left
+                if (minX < _size.X/2f)
+                {
+                    _bottomLeftVertices.RemoveAll(vertex => vertex.X <= minX);
+                    _topLeftVertices.RemoveAll(vertex => vertex.X <= minX);
+
+                    foreach (var box in CollisionBoxes)
+                    {
+                        var center = box.GetCenter();
+
+                        if (center.X <= minX + _parent.Position.X - _parent.Origin.X)
+                        {
+                            ParticleExplosion(center);
+                            toDelete.Add(box);
+                        }
+                    }
+
+                    foreach (var collisionElement in toDelete)
+                    {
+                        var box = (CollisionConvexPolygon) collisionElement;
+                        CollisionBoxes.Remove(box);
+                        _leftCollisionBoxes.Remove(box);
+                    }
+                }
+                // The part to remove is at right
+                else if (maxX > _size.X/2f)
+                {
+                    _bottomRightVertices.RemoveAll(vertex => vertex.X >= maxX);
+                    _topRightVertices.RemoveAll(vertex => vertex.X >= maxX);
+
+                    toDelete.Clear();
+                    foreach (CollisionElement box in CollisionBoxes)
+                    {
+                        var center = box.GetCenter();
+
+                        if (center.X >= maxX + _parent.Position.X - _parent.Origin.X)
+                        {
+                            ParticleExplosion(center);
+
+                            toDelete.Add(box);
+                        }
+                    }
+
+                    foreach (var collisionElement in toDelete)
+                    {
+                        var box = (CollisionConvexPolygon) collisionElement;
+                        CollisionBoxes.Remove(box);
+                        _rightCollisionBoxes.Remove(box);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var center in CollisionBoxes.Select(box => box.GetCenter()))
+                {
+                    ParticleExplosion(center);
+                }
+
+                _leftCollisionBoxes.Clear();
+                _rightCollisionBoxes.Clear();
+                CollisionBoxes.Clear();
+            }
 
             Vertices.Clear();
             Vertices.AddRange(_bottomLeftVertices);
@@ -336,12 +450,73 @@ namespace Danmaku_no_Kyojin.Entities
             Vertices.AddRange(_topRightVertices);
             Vertices.AddRange(_topLeftVertices);
 
-            _polygonShape.UpdateVertices(Vertices.ToArray());
+            _polygonShapes[0].UpdateVertices(Vertices.ToArray());
+
+            if (_leftCollisionBoxes.Contains(collisionBox))
+                _leftCollisionBoxes.Remove(collisionBox);
+            else if (_rightCollisionBoxes.Contains(collisionBox))
+                _rightCollisionBoxes.Remove(collisionBox);
+
+            CollisionBoxes.Remove(collisionBox);
+
+            ComputeCollisionBoxesHp();
+
+            return new PolygonShape(_gameRef, newPolygonShapeVertices.ToArray());
         }
 
-        public void Draw(Matrix viewMatrix, Vector2 position, Vector2 origin, float rotation, Vector2 scale)
+        public void Draw(Matrix viewMatrix, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale)
         {
-            _polygonShape.Draw(viewMatrix, position, origin, rotation, scale);
+            foreach (var polygonShape in _polygonShapes)
+            {
+                polygonShape.Draw(viewMatrix, position, color, rotation, origin, scale);
+            }
+        }
+
+        private void ParticleExplosion(Vector2 position)
+        {
+            float hue1 = _gameRef.Rand.NextFloat(0, 6);
+            float hue2 = (hue1 + _gameRef.Rand.NextFloat(0, 2)) % 6f;
+            Color color1 = ColorUtil.HSVToColor(hue1, 0.5f, 1);
+            Color color2 = ColorUtil.HSVToColor(hue2, 0.5f, 1);
+
+            for (int j = 0; j < 120; j++)
+            {
+                float speed = 18f * (1f - 1 / _gameRef.Rand.NextFloat(1f, 10f));
+                var state = new ParticleState()
+                {
+                    Velocity = _gameRef.Rand.NextVector2(speed, speed),
+                    Type = ParticleType.Enemy,
+                    LengthMultiplier = 1f
+                };
+
+                Color color = Color.Lerp(color1, color2, _gameRef.Rand.NextFloat(0, 1));
+
+                _gameRef.ParticleManager.CreateParticle(_gameRef.LineParticle, position,
+                    color, 190, 1.5f, state);
+            }
+        }
+
+        private void ComputeCollisionBoxesHp()
+        {
+            _leftCollisionBoxes.Sort((box1, box2) => box1.GetMinX().CompareTo(box2.GetMinX()));
+            _rightCollisionBoxes.Sort((box1, box2) => box1.GetMaxX().CompareTo(box2.GetMaxX()));
+
+            const int initialHp = 20;
+            const int hpStep = 5;
+            var hp = initialHp;
+            foreach (var collisionBox in _leftCollisionBoxes)
+            {
+                collisionBox.HealthPoint = hp;
+                hp += hpStep;
+            }
+
+            hp = initialHp;
+            for (int i = 0; i < _rightCollisionBoxes.Count; i++)
+            {
+                var collisionBox = _rightCollisionBoxes[_rightCollisionBoxes.Count - 1 - i];
+                collisionBox.HealthPoint = hp;
+                hp += hpStep;
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Danmaku_no_Kyojin.Entities
             set { _rotation = value; }
         }
 
-        public CollisionElements CollisionBoxes { get; set; }
+        public virtual CollisionElements CollisionBoxes { get; set; }
 
         public Vector2 Origin
         {
@@ -79,6 +79,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             CollisionBoxes = new CollisionElements();
             _scale = new Vector2(1f, 1f);
+            IsAlive = true;
         }
 
         public virtual void Initialize()
@@ -100,7 +101,7 @@ namespace Danmaku_no_Kyojin.Entities
                 CollisionBoxes.Draw(GameRef.SpriteBatch);
         }
 
-        public bool Intersects(Entity entity)
+        public virtual bool Intersects(Entity entity)
         {
             return CollisionBoxes.Intersects(entity.CollisionBoxes);
         }

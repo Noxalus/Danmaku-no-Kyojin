@@ -1,4 +1,5 @@
 using System;
+using Danmaku_no_Kyojin.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -33,8 +34,13 @@ namespace Danmaku_no_Kyojin
         // Useful pixel
         public readonly Texture2D Pixel;
 
+        // Particles
+        public ParticleManager<ParticleState> ParticleManager { get; private set; }
+        public Texture2D LineParticle;
+        public Texture2D Glow;
+
         // Random
-        public readonly Random Rand = new Random();
+        public readonly Random Rand = new Random(Config.RandomSeed);
 
         // Audio
         public SoundEffect Select;
@@ -96,6 +102,8 @@ namespace Danmaku_no_Kyojin
 
             _stateManager.ChangeState(TitleScreen);
 
+            ParticleManager = new ParticleManager<ParticleState>(1024 * 20, ParticleState.UpdateParticle);
+
             base.Initialize();
         }
 
@@ -125,6 +133,9 @@ namespace Danmaku_no_Kyojin
 
             Select = Content.Load<SoundEffect>(@"Audio/SE/select");
             Choose = Content.Load<SoundEffect>(@"Audio/SE/choose");
+
+            LineParticle = Content.Load<Texture2D>("Graphics/Pictures/laser");
+            Glow = Content.Load<Texture2D>("Graphics/Pictures/glow");
         }
 
         protected override void UnloadContent()
@@ -140,6 +151,8 @@ namespace Danmaku_no_Kyojin
                 Graphics.IsFullScreen = Config.FullScreen; 
                 Graphics.ApplyChanges();
             }
+
+            ParticleManager.Update();
 
             base.Update(gameTime);
         }

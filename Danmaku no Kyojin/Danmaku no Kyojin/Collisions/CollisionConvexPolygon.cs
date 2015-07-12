@@ -19,9 +19,17 @@ namespace Danmaku_no_Kyojin.Collisions
         }
 
         public bool IsFilled { get; set; }
+
+        public float HealthPoint
+        {
+            get { return _healthPoint; }
+            set { _healthPoint = value; }
+        }
+
         private List<Vector2> _axes;
         private List<Vector2> _circleAxes;
         private List<Vector2> _vertices;
+        private float _healthPoint;
 
         #endregion
 
@@ -34,14 +42,14 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #endregion
 
-        public CollisionConvexPolygon(Entity parent, Vector2 relativePosition, List<Vector2> vertices)
+        public CollisionConvexPolygon(Entity parent, Vector2 relativePosition, List<Vector2> vertices, float healthPoint = 100)
             : base(parent, relativePosition)
         {
             Parent = parent;
             Vertices = vertices;
             _axes = new List<Vector2>();
-
             _circleAxes = new List<Vector2>();
+            _healthPoint = healthPoint;
 
             ComputeAxes();
         }
@@ -184,7 +192,49 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override Vector2 GetCenter()
         {
-            return Vector2.Zero;
+            var center = Vector2.Zero;
+            var previousCenter = Vector2.Zero;
+            for (var i = 0; i < Vertices.Count; i++)
+            {
+                var currentCenter = (Vertices[i] + Vertices[(i + 1) % Vertices.Count]) / 2f;
+
+                if (previousCenter != Vector2.Zero)
+                {
+                    center = (previousCenter + currentCenter) / 2f;
+                }
+
+                previousCenter = currentCenter;
+            }
+
+            center = (center + previousCenter) / 2f;
+
+            return Parent.Position - Parent.Origin + center;
+        }
+
+        public float GetMinX()
+        {
+            var minX = Vertices[0].X;
+
+            for (var i = 1; i < Vertices.Count; i++)
+            {
+                if (Vertices[i].X < minX)
+                    minX = Vertices[i].X;
+            }
+
+            return minX;
+        }
+
+        public float GetMaxX()
+        {
+            var maxX = Vertices[0].X;
+
+            for (var i = 1; i < Vertices.Count; i++)
+            {
+                if (Vertices[i].X > maxX)
+                    maxX = Vertices[i].X;
+            }
+
+            return maxX;
         }
 
         private void ComputeAxes()

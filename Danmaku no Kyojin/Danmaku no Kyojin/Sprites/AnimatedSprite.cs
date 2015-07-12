@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Danmaku_no_Kyojin.Sprites
 {
@@ -178,6 +175,18 @@ namespace Danmaku_no_Kyojin.Sprites
             new Vector2(_position.X, _position.Y),
             sourceRectangle,
             Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+        }
+
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            Rectangle? sourceRectangle = _controlable ? _animations[_currentAnimation].CurrentFrameRect : _animation.CurrentFrameRect;
+
+            spriteBatch.Draw(
+                _texture,
+                new Vector2(_position.X, _position.Y),
+                sourceRectangle,
+                color, rotation, origin, scale, effects, layerDepth
+            );
         }
 
         #endregion

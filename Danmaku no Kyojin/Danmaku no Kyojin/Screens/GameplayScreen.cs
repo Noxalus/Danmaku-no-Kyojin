@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using Danmaku_no_Kyojin.Entities.Boss;
 using Microsoft.Xna.Framework.Media;
 
 namespace Danmaku_no_Kyojin.Screens
@@ -177,6 +178,7 @@ namespace Danmaku_no_Kyojin.Screens
                         gameTime = newGameTime;
                     }
 
+                    /*
                     for (int i = 0; i < p.GetBullets().Count; i++)
                     {
                         p.GetBullets()[i].Update(gameTime);
@@ -201,10 +203,14 @@ namespace Danmaku_no_Kyojin.Screens
                             }
                         }
                     }
+                    */
 
-                    if (p.Intersects(_enemy))
+                    foreach (var part in _enemy.Parts)
                     {
-                        p.Hit();
+                        if (p.Intersects(part))
+                        {
+                            p.Hit();
+                        }
                     }
 
                     foreach (Mover m in _enemy.MoverManager.movers)
@@ -217,6 +223,7 @@ namespace Danmaku_no_Kyojin.Screens
                 }
             }
 
+            /*
             if (_enemy.IsAlive)
             {
                 _enemy.Update(gameTime);
@@ -230,6 +237,7 @@ namespace Danmaku_no_Kyojin.Screens
                 _enemy.DefeatNumber++;
                 _enemy.Initialize();
             }
+            */
 
             // GameRef Over
             if ((!Players[0].IsAlive && (Config.PlayersNumber == 1 || (Config.PlayersNumber == 2 && !Players[1].IsAlive))) || _timer.IsFinished)
@@ -296,10 +304,12 @@ namespace Danmaku_no_Kyojin.Screens
 
                 Players[0].Draw(gameTime);
 
+                /*
                 if (_enemy.IsAlive)
                 {
                     _enemy.Draw(gameTime);
                 }
+                */
 
                 GameRef.SpriteBatch.End();
             }
@@ -368,6 +378,7 @@ namespace Danmaku_no_Kyojin.Screens
                 new Vector2(Config.Resolution.X / 2f - ControlManager.SpriteFont.MeasureString(waveNumber).X / 2f, Config.Resolution.Y - 50), Color.White);
 
             // Boss current pattern
+            /*
             if (Config.Debug)
             {
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont, _enemy.GetCurrentPatternName(),
@@ -385,7 +396,7 @@ namespace Danmaku_no_Kyojin.Screens
                                                    Config.Resolution.Y - 26),
                                                Color.White);
             }
-
+            */
             GameRef.SpriteBatch.End();
         }
 
@@ -408,11 +419,12 @@ namespace Danmaku_no_Kyojin.Screens
                 Players[0].Draw(gameTime);
                 Players[1].Draw(gameTime);
 
+                /*
                 if (_enemy.IsAlive)
                 {
                     _enemy.Draw(gameTime);
                 }
-
+                */
             }
 
             GameRef.SpriteBatch.End();

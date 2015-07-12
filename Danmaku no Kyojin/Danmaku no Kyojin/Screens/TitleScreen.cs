@@ -62,7 +62,7 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 MediaPlayer.Volume = Config.MusicVolume/100f;
                 MediaPlayer.IsRepeating = true;
-                MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/Menu"));
+                MediaPlayer.Play(GameRef.Content.Load<Song>("Audio/Musics/menu"));
             }
 
             SoundEffect.MasterVolume = Config.SoundVolume/100f;

@@ -140,15 +140,20 @@
     <Compile Include="Controls\GameState.cs" />
     <Compile Include="Controls\GameStateManager.cs" />
     <Compile Include="Controls\InputHandler.cs" />
-    <Compile Include="Entities\BossStructure.cs" />
+    <Compile Include="Entities\Boss\BossCore.cs" />
+    <Compile Include="Entities\Boss\BossPart.cs" />
+    <Compile Include="Entities\Boss\BossStructure.cs" />
+    <Compile Include="Entities\Dummy.cs" />
     <Compile Include="Entities\Line.cs" />
     <Compile Include="Entities\SpriteEntity.cs" />
     <Compile Include="Entities\Turret.cs" />
+    <Compile Include="Particles\ParticleManager.cs" />
+    <Compile Include="Particles\ParticleState.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="Entities\BaseBullet.cs" />
     <Compile Include="Entities\Bullet.cs" />
     <Compile Include="Entities\BulletLauncherEntity.cs" />
-    <Compile Include="Entities\Boss.cs" />
+    <Compile Include="Entities\Boss\Boss.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\ICollidable.cs" />
     <Compile Include="Entities\Laser.cs" />
@@ -193,6 +198,7 @@
     <Compile Include="Improvements.cs" />
     <Compile Include="Screens\PatternTestScreen.cs" />
     <Compile Include="Screens\DebugScreen.cs" />
+    <Compile Include="Shaders\Edge.cs" />
     <Compile Include="Shapes\PolygonShape.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -219,8 +225,11 @@
     <Compile Include="Triangulator\Utils\LineSegment.cs" />
     <Compile Include="Triangulator\Utils\Triangle.cs" />
     <Compile Include="Triangulator\Utils\Vertex.cs" />
+    <Compile Include="Utils\ColorUtil.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\FrameRateCounter.cs" />
     <Compile Include="Utils\ImprovementElement.cs" />
+    <Compile Include="Utils\MathUtil.cs" />
     <Compile Include="Utils\Primitives2D.cs" />
     <Compile Include="Utils\StaticClassSerializer.cs" />
   </ItemGroup>
