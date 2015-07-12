@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using Danmaku_no_Kyojin.Particles;
+using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -94,7 +96,7 @@ namespace Danmaku_no_Kyojin.Entities
             Rotation = 0f;
             _distance = Vector2.Zero;
 
-            _lives = Improvements.LivesNumberData[PlayerData.LivesNumberIndex].Key;
+            _lives = 10;//Improvements.LivesNumberData[PlayerData.LivesNumberIndex].Key;
 
             IsInvincible = false;
             _invincibleTime = Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex].Key;
@@ -196,6 +198,10 @@ namespace Danmaku_no_Kyojin.Entities
                     // Debug
                     if (InputHandler.KeyDown(Keys.R))
                         Rotation = 0;
+                    else if (InputHandler.KeyPressed(Keys.V))
+                    {
+                        Hit();
+                    }
 
                     if (InputHandler.MouseState.LeftButton == ButtonState.Pressed)
                     {
@@ -426,14 +432,17 @@ namespace Danmaku_no_Kyojin.Entities
                 // Straight
                 if (PlayerData.ShootTypeIndex != 1)
                 {
-                    // TODO: Add randomness to bullet direction
-                    /*
-                    float randomSpread = _random.NextFloat(-0.04f, 0.04f) + _random.NextFloat(-0.04f, 0.04f);
-                    Vector2 vel = MathUtil.FromPolar(aimAngle + randomSpread, 11f);
-                    Vector2 offset = Vector2.Transform(new Vector2(25, -8), aimQuat);
-                    */
+                    // Add randomness to bullet direction
+                    float aimAngle = direction.ToAngle();
+                    Quaternion aimQuat = Quaternion.CreateFromYawPitchRoll(0, 0, aimAngle);
+                    float randomSpread = GameRef.Rand.NextFloat(-.25f, .25f);
 
-                    var bullet = new Bullet(GameRef, _bulletSprite, Position, direction, Config.PlayerBulletVelocity);
+                    direction = MathUtil.FromPolar(aimAngle + randomSpread, 11f);
+                    direction.Normalize();
+                    
+                    Vector2 offset = Vector2.Transform(new Vector2(0, 0), aimQuat);
+
+                    var bullet = new Bullet(GameRef, _bulletSprite, Position + offset, direction, Config.PlayerBulletVelocity);
                     bullet.WaveMode = false;
 
                     AddBullet(bullet);
@@ -446,7 +455,6 @@ namespace Danmaku_no_Kyojin.Entities
                     Vector2 positionLeft = new Vector2(Position.X - 25f * (float)Math.Cos(Rotation), Position.Y - 25f * (float)Math.Sin(Rotation));
                     Vector2 directionRight = direction;
                     Vector2 positionRight = new Vector2(Position.X + 25f * (float)Math.Cos(Rotation), Position.Y + 25f * (float)Math.Sin(Rotation));
-                    ;
 
                     if (!SlowMode)
                     {
@@ -499,6 +507,8 @@ namespace Danmaku_no_Kyojin.Entities
                 }
 
                 _shootSound.Play();
+
+                //FireParticles(gameTime);
             }
         }
 
@@ -509,6 +519,22 @@ namespace Danmaku_no_Kyojin.Entities
                 _lives--;
                 _deadSound.Play();
 
+                var yellow = new Color(0.8f, 0.8f, 0.4f);
+
+                for (int i = 0; i < 1200; i++)
+                {
+                    float speed = 18f * (1f - 1 / GameRef.Rand.NextFloat(1f, 10f));
+                    Color color = Color.Lerp(Color.White, yellow, GameRef.Rand.NextFloat(0, 1));
+                    var state = new ParticleState()
+                    {
+                        Velocity = GameRef.Rand.NextVector2(speed, speed),
+                        Type = ParticleType.None,
+                        LengthMultiplier = 1
+                    };
+
+                    GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, Position, color, 190, 1.5f, state);
+                }
+
                 IsInvincible = true;
             }
         }
@@ -516,6 +542,52 @@ namespace Danmaku_no_Kyojin.Entities
         public void AddScore(int value)
         {
             _score += value;
+        }
+
+        private void FireParticles(GameTime gameTime)
+        {
+            double t = gameTime.TotalGameTime.TotalSeconds;
+
+            var direction = new Vector2((float)Math.Sin(Rotation), (float)Math.Cos(Rotation) * -1);
+            float aimAngle = direction.ToAngle();
+            Quaternion rot = Quaternion.CreateFromYawPitchRoll(0, 0, aimAngle);
+
+            // The primary velocity of the particles is 3 pixels/frame in the direction opposite to which the ship is travelling.
+            Vector2 baseVel = direction.ScaleTo(2);
+
+            // Calculate the sideways velocity for the two side streams. The direction is perpendicular to the ship's velocity and the
+            // magnitude varies sinusoidally.
+            var perpVel = new Vector2(baseVel.Y, -baseVel.X) * (0.6f * (float)Math.Sin(t * 10));
+            var sideColor = new Color(200, 38, 9);    // deep red
+            var midColor = new Color(255, 187, 30);   // orange-yellow
+            var pos = Position;   // position of the ship's exhaust pipe.
+            const float alpha = 0.7f;
+
+            // middle particle stream
+            Vector2 velMid = baseVel + GameRef.Rand.NextVector2(0, 1);
+
+            GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, pos, Color.White * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(velMid, ParticleType.Enemy));
+            GameRef.ParticleManager.CreateParticle(GameRef.Glow, pos, midColor * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(velMid, ParticleType.Enemy));
+
+            // side particle streams
+            Vector2 vel1 = baseVel + perpVel + GameRef.Rand.NextVector2(0, 0.3f);
+            Vector2 vel2 = baseVel - perpVel + GameRef.Rand.NextVector2(0, 0.3f);
+
+            GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, pos, Color.White * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(vel1, ParticleType.Enemy));
+            GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, pos, Color.White * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(vel2, ParticleType.Enemy));
+
+            GameRef.ParticleManager.CreateParticle(
+                GameRef.Glow, pos, sideColor * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(vel1, ParticleType.Enemy)
+            );
+            GameRef.ParticleManager.CreateParticle(
+                GameRef.Glow, pos, sideColor * alpha, 60f, new Vector2(0.5f, 1),
+                new ParticleState(vel2, ParticleType.Enemy)
+            );
         }
     }
 }
