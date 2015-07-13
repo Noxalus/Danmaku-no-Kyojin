@@ -57,7 +57,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             PolygonShape polygonShape = null)
             : base(gameRef)
         {
-            _structure = new BossStructure(gameRef, this);
             _moverManager = moverManager;
             _bulletPatterns = bulletPatterns;
 
@@ -73,6 +72,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         public override void Initialize()
         {
+            GenerateStructure();
+
             CollisionBoxes.AddRange(_structure.CollisionBoxes);
             Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
             Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
@@ -90,8 +91,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             // Audio
             if (_deadSound == null)
                 _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
-
-            GenerateStructure();
 
             base.LoadContent();
         }
@@ -273,8 +272,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 X += direction.X * velocity * dt;
                 Y += direction.Y * velocity * dt;
 
+                /*
                 X = MathHelper.Clamp(Position.X, Size.X / 2f, Config.GameArea.X - Size.X / 2f);
                 Y = MathHelper.Clamp(Position.Y, Size.Y / 2f, Config.GameArea.Y - Size.Y / 2f);
+                */
             }
 
             foreach (var turret in _turrets)
@@ -345,20 +346,18 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                 // TODO: Part is dead?
                                 // A boss part is dead when its center is dead?
                                 // or when the number of sub-parts is less than a number?
-                                /*
-                                if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
-                                    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
-                                {
-                                    TakeDamage(99999);
-                                }
-                                else
-                                {
-                                    // TODO: Instanciate a new BossStructure
-                                    // This should be done into Boss class
-                                    // Idea => execute a signal to be catched by Boss class?
-                                    //var bossPart = new BossPart(GameRef, newPolygonShape);
-                                }
-                                */
+                                //if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
+                                //    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
+                                //{
+                                //    TakeDamage(99999);
+                                //}
+                                //else
+                                //{
+                                //    // TODO: Instanciate a new BossStructure
+                                //    // This should be done into Boss class
+                                //    // Idea => execute a signal to be catched by Boss class?
+                                //    //var bossPart = new BossPart(GameRef, newPolygonShape);
+                                //}
                             }
                         }
 
@@ -369,7 +368,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     }
                 }
             }
-
             return false;
         }
 

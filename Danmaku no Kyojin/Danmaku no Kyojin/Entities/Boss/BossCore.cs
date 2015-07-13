@@ -7,7 +7,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 {
     class BossCore : SpriteEntity
     {
-        private Entity _parent;
+        private readonly Entity _parent;
         private AnimatedSprite _animatedSprite;
 
         public BossCore(DnK gameRef, Entity parent)
@@ -22,6 +22,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             // TODO: Upadte AnimatedSprite class to take a "rectangle" order
             var animation = new Animation(7, 50, 50, 0, 0, 5);
+            Origin = new Vector2(25, 25);
+            Scale = new Vector2(2f, 2f);
             _animatedSprite = new AnimatedSprite(Sprite, animation, Position) {IsAnimating = true};
 
             base.LoadContent();
@@ -37,7 +39,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         private void UpdatePosition()
         {
-            var position = _parent.Origin;
+            var position = _parent.Position;
 
             var angleCos = (float)Math.Cos(_parent.Rotation);
             var angleSin = (float)Math.Sin(_parent.Rotation);
@@ -56,12 +58,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             Position = position;
 
-            _animatedSprite.Position = Position;
+            _animatedSprite.Position = _parent.Position;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            //GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, 0f);
             _animatedSprite.Draw(gameTime, GameRef.SpriteBatch, Color.White, Rotation, Origin, Scale, SpriteEffects.None, 0f);
 
             base.Draw(gameTime);
