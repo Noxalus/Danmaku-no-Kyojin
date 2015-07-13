@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Particles;
@@ -289,8 +290,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _bottomRightVertices = GenerateSymmetry(_bottomLeftVertices, Symmetry.Vertical, _size.X / 2f);
             _topRightVertices = GenerateSymmetry(_topLeftVertices, Symmetry.Vertical, _size.X / 2f);
 
+            var centerVerticesDistance = _bottomRightVertices.First().Y + _topRightVertices.First().Y;
+
             _size.Y = Math.Abs(minY - maxY);
-            Origin = new Vector2(_size.X / 2f, _size.Y / 2f);
+            Origin = new Vector2(_size.X / 2f, centerVerticesDistance / 2f);
 
             foreach (var cb in _rightCollisionBoxes)
             {
