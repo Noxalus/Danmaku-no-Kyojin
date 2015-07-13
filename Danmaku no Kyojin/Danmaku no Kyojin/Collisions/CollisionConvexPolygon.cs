@@ -67,8 +67,6 @@ namespace Danmaku_no_Kyojin.Collisions
 
         private bool Intersects(CollisionConvexPolygon element)
         {
-            ComputeAxes();
-
             // loop over the axes of this polygon
             for (var i = 0; i < _axes.Count; i++)
             {
@@ -254,7 +252,8 @@ namespace Danmaku_no_Kyojin.Collisions
                 Vector2 edge = position - previousPosition;
                 var normal = new Vector2(edge.Y, -edge.X);
 
-                if (!_axes.Contains(normal))
+                // We want to avoid to have parallel axes because projection would give us the same result
+                if (!_axes.Contains(normal) && !_axes.Contains(-normal))
                     _axes.Add(normal);
 
                 previousPosition = position;
