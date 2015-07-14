@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Collisions;
@@ -17,6 +18,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
     // BossPart class contains motion + turrets logic and can be splitted in 2 BossPart
     class BossPart : Entity
     {
+        private readonly Boss _bossRef;
         private BossStructure _structure;
         private MoverManager _moverManager;
         private Mover _mover;
@@ -33,6 +35,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private int _iteration;
         private float _step;
 
+        private BossCore _core;
+
         // Turrets
         private List<Turret> _turrets;
 
@@ -46,7 +50,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private SoundEffect _deadSound;
 
         public BossPart(
-            DnK gameRef, 
+            DnK gameRef,
+            Boss bossRef,
             MoverManager moverManager, 
             List<BulletPattern> bulletPatterns, 
             Color color, 
@@ -57,8 +62,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             PolygonShape polygonShape = null)
             : base(gameRef)
         {
+            _bossRef = bossRef;
             _moverManager = moverManager;
-            _bulletPatterns = bulletPatterns;
+            _bulletPatterns = bulletPatterns ?? new List<BulletPattern>();
 
             _health = initialHealth;
             _displayHp = false;
@@ -68,6 +74,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _step = step;
 
             _turrets = turrets ?? new List<Turret>();
+            _polygonShape = polygonShape;
         }
 
         public override void Initialize()
@@ -81,6 +88,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             _currentPatternIndex = GameRef.Rand.Next(0, _bulletPatterns.Count);
 
+
             base.Initialize();
         }
 
@@ -92,12 +100,15 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             if (_deadSound == null)
                 _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
 
+            _core = new BossCore(GameRef, this);
+            _core.Initialize();
+
             base.LoadContent();
         }
 
         private void GenerateStructure()
         {
-            _structure = new BossStructure(GameRef, this, _iteration, _step);
+            _structure = new BossStructure(GameRef, this, _iteration, _step, _polygonShape);
 
             CollisionBoxes = _structure.CollisionBoxes;
             Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
@@ -230,52 +241,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
                     GenerateTurrets();
                 }
-
-                var velocity = 0f;
-                var direction = Vector2.Zero;
-
-                // Keyboard
-                if (InputHandler.KeyDown(Keys.I))
-                    direction.Y = -1;
-                if (InputHandler.KeyDown(Keys.L))
-                    direction.X = 1;
-                if (InputHandler.KeyDown(Keys.K))
-                    direction.Y = 1;
-                if (InputHandler.KeyDown(Keys.J))
-                    direction.X = -1;
-
-                if (InputHandler.KeyDown(Keys.PageUp))
-                {
-                    Rotation += dt * 0.01f;
-                }
-                else if (InputHandler.KeyDown(Keys.PageDown))
-                {
-                    Rotation -= dt * 0.01f;
-                }
-
-                if (InputHandler.KeyPressed(Keys.H))
-                {
-                    _displayHp = !_displayHp;
-                }
-
-                if (direction != Vector2.Zero)
-                {
-                    velocity = Config.PlayerMaxVelocity / 2;
-                }
-                else
-                {
-                    velocity = Config.PlayerMaxVelocity;
-                }
-
-                velocity /= 100;
-
-                X += direction.X * velocity * dt;
-                Y += direction.Y * velocity * dt;
-
-                /*
-                X = MathHelper.Clamp(Position.X, Size.X / 2f, Config.GameArea.X - Size.X / 2f);
-                Y = MathHelper.Clamp(Position.Y, Size.Y / 2f, Config.GameArea.Y - Size.Y / 2f);
-                */
             }
 
             foreach (var turret in _turrets)
@@ -293,6 +258,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     _color = InitialColor;
                 }
             }
+
+            _core.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -340,24 +307,49 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                 }
 
                                 var newPolygonShape = _structure.Split(collisionConvexPolygon);
-
                                 var center = collisionConvexPolygon.GetCenter();
 
                                 // TODO: Part is dead?
                                 // A boss part is dead when its center is dead?
                                 // or when the number of sub-parts is less than a number?
-                                //if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
-                                //    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
-                                //{
-                                //    TakeDamage(99999);
-                                //}
-                                //else
-                                //{
-                                //    // TODO: Instanciate a new BossStructure
-                                //    // This should be done into Boss class
-                                //    // Idea => execute a signal to be catched by Boss class?
-                                //    //var bossPart = new BossPart(GameRef, newPolygonShape);
-                                //}
+                                if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
+                                    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
+                                {
+                                    TakeDamage(99999);
+                                }
+                                else
+                                {
+                                    // If the break out part is not large enough => we don't create another part
+                                    if (newPolygonShape.Vertices.Length > 10)
+                                    {
+                                        var bossPart = new BossPart(GameRef, _bossRef, _moverManager, null, _color,
+                                            _health, 0, 25f, null, newPolygonShape);
+                                        bossPart.Initialize();
+
+                                        var bossPartSize = newPolygonShape.GetSize();
+
+                                        // Left (1) or right (-1) part?
+                                        var factor = (Position.X > collisionConvexPolygon.GetCenter().X) ? 1 : -1;
+                                        bossPart.Position = new Vector2(
+                                            (collisionConvexPolygon.GetCenter().X + (_step/ 8f) * factor) - (bossPartSize.X / 2f + _step) * factor,
+                                            Position.Y - Origin.Y
+                                        );
+
+                                        bossPart.Rotation = Rotation;
+                                        
+                                        // TODO: Compute the Origin point for this new BossPart => It will be the polygon's center, not the center of the box
+                                        bossPart.Origin = new Vector2(bossPartSize.X / 2f, 0f);
+
+                                        // TODO: Add bounding boxes to this BossPart (move bounding box computation + logic from BossStructure to BossPart?)
+
+                                        // TODO: Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
+
+                                        _bossRef.Parts.Add(bossPart);
+                                    }
+
+                                    // This is the bounding that the player has destroyed, so we remove it from the list
+                                    //entity.CollisionBoxes.Remove(collisionConvexPolygon);
+                                }
                             }
                         }
 
@@ -373,11 +365,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         private void AddBullet(bool clear)
         {
-            // Add a new bullet in the center of the screen
-            _mover = (Mover)_moverManager.CreateBullet();
-            _mover.X = Position.X;
-            _mover.Y = Position.Y - 5;
-            _mover.SetBullet(_bulletPatterns[_currentPatternIndex].RootNode);
+            if (_bulletPatterns.Count > 0)
+            {
+                // Add a new bullet in the center of the screen
+                _mover = (Mover) _moverManager.CreateBullet();
+                _mover.X = Position.X;
+                _mover.Y = Position.Y - 5;
+                _mover.SetBullet(_bulletPatterns[_currentPatternIndex].RootNode);
+            }
         }
 
         public void TakeDamage(float damage)
@@ -449,7 +444,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 turret.Draw(gameTime);
             }
 
+            _core.Draw(gameTime);
+
             base.Draw(gameTime);
+        }
+
+        public void DisplayHpSwitch()
+        {
+            _displayHp = !_displayHp;
         }
     }
 }

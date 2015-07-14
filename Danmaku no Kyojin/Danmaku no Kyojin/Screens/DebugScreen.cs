@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
 using Danmaku_no_Kyojin.Entities.Boss;
@@ -216,6 +217,22 @@ namespace Danmaku_no_Kyojin.Screens
             "Position: " + Players.First().GetPosition(),
             new Vector2(0, 20), Color.White);
             */
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+            "Player's bullet: " + Players.First().GetBullets().Count,
+            new Vector2(0, 20), Color.White);
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+            "Boss's bullet: " + _boss.MoverManager.movers.Count,
+            new Vector2(0, 40), Color.White);
+
+            for (int i = 0; i < _boss.Parts.Count; i++)
+            {
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                 "Part #" + i + " position: " + _boss.Parts[i].Position,
+                 new Vector2(0, 80 + (20 * i)), Color.White);
+            }
+
             GameRef.SpriteBatch.End();
         }
 

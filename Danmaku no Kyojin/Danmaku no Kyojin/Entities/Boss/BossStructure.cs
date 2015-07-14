@@ -27,7 +27,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         public List<Vector2> Vertices { get; private set; }
 
         private Entity _parent;
-        private List<PolygonShape> _polygonShapes;
+        private PolygonShape _polygonShape;
         private int _iteration;
         private float _step;
         private Vector2 _size;
@@ -53,13 +53,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             return _size;
         }
 
-        // TODO: Update this constructor to take list of existing vertices
-        public BossStructure(DnK game, Entity parent, List<Vector2> vertices)
-        {
-            Vertices = vertices;
-        }
-
-        public BossStructure(DnK game, Entity parent, int iteration = 50, float step = 25)
+        public BossStructure(DnK game, Entity parent, int iteration = 50, float step = 25, PolygonShape polygonShape = null)
         {
             _gameRef = game;
             _parent = parent;
@@ -81,10 +75,13 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _leftCollisionBoxes = new List<CollisionConvexPolygon>();
             _rightCollisionBoxes = new List<CollisionConvexPolygon>();
 
-            _polygonShapes = new List<PolygonShape>()
+            if (polygonShape != null)
             {
-                new PolygonShape(_gameRef, null)
-            };
+                _polygonShape = polygonShape;
+                _size = polygonShape.GetSize();
+            }
+            else
+                _polygonShape = new PolygonShape(_gameRef, null);
 
             GenerateBaseStructure();
         }
@@ -199,6 +196,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         public  void Iterate(int iterationNumber = 1)
         {
+            if (iterationNumber == 0)
+                return;
+
             var minY = 0f;
             var maxY = 0f;
 
@@ -313,7 +313,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             Vertices.AddRange(_topRightVertices);
             Vertices.AddRange(_topLeftVertices);
 
-            _polygonShapes[0].UpdateVertices(Vertices.ToArray());
+            _polygonShape.UpdateVertices(Vertices.ToArray());
         }
 
         private void GenerateCollisionBoxes(List<Vector2> collisionBoxesDownPositions, List<Vector2> collisionBoxesUpPositions)
@@ -371,24 +371,34 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             var collisionBoxCenter = collisionBox.GetCenter();
             var destroyAll = false;
 
-            // Boss is dead
+            // TODO: This structure is dead only if its area is less than a specific number, not because its center is destroyed
+            // Structure is dead
             if (collisionBoxCenter.X > (_size.X / 2f - 2 * _step) + _parent.Position.X - _parent.Origin.X &&
                 collisionBoxCenter.X < (_size.X / 2f + 2 * _step) + _parent.Position.X - _parent.Origin.X)
             {
                 destroyAll = true;
             }
 
+            // When we retrieve vertices, we need to transform them from world to local
             var newPolygonShapeVertices = new List<Vector2>();
 
             var toDelete = new List<CollisionElement>();
-
+            
             if (!destroyAll)
             {
                 // The part to remove is at left
                 if (minX < _size.X/2f)
                 {
-                    _bottomLeftVertices.RemoveAll(vertex => vertex.X <= minX);
-                    _topLeftVertices.RemoveAll(vertex => vertex.X <= minX);
+                    var newBottomLeftVertices = _bottomLeftVertices.FindAll(vertex => vertex.X <= minX);
+                    var newTopLeftVertices = _topLeftVertices.FindAll(vertex => vertex.X <= minX);
+
+                    newPolygonShapeVertices.AddRange(newBottomLeftVertices);
+                    newPolygonShapeVertices.AddRange(newTopLeftVertices);
+
+                    foreach (var vertex in newBottomLeftVertices)
+                        _bottomLeftVertices.Remove(vertex);
+                    foreach (var vertex in newTopLeftVertices)
+                        _topLeftVertices.Remove(vertex);
 
                     foreach (var box in CollisionBoxes)
                     {
@@ -411,10 +421,17 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 // The part to remove is at right
                 else if (maxX > _size.X/2f)
                 {
-                    _bottomRightVertices.RemoveAll(vertex => vertex.X >= maxX);
-                    _topRightVertices.RemoveAll(vertex => vertex.X >= maxX);
+                    var newBottomRightVertices = _bottomRightVertices.FindAll(vertex => vertex.X >= maxX);
+                    var newTopRightVertices = _topRightVertices.FindAll(vertex => vertex.X >= maxX);
 
-                    toDelete.Clear();
+                    newPolygonShapeVertices.AddRange(newBottomRightVertices);
+                    newPolygonShapeVertices.AddRange(newTopRightVertices);
+
+                    foreach (var vertex in newBottomRightVertices)
+                        _bottomRightVertices.Remove(vertex);
+                    foreach (var vertex in newTopRightVertices)
+                        _topRightVertices.Remove(vertex);
+
                     foreach (CollisionElement box in CollisionBoxes)
                     {
                         var center = box.GetCenter();
@@ -422,7 +439,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                         if (center.X >= maxX + _parent.Position.X - _parent.Origin.X)
                         {
                             ParticleExplosion(center);
-
                             toDelete.Add(box);
                         }
                     }
@@ -453,7 +469,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             Vertices.AddRange(_topRightVertices);
             Vertices.AddRange(_topLeftVertices);
 
-            _polygonShapes[0].UpdateVertices(Vertices.ToArray());
+            _polygonShape.UpdateVertices(Vertices.ToArray());
 
             if (_leftCollisionBoxes.Contains(collisionBox))
                 _leftCollisionBoxes.Remove(collisionBox);
@@ -464,15 +480,23 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             ComputeCollisionBoxesHp();
 
-            return new PolygonShape(_gameRef, newPolygonShapeVertices.ToArray());
+            var newPolygonShapeVerticesArray = newPolygonShapeVertices.ToArray();
+
+            if (newPolygonShapeVertices.Count > 0)
+            {
+                var newVerticesOriginPosition = newPolygonShapeVertices[0];
+                for (int i = 0; i < newPolygonShapeVerticesArray.Length; i++)
+                {
+                    newPolygonShapeVerticesArray[i].X -= newVerticesOriginPosition.X;
+                }
+            }
+
+            return new PolygonShape(_gameRef, newPolygonShapeVerticesArray);
         }
 
         public void Draw(Matrix viewMatrix, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale)
         {
-            foreach (var polygonShape in _polygonShapes)
-            {
-                polygonShape.Draw(viewMatrix, position, color, rotation, origin, scale);
-            }
+            _polygonShape.Draw(viewMatrix, position, color, rotation, origin, scale);
         }
 
         private void ParticleExplosion(Vector2 position)

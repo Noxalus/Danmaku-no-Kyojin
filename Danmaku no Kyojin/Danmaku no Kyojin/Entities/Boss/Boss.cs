@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Danmaku_no_Kyojin.BulletEngine;
+using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Danmaku_no_Kyojin.Entities.Boss
 {
@@ -32,6 +34,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private int _iteration;
         private float _step;
 
+        // To debug
+        private int _currentPartIndex;
+
         public List<BossPart> Parts
         {
             get { return _parts; }
@@ -47,6 +52,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _step = step;
 
             _parts = new List<BossPart>();
+            _currentPartIndex = 0;
         }
 
         public void Initialize()
@@ -76,7 +82,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 _completeBulletPatterns.Add(pattern);
             }
 
-            _mainPart = new BossPart(_gameRef, MoverManager, _completeBulletPatterns, Color.White, 4242f);
+            _mainPart = new BossPart(_gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f), 4242f);
             _mainPart.Initialize();
             _parts.Add(_mainPart);
 
@@ -110,6 +116,56 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             // TODO: We need to detect when a part is splitted to instanciate a new BossPart
 
+            // [Debug] Move the current selected part with keyboard
+            if (_parts.Count > 0)
+            {
+                var currentBossPart = _parts[_currentPartIndex];
+                var dt = (float) gameTime.ElapsedGameTime.TotalSeconds*100;
+
+                var velocity = 0f;
+                var direction = Vector2.Zero;
+
+                // Keyboard
+                if (InputHandler.KeyPressed(Keys.N))
+                    _currentPartIndex = (_currentPartIndex + 1)%_parts.Count;
+                if (InputHandler.KeyDown(Keys.I))
+                    direction.Y = -1;
+                if (InputHandler.KeyDown(Keys.L))
+                    direction.X = 1;
+                if (InputHandler.KeyDown(Keys.K))
+                    direction.Y = 1;
+                if (InputHandler.KeyDown(Keys.J))
+                    direction.X = -1;
+
+                if (InputHandler.KeyDown(Keys.PageUp))
+                {
+                    currentBossPart.Rotation += dt*0.01f;
+                }
+                else if (InputHandler.KeyDown(Keys.PageDown))
+                {
+                    currentBossPart.Rotation -= dt*0.01f;
+                }
+
+                if (InputHandler.KeyPressed(Keys.H))
+                {
+                    currentBossPart.DisplayHpSwitch();
+                }
+
+                if (direction != Vector2.Zero)
+                {
+                    velocity = Config.PlayerMaxVelocity/2;
+                }
+                else
+                {
+                    velocity = Config.PlayerMaxVelocity;
+                }
+
+                velocity /= 100;
+
+                currentBossPart.X += direction.X*velocity*dt;
+                currentBossPart.Y += direction.Y*velocity*dt;
+            }
+
             MoverManager.Update(gameTime);
             MoverManager.FreeMovers();
         }
@@ -124,9 +180,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             foreach (var part in _parts)
             {
                 part.Draw(gameTime, viewMatrix);
-            }
+           }
 
-            _core.Draw(gameTime);
         }
 
         public bool IsReady()
