@@ -14,6 +14,7 @@ namespace Danmaku_no_Kyojin.Shapes
         private readonly BasicEffect _effect;
         private Effect _edgeEffect;
         private Vector2 _size;
+        private Vector2 _center;
 
         private Vector2[] _triangulatedVertices;
         private int[] _indices;
@@ -45,6 +46,7 @@ namespace Danmaku_no_Kyojin.Shapes
             _vertices = vertices;
             _triangulated = false;
             _size = Vector2.Zero;
+            _center = Vector2.Zero;
 
             _edgeEffect = _gameRef.Content.Load<Effect>("Graphics/Shaders/Edge");
 
@@ -82,6 +84,38 @@ namespace Danmaku_no_Kyojin.Shapes
             _size = new Vector2(Math.Abs(max.X - min.X), Math.Abs(max.Y - min.Y));
         }
 
+        public Vector2 GetCenter()
+        {
+            if (_center == Vector2.Zero)
+                ComputeCenter();
+
+            return _center;
+        }
+
+        // Compute the center of the shape (it corresponds to what we call the "centroid")
+        private void ComputeCenter()
+        {
+            float accumulatedArea = 0.0f;
+            float centerX = 0.0f;
+            float centerY = 0.0f;
+
+            for (int i = 0, j = _vertices.Length - 1; i < _vertices.Length; j = i++)
+            {
+                float temp = _vertices[i].X * _vertices[j].Y - _vertices[j].X * _vertices[i].Y;
+                accumulatedArea += temp;
+                centerX += (_vertices[i].X + _vertices[j].X) * temp;
+                centerY += (_vertices[i].Y + _vertices[j].Y) * temp;
+            }
+
+            if (accumulatedArea < 1e-7f)
+                _center = Vector2.Zero; // Avoid division by zero
+            else
+            {
+                accumulatedArea *= 3f;
+                _center = new Vector2(centerX/accumulatedArea, centerY/accumulatedArea);
+            }
+        }
+
         public void UpdateVertices(Vector2[] vertices)
         {
             _vertices = vertices;
@@ -94,8 +128,9 @@ namespace Danmaku_no_Kyojin.Shapes
         /// <returns>The triangulated vertices array</returns>}
         private void Triangulate()
         {
-            // If we need to triangulate, the size should be incorrect
+            // If we need to triangulate, the size or center should be incorrect
             ComputeSize();
+            ComputeCenter();
 
             Triangulator.Triangulator.Triangulate(
                 _vertices,
