@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Danmaku_no_Kyojin.BulletEngine;
@@ -122,48 +123,86 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 var currentBossPart = _parts[_currentPartIndex];
                 var dt = (float) gameTime.ElapsedGameTime.TotalSeconds*100;
 
-                var velocity = 0f;
-                var direction = Vector2.Zero;
+                if (Config.Debug)
+                {
+                    /*
+                    //check input to increment/decrement the current bullet pattern
+                    if (InputHandler.KeyPressed(Keys.A))
+                    {
+                        //decrement the pattern
+                        if (0 >= _currentPatternIndex)
+                        {
+                            //if it is at the beginning, move to the end
+                            _currentPatternIndex = _bulletPatterns.Count - 1;
+                        }
+                        else
+                        {
+                            _currentPatternIndex--;
+                        }
 
-                // Keyboard
+                        AddBullet(true);
+                    }
+                    else if (InputHandler.KeyPressed(Keys.X))
+                    {
+                        //increment the pattern
+                        if ((_bulletPatterns.Count - 1) <= _currentPatternIndex)
+                        {
+                            //if it is at the beginning, move to the end
+                            _currentPatternIndex = 0;
+                        }
+                        else
+                        {
+                            _currentPatternIndex++;
+                        }
+
+                        AddBullet(true);
+                    }
+                    else if (InputHandler.KeyPressed(Keys.LeftControl))
+                    {
+                        AddBullet(false);
+                    }
+                    else */if (InputHandler.KeyDown(Keys.Space))
+                    {
+                        currentBossPart.GenerateStructure();
+                    }
+                    else if (InputHandler.KeyPressed(Keys.OemPlus))
+                    {
+                        currentBossPart.IterateStructure();
+                    }
+                    else if (InputHandler.KeyDown(Keys.P))
+                    {
+                        currentBossPart.IterateStructure();
+                    }
+                }
+
+                // Motion
+
                 if (InputHandler.KeyPressed(Keys.N))
-                    _currentPartIndex = (_currentPartIndex + 1)%_parts.Count;
-                if (InputHandler.KeyDown(Keys.I))
-                    direction.Y = -1;
-                if (InputHandler.KeyDown(Keys.L))
-                    direction.X = 1;
-                if (InputHandler.KeyDown(Keys.K))
-                    direction.Y = 1;
-                if (InputHandler.KeyDown(Keys.J))
-                    direction.X = -1;
+                    _currentPartIndex = (_currentPartIndex + 1) % _parts.Count;
+
+                var acceleration = 1f;
+                if (InputHandler.KeyPressed(Keys.I))
+                    currentBossPart.ApplyImpulse(new Vector2(0, -1), new Vector2(acceleration));
+                if (InputHandler.KeyPressed(Keys.L))
+                    currentBossPart.ApplyImpulse(new Vector2(1, 0), new Vector2(acceleration));
+                if (InputHandler.KeyPressed(Keys.K))
+                    currentBossPart.ApplyImpulse(new Vector2(0, 1), new Vector2(acceleration));
+                if (InputHandler.KeyPressed(Keys.J))
+                    currentBossPart.ApplyImpulse(new Vector2(-1, 0), new Vector2(acceleration));
 
                 if (InputHandler.KeyDown(Keys.PageUp))
                 {
-                    currentBossPart.Rotation += dt*0.01f;
+                    currentBossPart.Rotation += dt * 0.01f;
                 }
                 else if (InputHandler.KeyDown(Keys.PageDown))
                 {
-                    currentBossPart.Rotation -= dt*0.01f;
+                    currentBossPart.Rotation -= dt * 0.01f;
                 }
 
                 if (InputHandler.KeyPressed(Keys.H))
                 {
                     currentBossPart.DisplayHpSwitch();
                 }
-
-                if (direction != Vector2.Zero)
-                {
-                    velocity = Config.PlayerMaxVelocity/2;
-                }
-                else
-                {
-                    velocity = Config.PlayerMaxVelocity;
-                }
-
-                velocity /= 100;
-
-                currentBossPart.X += direction.X*velocity*dt;
-                currentBossPart.Y += direction.Y*velocity*dt;
             }
 
             MoverManager.Update(gameTime);

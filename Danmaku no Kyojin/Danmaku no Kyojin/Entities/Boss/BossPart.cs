@@ -23,7 +23,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private MoverManager _moverManager;
         private Mover _mover;
         private List<BulletPattern> _bulletPatterns;
-        private int _currentPatternIndex; 
+        private int _currentPatternIndex;
 
         private float _health;
         private bool _displayHp;
@@ -34,6 +34,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         private int _iteration;
         private float _step;
+
+        private float _accelerationDecreaseFactor;
 
         private BossCore _core;
 
@@ -49,6 +51,13 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         // Sounds
         private SoundEffect _deadSound;
 
+        // Direction of the motion
+        public Vector2 Direction { get; set; }
+        // Speed as pixel/frame
+        public float Velocity { get; set; }
+        // Speed modification on X and Y
+        public Vector2 Acceleration { get; set; }
+        
         public BossPart(
             DnK gameRef,
             Boss bossRef,
@@ -73,6 +82,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _iteration = iteration;
             _step = step;
 
+            _accelerationDecreaseFactor = 0.0075f;
+
             _turrets = turrets ?? new List<Turret>();
             _polygonShape = polygonShape;
         }
@@ -87,7 +98,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             Origin = _structure.Origin;
 
             _currentPatternIndex = GameRef.Rand.Next(0, _bulletPatterns.Count);
-
+            Direction = Vector2.Zero;
+            Velocity = (Config.PlayerMaxVelocity / 2) / 100f;
+            Acceleration = Vector2.Zero;
 
             base.Initialize();
         }
@@ -106,13 +119,23 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             base.LoadContent();
         }
 
-        private void GenerateStructure()
+        public void GenerateStructure()
         {
             _structure = new BossStructure(GameRef, this, _iteration, _step, _polygonShape);
 
             CollisionBoxes = _structure.CollisionBoxes;
-            Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
-            Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
+            Size = _structure.GetSize().ToPoint();
+            Origin = _structure.Origin;
+
+            GenerateTurrets();
+        }
+
+        public void IterateStructure(int iterationNumber = 1)
+        {
+            _structure.Iterate(iterationNumber);
+
+            CollisionBoxes = _structure.CollisionBoxes;
+            Size = _structure.GetSize().ToPoint();
             Origin = _structure.Origin;
 
             GenerateTurrets();
@@ -161,93 +184,47 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         public override void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
-
-            if (Config.Debug)
+            
+            // Part motion
+            if (Direction == Vector2.Zero)
             {
-                //check input to increment/decrement the current bullet pattern
-                if (InputHandler.KeyPressed(Keys.A))
-                {
-                    //decrement the pattern
-                    if (0 >= _currentPatternIndex)
-                    {
-                        //if it is at the beginning, move to the end
-                        _currentPatternIndex = _bulletPatterns.Count - 1;
-                    }
-                    else
-                    {
-                        _currentPatternIndex--;
-                    }
-
-                    AddBullet(true);
-                }
-                else if (InputHandler.KeyPressed(Keys.X))
-                {
-                    //increment the pattern
-                    if ((_bulletPatterns.Count - 1) <= _currentPatternIndex)
-                    {
-                        //if it is at the beginning, move to the end
-                        _currentPatternIndex = 0;
-                    }
-                    else
-                    {
-                        _currentPatternIndex++;
-                    }
-
-                    AddBullet(true);
-                }
-                else if (InputHandler.KeyPressed(Keys.LeftControl))
-                {
-                    AddBullet(false);
-                }
-                else if (InputHandler.KeyDown(Keys.Space))
-                {
-                    _structure.GenerateBaseStructure();
-
-                    var bossRectangleVertices = new List<Vector2>()
-                    {
-                        new Vector2(0, -_structure.GetSize().Y / 2),
-                        new Vector2(_structure.GetSize().X, -_structure.GetSize().Y / 2),                          
-                        new Vector2(_structure.GetSize().X, _structure.GetSize().Y -_structure.GetSize().Y / 2),                          
-                        new Vector2(0, _structure.GetSize().Y -_structure.GetSize().Y / 2)                          
-                    };
-
-                    CollisionBoxes = _structure.CollisionBoxes;
-                    //CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, bossRectangleVertices));
-                    Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
-                    Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 2f);
-                    Origin = _structure.Origin;
-
-                    GenerateTurrets();
-                }
-                else if (InputHandler.KeyPressed(Keys.OemPlus))
-                {
-                    _structure.Iterate();
-
-                    CollisionBoxes = _structure.CollisionBoxes;
-                    Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
-                    Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 2f);
-                    Origin = _structure.Origin;
-
-                    GenerateTurrets();
-                }
-                else if (InputHandler.KeyDown(Keys.P))
-                {
-                    _structure.Iterate();
-
-                    CollisionBoxes = _structure.CollisionBoxes;
-                    Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
-                    Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 2f);
-                    Origin = _structure.Origin;
-
-                    GenerateTurrets();
-                }
+                Acceleration = Vector2.Zero;
             }
 
+            X += Direction.X * (Velocity * Acceleration.X) * dt;
+            Y += Direction.Y * (Velocity * Acceleration.Y) * dt;
+
+            if (Math.Abs(Acceleration.X) < 0.01f && Math.Abs(Acceleration.Y) < 0.01f)
+            {
+                Acceleration = Vector2.Zero;
+                Direction = Vector2.Zero;
+            }
+
+            if (Acceleration.X > 0)
+            {
+                Acceleration = new Vector2(Acceleration.X - (_accelerationDecreaseFactor * dt), Acceleration.Y);
+            }
+            else if (Acceleration.X < 0)
+            {
+                Acceleration = new Vector2(Acceleration.X + (_accelerationDecreaseFactor * dt), Acceleration.Y);
+            }
+
+            if (Acceleration.Y > 0)
+            {
+                Acceleration = new Vector2(Acceleration.X, Acceleration.Y - (_accelerationDecreaseFactor * dt));
+            }
+            else if (Acceleration.Y < 0)
+            {
+                Acceleration = new Vector2(Acceleration.X, Acceleration.Y + (_accelerationDecreaseFactor * dt));
+            }
+
+            // Turrets
             foreach (var turret in _turrets)
             {
                 turret.Update(gameTime);
             }
 
+            // Color highlight timer
             if (_changeColorTimer.TotalMilliseconds > 0)
             {
                 _changeColorTimer -= gameTime.ElapsedGameTime;
@@ -335,16 +312,34 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                             Position.Y - Origin.Y
                                         );
 
+                                        var angleCos = (float)Math.Cos(Rotation);
+                                        var angleSin = (float)Math.Sin(Rotation);
+
+                                        // Translate point back to origin  
+                                        //bossPart.Position = new Vector2(bossPart.Position.X - Origin.X, bossPart.Position.Y - Origin.Y);
+
+                                        // Rotate point
+                                        var newX = bossPart.Position.X * angleCos - bossPart.Position.Y * angleSin;
+                                        var newY = bossPart.Position.X * angleSin + bossPart.Position.Y * angleCos;
+
+                                        // Translate point back
+                                        bossPart.Position = new Vector2(newX, newY);
+
                                         bossPart.Rotation = Rotation;
                                         
                                         // TODO: Compute the Origin point for this new BossPart => It will be the polygon's center, not the center of the box
-                                        bossPart.Origin = new Vector2(bossPartSize.X / 2f, 0f);
+                                        bossPart.Origin = newPolygonShape.GetCenter();
 
                                         // TODO: Add bounding boxes to this BossPart (move bounding box computation + logic from BossStructure to BossPart?)
 
                                         // TODO: Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
 
                                         _bossRef.Parts.Add(bossPart);
+
+                                        var random = (float)(GameRef.Rand.NextDouble() * (1f - 0.75f)) + 0.75f;
+                                        Debug.WriteLine("Random: " + random);
+                                        bossPart.ApplyImpulse(new Vector2(-factor, random * (-factor)), new Vector2(random));
+                                        ApplyImpulse(new Vector2(factor, random * factor), new Vector2(random));
                                     }
 
                                     // This is the bounding that the player has destroyed, so we remove it from the list
@@ -404,6 +399,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
                 IsAlive = false;
             }
+        }
+
+        public void ApplyImpulse(Vector2 direction, Vector2 acceleration)
+        {
+            Direction = (direction + Direction);
+            Direction.Normalize();
+
+            Acceleration += acceleration;
         }
 
         public void Draw(GameTime gameTime, Matrix viewMatrix)
