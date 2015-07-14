@@ -1,10 +1,8 @@
 using System;
-using System.ComponentModel;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 
 namespace Danmaku_no_Kyojin.Shapes
 {
@@ -15,6 +13,7 @@ namespace Danmaku_no_Kyojin.Shapes
         private bool _triangulated;
         private readonly BasicEffect _effect;
         private Effect _edgeEffect;
+        private Vector2 _size;
 
         private Vector2[] _triangulatedVertices;
         private int[] _indices;
@@ -29,6 +28,11 @@ namespace Danmaku_no_Kyojin.Shapes
             FillMode = FillMode.WireFrame
         };
 
+        public Vector2[] Vertices
+        {
+            get { return _vertices; }
+        }
+
         /// <summary>
         /// A Polygon object that you will be able to draw.
         /// Animations are being implemented as we speak.
@@ -40,6 +44,7 @@ namespace Danmaku_no_Kyojin.Shapes
             _gameRef = game;
             _vertices = vertices;
             _triangulated = false;
+            _size = Vector2.Zero;
 
             _edgeEffect = _gameRef.Content.Load<Effect>("Graphics/Shaders/Edge");
 
@@ -51,6 +56,30 @@ namespace Danmaku_no_Kyojin.Shapes
                 DiffuseColor = new Vector3(0, 1, 0),
                 Alpha = 0.5f
             };
+        }
+
+        public Vector2 GetSize()
+        {
+            if (_size == Vector2.Zero)
+                ComputeSize();
+
+            return _size;
+        }
+
+        private void ComputeSize()
+        {
+            var min = new Vector2(_vertices[0].X, _vertices[0].Y);
+            var max = new Vector2(_vertices[0].X, _vertices[0].Y);
+
+            for (var i = 1; i < _vertices.Length; i++)
+            {
+                min.X = Math.Min(min.X, _vertices[i].X);
+                min.Y = Math.Min(min.Y, _vertices[i].Y);
+                max.X = Math.Max(max.X, _vertices[i].X);
+                max.Y = Math.Max(max.Y, _vertices[i].Y);
+            }
+
+            _size = new Vector2(Math.Abs(max.X - min.X), Math.Abs(max.Y - min.Y));
         }
 
         public void UpdateVertices(Vector2[] vertices)
@@ -65,6 +94,9 @@ namespace Danmaku_no_Kyojin.Shapes
         /// <returns>The triangulated vertices array</returns>}
         private void Triangulate()
         {
+            // If we need to triangulate, the size should be incorrect
+            ComputeSize();
+
             Triangulator.Triangulator.Triangulate(
                 _vertices,
                 Triangulator.WindingOrder.CounterClockwise,
@@ -105,7 +137,7 @@ namespace Danmaku_no_Kyojin.Shapes
                     _indexBuffer = new IndexBuffer(
                         _gameRef.GraphicsDevice,
                         IndexElementSize.SixteenBits,
-                        indices.Length*sizeof (short),
+                        indices.Length * sizeof (short),
                         BufferUsage.WriteOnly);
 
                     _indexBuffer.SetData(indices);
@@ -118,7 +150,7 @@ namespace Danmaku_no_Kyojin.Shapes
                     _indexBuffer = new IndexBuffer(
                         _gameRef.GraphicsDevice,
                         IndexElementSize.ThirtyTwoBits,
-                        _triangulatedVertices.Length*sizeof (int),
+                        _triangulatedVertices.Length * sizeof (int),
                         BufferUsage.WriteOnly);
 
                     _indexBuffer.SetData(_triangulatedVertices);
