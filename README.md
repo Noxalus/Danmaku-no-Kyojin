@@ -80,3 +80,4 @@ For its bloomy visual and particle effects.
 * https://www.youtube.com/watch?v=vcpW3cF-qfQ (boss triangulation experimentation #4)
 * https://www.youtube.com/watch?v=bN9937blvjw (concave polygon collision test with convex polygon subdivision)
 * https://www.youtube.com/watch?v=2Z664BJ_cxQ (boss split + bloom effect + particles)
+* https://www.youtube.com/watch?v=lWXfODTq7Yc (boss split into independent parts)
