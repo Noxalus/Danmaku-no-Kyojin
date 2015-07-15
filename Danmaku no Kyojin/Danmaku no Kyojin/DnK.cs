@@ -40,7 +40,7 @@ namespace Danmaku_no_Kyojin
         public Texture2D Glow;
 
         // Random
-        public readonly Random Rand = new Random(Config.RandomSeed);
+        public readonly Random Rand = new Random();
 
         // Audio
         public SoundEffect Select;

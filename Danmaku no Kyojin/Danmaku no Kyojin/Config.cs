@@ -52,7 +52,7 @@ namespace Danmaku_no_Kyojin
 
         public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 3);
         public static readonly TimeSpan DefaultBulletTimeTimer = new TimeSpan(0, 0, 1);
-        public static readonly TimeSpan PlayerShootFrequency = new TimeSpan(0, 0, 0, 0, 0);
+        public static readonly TimeSpan PlayerShootFrequency = new TimeSpan(0, 0, 0, 0, 1);
         public const float PlayerMaxVelocity = 800f;
         public const float PlayerMaxSlowVelocity = 125f;
         public static Vector2 PlayerBulletVelocity = new Vector2(1000f, 1000f);

@@ -24,7 +24,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private enum Symmetry { Vertical, Horizontal };
 
         private DnK _gameRef;
-        public List<Vector2> Vertices { get; private set; }
 
         private Entity _parent;
         private PolygonShape _polygonShape;
@@ -53,11 +52,15 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             return _size;
         }
 
+        public Vector2[] GetVertices()
+        {
+            return _polygonShape.Vertices;
+        }
+
         public BossStructure(DnK game, Entity parent, int iteration = 50, float step = 25, PolygonShape polygonShape = null)
         {
             _gameRef = game;
             _parent = parent;
-            Vertices = new List<Vector2>();
             CollisionBoxes = new CollisionElements();
 
             _iteration = iteration;
@@ -92,7 +95,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _topLeftVertices.Clear();
             _bottomLeftVertices.Clear();
             _bottomRightVertices.Clear();
-            Vertices.Clear();
             CollisionBoxes.Clear();
             _leftCollisionBoxes.Clear();
             _rightCollisionBoxes.Clear();
@@ -307,61 +309,13 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _topRightVertices.Reverse();
             _topLeftVertices.Reverse();
 
-            Vertices.Clear();
-            Vertices.AddRange(_bottomLeftVertices);
-            Vertices.AddRange(_bottomRightVertices);
-            Vertices.AddRange(_topRightVertices);
-            Vertices.AddRange(_topLeftVertices);
+            var vertices = new List<Vector2>();
+            vertices.AddRange(_bottomLeftVertices);
+            vertices.AddRange(_bottomRightVertices);
+            vertices.AddRange(_topRightVertices);
+            vertices.AddRange(_topLeftVertices);
 
-            _polygonShape.UpdateVertices(Vertices.ToArray());
-        }
-
-        private void GenerateCollisionBoxes(List<Vector2> collisionBoxesDownPositions, List<Vector2> collisionBoxesUpPositions)
-        {
-            // Generate collision boxes
-            for (var i = 0; i < collisionBoxesDownPositions.Count - 1; i += 2)
-            {
-                var bottomRightVertex = collisionBoxesDownPositions[i + 1];
-                var bottomLeftVertex = collisionBoxesDownPositions[i];
-                var topLeftVertex = collisionBoxesUpPositions[i];
-                var topRightVertex = collisionBoxesUpPositions[i + 1];
-
-                var symmetricBottomRightVertex = new Vector2(_size.X - collisionBoxesDownPositions[i + 1].X, collisionBoxesDownPositions[i + 1].Y);
-                var symmetricBottomLeftVertex = new Vector2(_size.X - collisionBoxesDownPositions[i].X, collisionBoxesDownPositions[i].Y);
-                var symmetricTopLeftVertex = new Vector2(_size.X - collisionBoxesUpPositions[i].X, collisionBoxesUpPositions[i].Y);
-                var symmetricTopRightVertex = new Vector2(_size.X - collisionBoxesUpPositions[i + 1].X, collisionBoxesUpPositions[i + 1].Y);
-
-                var collisionVertices = new List<Vector2> { bottomRightVertex };
-                var symetricCollisionVertices = new List<Vector2> { symmetricBottomRightVertex };
-
-                if (!collisionVertices.Contains(bottomLeftVertex))
-                    collisionVertices.Add(bottomLeftVertex);
-
-                if (!collisionVertices.Contains(topLeftVertex))
-                    collisionVertices.Add(topLeftVertex);
-
-                if (!collisionVertices.Contains(topRightVertex))
-                    collisionVertices.Add(topRightVertex);
-
-                // Symmetric
-                if (!symetricCollisionVertices.Contains(symmetricBottomLeftVertex))
-                    symetricCollisionVertices.Add(symmetricBottomLeftVertex);
-
-                if (!symetricCollisionVertices.Contains(symmetricTopLeftVertex))
-                    symetricCollisionVertices.Add(symmetricTopLeftVertex);
-
-                if (!symetricCollisionVertices.Contains(symmetricTopRightVertex))
-                    symetricCollisionVertices.Add(symmetricTopRightVertex);
-
-                _leftCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, collisionVertices));
-                _rightCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, symetricCollisionVertices));
-            }
-
-            CollisionBoxes.Clear();
-            CollisionBoxes.AddRange(_leftCollisionBoxes);
-            CollisionBoxes.AddRange(_rightCollisionBoxes);
-
-            ComputeCollisionBoxesHp();
+            _polygonShape.UpdateVertices(vertices.ToArray());
         }
 
         public PolygonShape Split(CollisionConvexPolygon collisionBox)
@@ -463,13 +417,13 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 CollisionBoxes.Clear();
             }
 
-            Vertices.Clear();
-            Vertices.AddRange(_bottomLeftVertices);
-            Vertices.AddRange(_bottomRightVertices);
-            Vertices.AddRange(_topRightVertices);
-            Vertices.AddRange(_topLeftVertices);
+            var vertices = new List<Vector2>();
+            vertices.AddRange(_bottomLeftVertices);
+            vertices.AddRange(_bottomRightVertices);
+            vertices.AddRange(_topRightVertices);
+            vertices.AddRange(_topLeftVertices);
 
-            _polygonShape.UpdateVertices(Vertices.ToArray());
+            _polygonShape.UpdateVertices(vertices.ToArray());
 
             if (_leftCollisionBoxes.Contains(collisionBox))
                 _leftCollisionBoxes.Remove(collisionBox);
@@ -490,6 +444,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     newPolygonShapeVerticesArray[i].X -= newVerticesOriginPosition.X;
                 }
             }
+            else
+                newPolygonShapeVerticesArray = null;
 
             return new PolygonShape(_gameRef, newPolygonShapeVerticesArray);
         }
@@ -521,6 +477,55 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 _gameRef.ParticleManager.CreateParticle(_gameRef.LineParticle, position,
                     color, 190, 1.5f, state);
             }
+        }
+
+        // TODO: Move this function to BossPart
+        private void GenerateCollisionBoxes(List<Vector2> collisionBoxesDownPositions, List<Vector2> collisionBoxesUpPositions)
+        {
+            // Generate collision boxes
+            for (var i = 0; i < collisionBoxesDownPositions.Count - 1; i += 2)
+            {
+                var bottomRightVertex = collisionBoxesDownPositions[i + 1];
+                var bottomLeftVertex = collisionBoxesDownPositions[i];
+                var topLeftVertex = collisionBoxesUpPositions[i];
+                var topRightVertex = collisionBoxesUpPositions[i + 1];
+
+                var symmetricBottomRightVertex = new Vector2(_size.X - collisionBoxesDownPositions[i + 1].X, collisionBoxesDownPositions[i + 1].Y);
+                var symmetricBottomLeftVertex = new Vector2(_size.X - collisionBoxesDownPositions[i].X, collisionBoxesDownPositions[i].Y);
+                var symmetricTopLeftVertex = new Vector2(_size.X - collisionBoxesUpPositions[i].X, collisionBoxesUpPositions[i].Y);
+                var symmetricTopRightVertex = new Vector2(_size.X - collisionBoxesUpPositions[i + 1].X, collisionBoxesUpPositions[i + 1].Y);
+
+                var collisionVertices = new List<Vector2> { bottomRightVertex };
+                var symetricCollisionVertices = new List<Vector2> { symmetricBottomRightVertex };
+
+                if (!collisionVertices.Contains(bottomLeftVertex))
+                    collisionVertices.Add(bottomLeftVertex);
+
+                if (!collisionVertices.Contains(topLeftVertex))
+                    collisionVertices.Add(topLeftVertex);
+
+                if (!collisionVertices.Contains(topRightVertex))
+                    collisionVertices.Add(topRightVertex);
+
+                // Symmetric
+                if (!symetricCollisionVertices.Contains(symmetricBottomLeftVertex))
+                    symetricCollisionVertices.Add(symmetricBottomLeftVertex);
+
+                if (!symetricCollisionVertices.Contains(symmetricTopLeftVertex))
+                    symetricCollisionVertices.Add(symmetricTopLeftVertex);
+
+                if (!symetricCollisionVertices.Contains(symmetricTopRightVertex))
+                    symetricCollisionVertices.Add(symmetricTopRightVertex);
+
+                _leftCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, collisionVertices));
+                _rightCollisionBoxes.Add(new CollisionConvexPolygon(_parent, Vector2.Zero, symetricCollisionVertices));
+            }
+
+            CollisionBoxes.Clear();
+            CollisionBoxes.AddRange(_leftCollisionBoxes);
+            CollisionBoxes.AddRange(_rightCollisionBoxes);
+
+            ComputeCollisionBoxesHp();
         }
 
         private void ComputeCollisionBoxesHp()

@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin.BulletEngine
 
 	    protected override void LoadContent()
 	    {
-            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type1");
+            Sprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/boss_bullet_type3");
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, Sprite.Height / 2f));
             Origin = new Vector2(Sprite.Height / 2f, Sprite.Height / 2f);
 

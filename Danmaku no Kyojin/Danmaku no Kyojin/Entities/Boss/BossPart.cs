@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Collisions;
 using Danmaku_no_Kyojin.Controls;
@@ -297,7 +298,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                 else
                                 {
                                     // If the break out part is not large enough => we don't create another part
-                                    if (newPolygonShape.Vertices.Length > 10)
+                                    if (newPolygonShape.Vertices != null && newPolygonShape.Vertices.Length > 10)
                                     {
                                         var bossPart = new BossPart(GameRef, _bossRef, _moverManager, null, _color,
                                             _health, 0, 25f, null, newPolygonShape);
@@ -312,6 +313,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                             Position.Y - Origin.Y
                                         );
 
+                                        // TODO: Fix position according parent rotation (doesn't work properly for now)
                                         var angleCos = (float)Math.Cos(Rotation);
                                         var angleSin = (float)Math.Sin(Rotation);
 
@@ -324,20 +326,17 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
                                         // Translate point back
                                         bossPart.Position = new Vector2(newX, newY);
-
                                         bossPart.Rotation = Rotation;
-                                        
-                                        // TODO: Compute the Origin point for this new BossPart => It will be the polygon's center, not the center of the box
+                                        // We take the centroid as rotation origin
                                         bossPart.Origin = newPolygonShape.GetCenter();
 
                                         // TODO: Add bounding boxes to this BossPart (move bounding box computation + logic from BossStructure to BossPart?)
-
-                                        // TODO: Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
+                                        bossPart.ComputeCollisionBoxes();
 
                                         _bossRef.Parts.Add(bossPart);
 
+                                        // Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
                                         var random = (float)(GameRef.Rand.NextDouble() * (1f - 0.75f)) + 0.75f;
-                                        Debug.WriteLine("Random: " + random);
                                         bossPart.ApplyImpulse(new Vector2(-factor, random * (-factor)), new Vector2(random));
                                         ApplyImpulse(new Vector2(factor, random * factor), new Vector2(random));
                                     }
@@ -450,6 +449,75 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _core.Draw(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        // Create multiple collision boxes from BossStructure
+        private void ComputeCollisionBoxes()
+        {
+            var vertices = _structure.GetVertices();
+            var bottomVertices = new List<Vector2>(); // the lowest vertex for each step
+            var topVertices = new List<Vector2>(); // the highest vertex for each step
+            var currentStep = 0f;
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                // Bottom part
+                if (vertices[i].Y >= 0)
+                {
+                    if (vertices[i].X > currentStep)
+                    {
+                        bottomVertices.Add(vertices[i - 1]);
+                        bottomVertices.Add(vertices[i]);
+                    }
+                }
+                // Top part
+                else
+                {
+                    if (vertices[i].X < currentStep)
+                    {
+                        topVertices.Add(vertices[i - 1]);
+                        topVertices.Add(vertices[i]);
+                    }
+                }
+
+                currentStep = vertices[i].X;
+            }
+
+            if (bottomVertices.Count != topVertices.Count)
+            {
+                // Left part
+                if (bottomVertices.First().Y == 0f)
+                {
+                    topVertices.Add(vertices[vertices.Length - 1]);
+                    topVertices.Add(bottomVertices.First());
+                    topVertices.Reverse();
+                }
+                // Right part
+                else if (bottomVertices.Last().Y == 0f)
+                {
+                    //topVertices.Add(vertices[vertices.Length - 1]);
+                    topVertices.Reverse();
+                    topVertices.Add(bottomVertices.Last());
+                }
+            }
+            else
+                topVertices.Reverse();
+
+            if (bottomVertices.Count == topVertices.Count)
+            {
+                for (int i = 1; i < bottomVertices.Count; i += 2)
+                {
+                    var boxVertices = new List<Vector2>
+                    {
+                        bottomVertices[i],
+                        bottomVertices[i - 1],
+                        topVertices[i - 1],
+                        topVertices[i]
+                    };
+
+                    CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, boxVertices));
+                }
+            }
         }
 
         public void DisplayHpSwitch()

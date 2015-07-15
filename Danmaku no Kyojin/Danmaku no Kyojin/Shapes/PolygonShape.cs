@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Danmaku_no_Kyojin.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -58,6 +59,9 @@ namespace Danmaku_no_Kyojin.Shapes
                 DiffuseColor = new Vector3(0, 1, 0),
                 Alpha = 0.5f
             };
+
+            if (_vertices != null)
+                Triangulate();
         }
 
         public Vector2 GetSize()
