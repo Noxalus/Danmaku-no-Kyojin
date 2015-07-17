@@ -81,3 +81,15 @@ For its bloomy visual and particle effects.
 * https://www.youtube.com/watch?v=bN9937blvjw (concave polygon collision test with convex polygon subdivision)
 * https://www.youtube.com/watch?v=2Z664BJ_cxQ (boss split + bloom effect + particles)
 * https://www.youtube.com/watch?v=lWXfODTq7Yc (boss split into independent parts)
+* https://www.youtube.com/watch?v=oRGans5XNNk (boss part explosion random inertia + bounding boxes generation)
+* 
+## Additional information
+
+* [Web site](http://danmakunokyojin.free.fr/)
+* [Dev blog](http://danmakunokyojin.blogspot.fr/)
+* [Dev journal](http://www.gamedev.net/blog/2077-danmaku-no-kyojin/)
+* [Trello](https://trello.com/b/8FIBQSBT/danmaku-no-kyojin)
+* [Youtube](https://www.youtube.com/channel/UC-75NW0MoGzjQcR0gajx5Eg)
+* [Twitter](https://twitter.com/Noxalus)
+* [Live coding](https://www.livecoding.tv/noxalus/)
+* [OpenHub](https://www.openhub.net/p/Danmaku-no-Kyojin)
