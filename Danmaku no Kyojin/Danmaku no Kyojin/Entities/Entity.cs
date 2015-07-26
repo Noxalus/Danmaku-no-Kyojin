@@ -51,7 +51,7 @@ namespace Danmaku_no_Kyojin.Entities
             set { _rotation = value; }
         }
 
-        public virtual CollisionElements CollisionBoxes { get; set; }
+        public virtual CollisionElements CollisionBoxes { get; protected set; }
 
         public Vector2 Origin
         {

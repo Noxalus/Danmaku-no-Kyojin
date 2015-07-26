@@ -29,6 +29,9 @@ namespace Danmaku_no_Kyojin.Collisions
         private List<Vector2> _axes;
         private List<Vector2> _circleAxes;
         private List<Vector2> _vertices;
+        private Vector2 _localPosition;
+        private Vector2 _center;
+        private Vector2 _size;
         private float _healthPoint;
 
         #endregion
@@ -50,6 +53,8 @@ namespace Danmaku_no_Kyojin.Collisions
             _axes = new List<Vector2>();
             _circleAxes = new List<Vector2>();
             _healthPoint = healthPoint;
+            _localPosition = Vector2.Zero;
+            _center = Vector2.Zero;
 
             ComputeAxes();
         }
@@ -133,11 +138,11 @@ namespace Danmaku_no_Kyojin.Collisions
             if (Vertices.Count == 0)
                 return;
 
-            Vector2 previousPosition = GetPosition(Vertices[0]);
+            Vector2 previousPosition = GetWorldPosition(Vertices[0]);
 
             for (int i = 1; i <= Vertices.Count; i++)
             {
-                Vector2 position = GetPosition(i == Vertices.Count ? Vertices[0] : Vertices[i]);
+                Vector2 position = GetWorldPosition(i == Vertices.Count ? Vertices[0] : Vertices[i]);
 
                 sp.DrawLine(
                     previousPosition.X,
@@ -168,27 +173,91 @@ namespace Danmaku_no_Kyojin.Collisions
             }
         }
 
-        private Vector2 GetPosition(Vector2 vertex)
+        public Vector2 GetSize()
         {
-            var angleCos = (float)Math.Cos(Parent.Rotation);
-            var angleSin = (float)Math.Sin(Parent.Rotation);
+            if (_size == Vector2.Zero)
+                ComputeSize();
 
-            // Translate point back to origin  
-            vertex.X -= Parent.Origin.X;
-            vertex.Y -= Parent.Origin.Y;
+            return _size;
+        }
 
-            // Rotate point
-            var newX = vertex.X * angleCos - vertex.Y * angleSin;
-            var newY = vertex.X * angleSin + vertex.Y * angleCos;
+        private void ComputeSize()
+        {
+            var min = _vertices[0];
+            var max = _vertices[0];
 
-            // Translate point back
-            vertex.X = newX + Parent.Position.X;
-            vertex.Y = newY + Parent.Position.Y;
+            for (int i = 1; i < _vertices.Count; i++)
+            {
+                if (_vertices[i].X < min.X ||
+                    _vertices[i].X.Equals(min.X) && _vertices[i].Y < min.Y)
+                {
+                    min = _vertices[i];
+                }
 
-            return vertex;
+                if (_vertices[i].X > max.X ||
+                    _vertices[i].X.Equals(max.X) && _vertices[i].Y > max.Y)
+                {
+                    max = _vertices[i];
+                }
+            }
+
+            _size = new Vector2(Math.Abs(max.X - min.X), Math.Abs(max.Y - min.Y));
+        }
+
+        // Returns the top-left vertex
+        public Vector2 GetLocalPosition()
+        {
+            if (_localPosition == Vector2.Zero)
+                ComputeLocalPosition();
+
+            return _localPosition;
+        }
+
+        private void ComputeLocalPosition()
+        {
+            _localPosition = _vertices[0];
+
+            for (int i = 1; i < _vertices.Count; i++)
+            {
+                if (_vertices[i].X < _localPosition.X ||
+                    _vertices[i].X.Equals(_localPosition.X) && _vertices[i].Y < _localPosition.Y)
+                {
+                    _localPosition = _vertices[i];
+                }
+            }
+        }
+
+        public Vector2 GetWorldPosition()
+        {
+            return GetWorldPosition(GetLocalPosition());
+        }
+
+        private Vector2 GetWorldPosition(Vector2 vertex)
+        {
+            var cos = (float)Math.Cos(Parent.Rotation);
+            var sin = (float)Math.Sin(Parent.Rotation);
+
+            return new Vector2(
+                cos * (vertex.X - Parent.Origin.X) - sin * (vertex.Y - Parent.Origin.Y) + Parent.Position.X,
+                sin * (vertex.X - Parent.Origin.X) + cos * (vertex.Y - Parent.Origin.Y) + Parent.Position.Y
+            );
         }
 
         public override Vector2 GetCenter()
+        {
+            if (_center == Vector2.Zero)
+                ComputeCenter();
+
+            return _center;
+        }
+
+        public Vector2 GetCenterInWorldSpace()
+        {
+            return GetWorldPosition(GetCenter());
+        }
+
+        // Compute the center of the shape (it corresponds to what we call the "centroid")
+        private void ComputeCenter()
         {
             var center = Vector2.Zero;
             var previousCenter = Vector2.Zero;
@@ -204,35 +273,7 @@ namespace Danmaku_no_Kyojin.Collisions
                 previousCenter = currentCenter;
             }
 
-            center = (center + previousCenter) / 2f;
-
-            return Parent.Position - Parent.Origin + center;
-        }
-
-        public float GetMinX()
-        {
-            var minX = Vertices[0].X;
-
-            for (var i = 1; i < Vertices.Count; i++)
-            {
-                if (Vertices[i].X < minX)
-                    minX = Vertices[i].X;
-            }
-
-            return minX;
-        }
-
-        public float GetMaxX()
-        {
-            var maxX = Vertices[0].X;
-
-            for (var i = 1; i < Vertices.Count; i++)
-            {
-                if (Vertices[i].X > maxX)
-                    maxX = Vertices[i].X;
-            }
-
-            return maxX;
+            _center = (center + previousCenter) / 2f;
         }
 
         private void ComputeAxes()
@@ -243,11 +284,11 @@ namespace Danmaku_no_Kyojin.Collisions
             // We start by deleting former axis
             _axes.Clear();
 
-            Vector2 previousPosition = GetPosition(Vertices[0]);
+            Vector2 previousPosition = GetWorldPosition(Vertices[0]);
 
             for (int i = 1; i <= Vertices.Count; i++)
             {
-                Vector2 position = GetPosition(i == Vertices.Count ? Vertices[0] : Vertices[i]);
+                Vector2 position = GetWorldPosition(i == Vertices.Count ? Vertices[0] : Vertices[i]);
 
                 Vector2 edge = position - previousPosition;
                 var normal = new Vector2(edge.Y, -edge.X);
@@ -266,7 +307,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vector2 position = GetPosition(Vertices[i]);
+                Vector2 position = GetWorldPosition(Vertices[i]);
 
                 Vector2 edge = element.GetCenter() - position;
                 var normal = new Vector2(edge.Y, -edge.X);
@@ -285,12 +326,12 @@ namespace Danmaku_no_Kyojin.Collisions
             if (Vertices.Count == 0)
                 return Vector2.Zero;
 
-            float min = Vector2.Dot(new Vector2(GetPosition(Vertices[0]).X, GetPosition(Vertices[0]).Y), axis);
+            float min = Vector2.Dot(new Vector2(GetWorldPosition(Vertices[0]).X, GetWorldPosition(Vertices[0]).Y), axis);
             float max = min;
             for (int i = 1; i < Vertices.Count; i++)
             {
                 // NOTE: the axis must be normalized to get accurate projections
-                float p = Vector2.Dot(new Vector2(GetPosition(Vertices[i]).X, GetPosition(Vertices[i]).Y), axis);
+                float p = Vector2.Dot(new Vector2(GetWorldPosition(Vertices[i]).X, GetWorldPosition(Vertices[i]).Y), axis);
                 if (p < min)
                 {
                     min = p;

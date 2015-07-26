@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -83,7 +84,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _iteration = iteration;
             _step = step;
 
-            _accelerationDecreaseFactor = 0.0075f;
+            _accelerationDecreaseFactor = 0.00075f;
 
             _turrets = turrets ?? new List<Turret>();
             _polygonShape = polygonShape;
@@ -92,16 +93,15 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         public override void Initialize()
         {
             GenerateStructure();
+            ComputeCollisionBoxes();
+            GenerateTurrets();
 
-            CollisionBoxes.AddRange(_structure.CollisionBoxes);
-            Size = new Point((int)_structure.GetSize().X, (int)_structure.GetSize().Y);
             Position = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 4f);
-            Origin = _structure.Origin;
-
-            _currentPatternIndex = GameRef.Rand.Next(0, _bulletPatterns.Count);
             Direction = Vector2.Zero;
             Velocity = (Config.PlayerMaxVelocity / 2) / 100f;
             Acceleration = Vector2.Zero;
+
+            _currentPatternIndex = GameRef.Rand.Next(0, _bulletPatterns.Count);
 
             base.Initialize();
         }
@@ -124,22 +124,16 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         {
             _structure = new BossStructure(GameRef, this, _iteration, _step, _polygonShape);
 
-            CollisionBoxes = _structure.CollisionBoxes;
             Size = _structure.GetSize().ToPoint();
             Origin = _structure.Origin;
-
-            GenerateTurrets();
         }
 
         public void IterateStructure(int iterationNumber = 1)
         {
             _structure.Iterate(iterationNumber);
 
-            CollisionBoxes = _structure.CollisionBoxes;
             Size = _structure.GetSize().ToPoint();
             Origin = _structure.Origin;
-
-            GenerateTurrets();
         }
 
         private void GenerateTurrets()
@@ -284,66 +278,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                                         color, 190, 1.5f, state);
                                 }
 
-                                var newPolygonShape = _structure.Split(collisionConvexPolygon);
-                                var center = collisionConvexPolygon.GetCenter();
-
-                                // TODO: Part is dead?
-                                // A boss part is dead when its center is dead?
-                                // or when the number of sub-parts is less than a number?
-                                if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
-                                    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
-                                {
-                                    TakeDamage(99999);
-                                }
-                                else
-                                {
-                                    // If the break out part is not large enough => we don't create another part
-                                    if (newPolygonShape.Vertices != null && newPolygonShape.Vertices.Length > 10)
-                                    {
-                                        var bossPart = new BossPart(GameRef, _bossRef, _moverManager, null, _color,
-                                            _health, 0, 25f, null, newPolygonShape);
-                                        bossPart.Initialize();
-
-                                        var bossPartSize = newPolygonShape.GetSize();
-
-                                        // Left (1) or right (-1) part?
-                                        var factor = (Position.X > collisionConvexPolygon.GetCenter().X) ? 1 : -1;
-                                        bossPart.Position = new Vector2(
-                                            (collisionConvexPolygon.GetCenter().X + (_step/ 8f) * factor) - (bossPartSize.X / 2f + _step) * factor,
-                                            Position.Y - Origin.Y
-                                        );
-
-                                        // TODO: Fix position according parent rotation (doesn't work properly for now)
-                                        var angleCos = (float)Math.Cos(Rotation);
-                                        var angleSin = (float)Math.Sin(Rotation);
-
-                                        // Translate point back to origin  
-                                        //bossPart.Position = new Vector2(bossPart.Position.X - Origin.X, bossPart.Position.Y - Origin.Y);
-
-                                        // Rotate point
-                                        var newX = bossPart.Position.X * angleCos - bossPart.Position.Y * angleSin;
-                                        var newY = bossPart.Position.X * angleSin + bossPart.Position.Y * angleCos;
-
-                                        // Translate point back
-                                        bossPart.Position = new Vector2(newX, newY);
-                                        bossPart.Rotation = Rotation;
-                                        // We take the centroid as rotation origin
-                                        bossPart.Origin = newPolygonShape.GetCenter();
-
-                                        // TODO: Add bounding boxes to this BossPart (move bounding box computation + logic from BossStructure to BossPart?)
-                                        bossPart.ComputeCollisionBoxes();
-
-                                        _bossRef.Parts.Add(bossPart);
-
-                                        // Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
-                                        var random = (float)(GameRef.Rand.NextDouble() * (1f - 0.75f)) + 0.75f;
-                                        bossPart.ApplyImpulse(new Vector2(-factor, random * (-factor)), new Vector2(random));
-                                        ApplyImpulse(new Vector2(factor, random * factor), new Vector2(random));
-                                    }
-
-                                    // This is the bounding that the player has destroyed, so we remove it from the list
-                                    //entity.CollisionBoxes.Remove(collisionConvexPolygon);
-                                }
+                                Split(collisionConvexPolygon);
                             }
                         }
 
@@ -355,6 +290,94 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 }
             }
             return false;
+        }
+
+        private void Split(CollisionConvexPolygon box)
+        {
+            var newPolygonShape = _structure.Split(box);
+            var center = box.GetCenter();
+
+            // TODO: Part is dead?
+            // A boss part is dead when its center is dead?
+            // or when the number of sub-parts is less than a number?
+            //if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
+            //    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
+            //{
+            //    TakeDamage(99999);
+            //}
+            //else
+            {
+                // If the break out part is not large enough => we don't create another part
+                // TODO: Use area instead of vertex number
+                if (newPolygonShape.Vertices != null /*&& newPolygonShape.Vertices.Length > 10*/)
+                {
+                    var bossPart = new BossPart(GameRef, _bossRef, _moverManager, null, _color,
+                        _health, 0, 25f, null, newPolygonShape);
+
+                    bossPart.Initialize();
+
+                    var bossPartSize = newPolygonShape.GetSize();
+                    var boxWorldPosition = box.GetWorldPosition();
+                    var boxLocalPosition = box.GetLocalPosition();
+
+                    // TODO: Fix part detection
+                    // Left (1) or right (-1) part?
+                    var factor = (boxLocalPosition.X > Origin.X) ? 1 : -1;
+
+                    // Compute new boss part's world position
+                    var worldPosition = Vector2.Zero;
+                    worldPosition.Y = boxWorldPosition.Y - boxLocalPosition.Y;
+                
+                    // Left part
+                    if (factor == 1)
+                        worldPosition.X = boxWorldPosition.X - bossPartSize.X;
+                    // Right part
+                    else if (factor == -1)
+                        worldPosition.X = boxWorldPosition.X + _step;
+
+                    // Update world position according to parent rotation
+                    bossPart.Scale = Scale;
+                    bossPart.Rotation = Rotation;
+
+                    var cos = (float)Math.Cos(Rotation);
+                    var sin = (float)Math.Sin(Rotation);
+                    var newLocalPosition = Vector2.Zero;
+                    newLocalPosition.X = (Position.X - Origin.X) + (boxLocalPosition.X);
+                    newLocalPosition.Y = (Position.Y - Origin.Y);
+
+                    if (factor == -1)
+                        newLocalPosition.X -= bossPartSize.X;
+                    else
+                        newLocalPosition.X += _step;
+
+
+                    var newOrigin = newPolygonShape.GetCenter();
+                    //newOrigin = Vector2.Transform(newOrigin - rotationOrigin, Matrix.CreateRotationZ(Rotation)) + rotationOrigin;
+
+                    newLocalPosition += newOrigin;
+
+                    var rotationOrigin = Position;
+                    //newLocalPosition.X = cos * (newLocalPosition.X - Position.X) - sin * (newLocalPosition.Y - Position.Y) + Position.X;
+                    //newLocalPosition.Y = sin * (newLocalPosition.X - Position.X) + cos * (newLocalPosition.Y - Position.Y) + Position.Y;
+                    newLocalPosition = Vector2.Transform(newLocalPosition - rotationOrigin, Matrix.CreateRotationZ(Rotation)) + rotationOrigin;
+
+                    bossPart.Origin = newOrigin;
+                    bossPart.Position = newLocalPosition;
+                    _bossRef.Parts.Add(bossPart);
+
+                    // Give to this new BossPart an impulsion to (pseudo) random direction due to explosion
+                    // TODO: Take rotation into account for random direction
+                    //var random = (float)(GameRef.Rand.NextDouble() * (1f - 0.75f)) + 0.75f;
+                    //bossPart.ApplyImpulse(new Vector2(factor, random * factor), new Vector2(random / 5f));
+                    //ApplyImpulse(new Vector2(-factor, random * -factor), new Vector2(random / 5f));
+
+                    // TODO: Remove destroyed bounding boxes
+
+                }
+
+                // This is the bounding that the player has destroyed, so we remove it from the list
+                CollisionBoxes.Remove(box);
+            }
         }
 
         private void AddBullet(bool clear)
@@ -405,7 +428,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             Direction = (direction + Direction);
             Direction.Normalize();
 
-            Acceleration += acceleration;
+            Acceleration = acceleration;
         }
 
         public void Draw(GameTime gameTime, Matrix viewMatrix)
@@ -454,6 +477,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         // Create multiple collision boxes from BossStructure
         private void ComputeCollisionBoxes()
         {
+            // TODO: Handle the case where there is 2 vertices with Y = 0
             var vertices = _structure.GetVertices();
             var bottomVertices = new List<Vector2>(); // the lowest vertex for each step
             var topVertices = new List<Vector2>(); // the highest vertex for each step
@@ -486,16 +510,15 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             if (bottomVertices.Count != topVertices.Count)
             {
                 // Left part
-                if (bottomVertices.First().Y == 0f)
+                if (bottomVertices.First().Y.Equals(0f))
                 {
                     topVertices.Add(vertices[vertices.Length - 1]);
                     topVertices.Add(bottomVertices.First());
                     topVertices.Reverse();
                 }
                 // Right part
-                else if (bottomVertices.Last().Y == 0f)
+                else if (bottomVertices.Last().Y.Equals(0f))
                 {
-                    //topVertices.Add(vertices[vertices.Length - 1]);
                     topVertices.Reverse();
                     topVertices.Add(bottomVertices.Last());
                 }
@@ -520,9 +543,58 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             }
         }
 
+        /*
+        private void ComputeCollisionBoxesHp()
+        {
+            _leftCollisionBoxes.Sort((box1, box2) => box1.GetMinX().CompareTo(box2.GetMinX()));
+            _rightCollisionBoxes.Sort((box1, box2) => box1.GetMaxX().CompareTo(box2.GetMaxX()));
+
+            const int initialHp = 20;
+            const int hpStep = 5;
+            var hp = initialHp;
+            foreach (var collisionBox in _leftCollisionBoxes)
+            {
+                collisionBox.HealthPoint = hp;
+                hp += hpStep;
+            }
+
+            hp = initialHp;
+            for (int i = 0; i < _rightCollisionBoxes.Count; i++)
+            {
+                var collisionBox = _rightCollisionBoxes[_rightCollisionBoxes.Count - 1 - i];
+                collisionBox.HealthPoint = hp;
+                hp += hpStep;
+            }
+        }
+        */
+
         public void DisplayHpSwitch()
         {
             _displayHp = !_displayHp;
+        }
+
+        private void ParticleExplosion(Vector2 position)
+        {
+            float hue1 = GameRef.Rand.NextFloat(0, 6);
+            float hue2 = (hue1 + GameRef.Rand.NextFloat(0, 2)) % 6f;
+            Color color1 = ColorUtil.HSVToColor(hue1, 0.5f, 1);
+            Color color2 = ColorUtil.HSVToColor(hue2, 0.5f, 1);
+
+            for (int j = 0; j < 120; j++)
+            {
+                float speed = 18f * (1f - 1 / GameRef.Rand.NextFloat(1f, 10f));
+                var state = new ParticleState()
+                {
+                    Velocity = GameRef.Rand.NextVector2(speed, speed),
+                    Type = ParticleType.Enemy,
+                    LengthMultiplier = 1f
+                };
+
+                Color color = Color.Lerp(color1, color2, GameRef.Rand.NextFloat(0, 1));
+
+                GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, position,
+                    color, 190, 1.5f, state);
+            }
         }
     }
 }

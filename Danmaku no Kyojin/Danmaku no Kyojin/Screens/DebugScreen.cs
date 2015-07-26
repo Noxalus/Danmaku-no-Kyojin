@@ -63,7 +63,7 @@ namespace Danmaku_no_Kyojin.Screens
             player1.Initialize();
             Players.Add(player1);
 
-            _boss = new Boss(GameRef, Players, 20);
+            _boss = new Boss(GameRef, Players, 30, 25);
             _boss.Initialize();
 
         }
@@ -226,11 +226,27 @@ namespace Danmaku_no_Kyojin.Screens
             "Boss's bullet: " + _boss.MoverManager.movers.Count,
             new Vector2(0, 40), Color.White);
 
+            var boundingBoxCount = 0;
+            foreach (var part in _boss.Parts)
+                boundingBoxCount += part.CollisionBoxes.Count;
+
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+            "Bounding boxes: " + boundingBoxCount,
+            new Vector2(0, 60), Color.White);
+
             for (int i = 0; i < _boss.Parts.Count; i++)
             {
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " position: " + _boss.Parts[i].Position,
-                 new Vector2(0, 80 + (20 * i)), Color.White);
+                 new Vector2(0, 80 + (3 * 20 * i) + (20 * i)), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                 "Part #" + i + " origin: " + _boss.Parts[i].Origin,
+                 new Vector2(0, 100 + (3 * 20 * i) + (20 * i)), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                 "Part #" + i + " rotation: " + Math.Round(_boss.Parts[i].Rotation, 2) + 
+                 " (cos: " + Math.Round(Math.Cos(_boss.Parts[i].Rotation), 2) + 
+                 ", sin: " + Math.Round(Math.Sin(_boss.Parts[i].Rotation), 2) + ")",
+                 new Vector2(0, 120 + (3 * 20 * i) + (20 * i)), Color.White);
             }
 
             GameRef.SpriteBatch.End();

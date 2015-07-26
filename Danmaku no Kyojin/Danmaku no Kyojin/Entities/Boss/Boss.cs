@@ -83,7 +83,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 _completeBulletPatterns.Add(pattern);
             }
 
-            _mainPart = new BossPart(_gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f), 4242f);
+            _mainPart = new BossPart(_gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f), 4242f, _iteration, _step);
             _mainPart.Initialize();
             _parts.Add(_mainPart);
 
@@ -180,15 +180,46 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 if (InputHandler.KeyPressed(Keys.N))
                     _currentPartIndex = (_currentPartIndex + 1) % _parts.Count;
 
-                var acceleration = 1f;
-                if (InputHandler.KeyPressed(Keys.I))
+                var acceleration = 0.1f;
+                if (InputHandler.KeyDown(Keys.I))
                     currentBossPart.ApplyImpulse(new Vector2(0, -1), new Vector2(acceleration));
-                if (InputHandler.KeyPressed(Keys.L))
+                if (InputHandler.KeyDown(Keys.L))
                     currentBossPart.ApplyImpulse(new Vector2(1, 0), new Vector2(acceleration));
-                if (InputHandler.KeyPressed(Keys.K))
+                if (InputHandler.KeyDown(Keys.K))
                     currentBossPart.ApplyImpulse(new Vector2(0, 1), new Vector2(acceleration));
-                if (InputHandler.KeyPressed(Keys.J))
+                if (InputHandler.KeyDown(Keys.J))
                     currentBossPart.ApplyImpulse(new Vector2(-1, 0), new Vector2(acceleration));
+
+                // Left vector
+                if (InputHandler.KeyPressed(Keys.F))
+                {
+                    var direction = new Vector2(
+                        (float)Math.Cos(currentBossPart.Rotation) * -1,
+                        (float)-Math.Sin(currentBossPart.Rotation)
+                    );
+
+                    /*
+                    var direction = new Vector2(
+                        (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
+                        (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
+                    );
+                    */
+
+                    currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
+                }
+
+                // Right vector
+                if (InputHandler.KeyPressed(Keys.G))
+                {
+                    var direction = new Vector2(
+                        (float)-Math.Cos(currentBossPart.Rotation) * -1,
+                        (float)Math.Sin(currentBossPart.Rotation)
+                    );
+
+                    direction = new Vector2(-direction.Y, direction.X);
+
+                    currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
+                }
 
                 if (InputHandler.KeyDown(Keys.PageUp))
                 {

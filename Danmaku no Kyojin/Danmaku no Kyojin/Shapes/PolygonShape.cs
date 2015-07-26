@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Danmaku_no_Kyojin.Controls;
+using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -96,28 +97,9 @@ namespace Danmaku_no_Kyojin.Shapes
             return _center;
         }
 
-        // Compute the center of the shape (it corresponds to what we call the "centroid")
         private void ComputeCenter()
         {
-            float accumulatedArea = 0.0f;
-            float centerX = 0.0f;
-            float centerY = 0.0f;
-
-            for (int i = 0, j = _vertices.Length - 1; i < _vertices.Length; j = i++)
-            {
-                float temp = _vertices[i].X * _vertices[j].Y - _vertices[j].X * _vertices[i].Y;
-                accumulatedArea += temp;
-                centerX += (_vertices[i].X + _vertices[j].X) * temp;
-                centerY += (_vertices[i].Y + _vertices[j].Y) * temp;
-            }
-
-            if (accumulatedArea < 1e-7f)
-                _center = Vector2.Zero; // Avoid division by zero
-            else
-            {
-                accumulatedArea *= 3f;
-                _center = new Vector2(centerX/accumulatedArea, centerY/accumulatedArea);
-            }
+            _center = MathUtil.ComputePolygonCentroid(_vertices);
         }
 
         public void UpdateVertices(Vector2[] vertices)
