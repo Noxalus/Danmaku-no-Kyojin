@@ -140,7 +140,6 @@
     <Compile Include="Entities\Boss\BossCore.cs" />
     <Compile Include="Entities\Boss\BossPart.cs" />
     <Compile Include="Entities\Boss\BossStructure.cs" />
-    <Compile Include="Entities\Dummy.cs" />
     <Compile Include="Entities\Line.cs" />
     <Compile Include="Entities\SpriteEntity.cs" />
     <Compile Include="Entities\Turret.cs" />
