@@ -58,6 +58,9 @@ namespace Danmaku_no_Kyojin
         public static Vector2 PlayerBulletVelocity = new Vector2(1000f, 1000f);
         public const int PlayerLives = 5;
 
+        // Boss config
+        public static float MinBossPartArea = 10000f;
+
         // GameRef
         public static readonly Point GameArea = new Point(2400, 1800);
 

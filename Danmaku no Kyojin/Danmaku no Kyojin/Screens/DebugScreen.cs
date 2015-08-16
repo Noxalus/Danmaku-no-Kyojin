@@ -238,15 +238,18 @@ namespace Danmaku_no_Kyojin.Screens
             {
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " position: " + _boss.Parts[i].Position,
-                 new Vector2(0, 80 + (3 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, 80 + (4 * 20 * i) + (20 * i)), Color.White);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " origin: " + _boss.Parts[i].Origin,
-                 new Vector2(0, 100 + (3 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, 100 + (4 * 20 * i) + (20 * i)), Color.White);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " rotation: " + Math.Round(_boss.Parts[i].Rotation, 2) + 
                  " (cos: " + Math.Round(Math.Cos(_boss.Parts[i].Rotation), 2) + 
                  ", sin: " + Math.Round(Math.Sin(_boss.Parts[i].Rotation), 2) + ")",
-                 new Vector2(0, 120 + (3 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, 120 + (4 * 20 * i) + (20 * i)), Color.White);
+                GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+                 "Part #" + i + " area: " + Math.Round(_boss.Parts[i].GetArea(), 2),
+                 new Vector2(0, 140 + (4 * 20 * i) + (20 * i)), Color.White);
             }
 
             GameRef.SpriteBatch.End();
