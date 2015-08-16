@@ -16,7 +16,7 @@
     <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>7d8e2e6b-ff2e-4e97-909c-fdb39cef76b0</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Thumbnail>
     </Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -230,8 +230,7 @@
     <Compile Include="Utils\StaticClassSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
+    <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj">
