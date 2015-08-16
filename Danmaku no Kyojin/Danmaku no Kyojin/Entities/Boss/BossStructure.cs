@@ -49,7 +49,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         public float GetArea()
         {
-            return _area;
+            return (_polygonShape != null) ? _polygonShape.GetArea() : 0f;
         }
 
         public Vector2[] GetVertices()
@@ -79,7 +79,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             {
                 _polygonShape = polygonShape;
                 _size = polygonShape.GetSize();
-                ComputeArea();
             }
             else
             {
@@ -193,7 +192,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             vertices.AddRange(_topLeftVertices);
 
             _polygonShape.UpdateVertices(vertices.ToArray());
-            ComputeArea();
         }
 
         private Vector2 GenerateRandomPosition(Vector2 position, List<Direction> possibleDirections, ref Direction lastDirection)
@@ -418,18 +416,6 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 newPolygonShapeVerticesArray = null;
 
             return new PolygonShape(_gameRef, newPolygonShapeVerticesArray);
-        }
-
-        private void ComputeArea()
-        {
-            var sum = 0f;
-            var vertices = _polygonShape.Vertices;
-            for (int i = 0; i < vertices.Length - 1; i++)
-            {
-                sum += ((vertices[i].X * vertices[i + 1].Y) - (vertices[i].Y * vertices[i + 1].X));
-            }
-
-            _area = Math.Abs(sum / 2f);
         }
 
         public void Draw(Matrix viewMatrix, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale)

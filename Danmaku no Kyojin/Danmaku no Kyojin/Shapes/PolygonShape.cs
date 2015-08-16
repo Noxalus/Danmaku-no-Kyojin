@@ -16,6 +16,7 @@ namespace Danmaku_no_Kyojin.Shapes
         private readonly BasicEffect _effect;
         private Effect _edgeEffect;
         private Vector2 _size;
+        private float _area;
         private Vector2 _center;
 
         private Vector2[] _triangulatedVertices;
@@ -48,6 +49,7 @@ namespace Danmaku_no_Kyojin.Shapes
             _vertices = vertices;
             _triangulated = false;
             _size = Vector2.Zero;
+            _area = 0f;
             _center = Vector2.Zero;
 
             _edgeEffect = _gameRef.Content.Load<Effect>("Graphics/Shaders/Edge");
@@ -89,6 +91,22 @@ namespace Danmaku_no_Kyojin.Shapes
             _size = new Vector2(Math.Abs(max.X - min.X), Math.Abs(max.Y - min.Y));
         }
 
+        public float GetArea()
+        {
+            return _area;
+        }
+
+        private void ComputeArea()
+        {
+            var sum = 0f;
+            for (int i = 0; i < Vertices.Length - 1; i++)
+            {
+                sum += ((Vertices[i].X * Vertices[i + 1].Y) - (Vertices[i].Y * Vertices[i + 1].X));
+            }
+
+            _area = Math.Abs(sum / 2f);
+        }
+
         public Vector2 GetCenter()
         {
             if (_center == Vector2.Zero)
@@ -116,6 +134,7 @@ namespace Danmaku_no_Kyojin.Shapes
         {
             // If we need to triangulate, the size or center should be incorrect
             ComputeSize();
+            ComputeArea();
             ComputeCenter();
 
             Triangulator.Triangulator.Triangulate(
