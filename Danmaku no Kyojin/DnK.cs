@@ -32,7 +32,7 @@ namespace Danmaku_no_Kyojin
         public Rectangle ScreenRectangle;
 
         // Useful pixel
-        public readonly Texture2D Pixel;
+        public Texture2D Pixel;
 
         // Particles
         public ParticleManager<ParticleState> ParticleManager { get; private set; }
@@ -69,9 +69,6 @@ namespace Danmaku_no_Kyojin
             Graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-
-            Pixel = new Texture2D(GraphicsDevice, 1, 1);
-            Pixel.SetData(new [] { Color.White });
         }
 
         protected override void Initialize()
@@ -130,6 +127,9 @@ namespace Danmaku_no_Kyojin
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Pixel.SetData(new[] { Color.White });
 
             Select = Content.Load<SoundEffect>(@"Audio/SE/select");
             Choose = Content.Load<SoundEffect>(@"Audio/SE/choose");

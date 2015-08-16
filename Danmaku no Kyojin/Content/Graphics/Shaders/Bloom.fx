@@ -16,7 +16,7 @@ float BaseIntensity, BloomIntensity;
 float BaseSaturation, BloomSaturation;
 
 //Range of offsets to sample from
-const float2 offsets[12] = {
+static const float2 offsets[12] = {
    -0.326212, -0.405805,
    -0.840144, -0.073580,
    -0.695914,  0.457137,
@@ -39,7 +39,7 @@ struct PixelShaderInput
 float4 AdjustSaturation(float4 color, float saturation) {
     // The constants 0.3, 0.59, and 0.11 are chosen because the
     // human eye is more sensitive to green light, and less to blue.
-    float grey = dot(color, float3(0.3, 0.59, 0.11));
+    float grey = dot(color.rgb, float3(0.3, 0.59, 0.11));
 
     return lerp(grey, color, saturation);
 }
@@ -66,6 +66,12 @@ float4 bloomEffect(PixelShaderInput Input) : COLOR0 {
 
 technique Bloom { 
     pass P0{ 
-        PixelShader = compile ps_2_0 bloomEffect(); 
+		#if SM4
+			PixelShader = compile ps_4_0_level_9_1 bloomEffect();
+		#elif SM3
+			PixelShader = compile ps_3_0 bloomEffect();
+		#else
+			PixelShader = compile ps_2_0 bloomEffect();
+		#endif
     } 
 }

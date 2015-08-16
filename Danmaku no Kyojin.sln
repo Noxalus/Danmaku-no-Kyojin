@@ -3,34 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no Kyojin", "Danmaku no Kyojin\Danmaku no Kyojin\Danmaku no Kyojin.csproj", "{574375AD-4203-4AC3-B2C6-D52A31E20A05}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no KyojinContent", "Danmaku no Kyojin\Danmaku no KyojinContent\Danmaku no KyojinContent.contentproj", "{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmaku no Kyojin (OpenGL)", "Danmaku no Kyojin\Danmaku no Kyojin (OpenGL).csproj", "{C1323480-FC0F-4EF5-9203-069493918859}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		CD_ROM|x86 = CD_ROM|x86
 		Debug|x86 = Debug|x86
-		DVD-5|x86 = DVD-5|x86
 		Release|x86 = Release|x86
-		SingleImage|x86 = SingleImage|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.CD_ROM|x86.ActiveCfg = Release|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.CD_ROM|x86.Build.0 = Release|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Debug|x86.ActiveCfg = Debug|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Debug|x86.Build.0 = Debug|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.DVD-5|x86.ActiveCfg = Debug|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.DVD-5|x86.Build.0 = Debug|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Release|x86.ActiveCfg = Release|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.Release|x86.Build.0 = Release|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.SingleImage|x86.ActiveCfg = Release|x86
-		{574375AD-4203-4AC3-B2C6-D52A31E20A05}.SingleImage|x86.Build.0 = Release|x86
-		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.CD_ROM|x86.ActiveCfg = Release|x86
-		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.Debug|x86.ActiveCfg = Debug|x86
-		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.DVD-5|x86.ActiveCfg = Debug|x86
-		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.Release|x86.ActiveCfg = Release|x86
-		{F4482B84-3BC1-4237-B74A-0E87CDBC7BCE}.SingleImage|x86.ActiveCfg = Release|x86
+		{C1323480-FC0F-4EF5-9203-069493918859}.Debug|x86.ActiveCfg = Debug|x86
+		{C1323480-FC0F-4EF5-9203-069493918859}.Debug|x86.Build.0 = Debug|x86
+		{C1323480-FC0F-4EF5-9203-069493918859}.Release|x86.ActiveCfg = Release|x86
+		{C1323480-FC0F-4EF5-9203-069493918859}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

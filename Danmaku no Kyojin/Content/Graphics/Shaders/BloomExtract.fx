@@ -6,7 +6,7 @@ sampler TextureSampler : register(s0);
 float BloomThreshold;
 
 
-float4 PixelShaders(float2 texCoord : TEXCOORD0) : COLOR0
+float4 PixelShaderFunction(float2 texCoord : TEXCOORD0) : COLOR0
 {
     // Look up the original image color.
     float4 c = tex2D(TextureSampler, texCoord);
@@ -20,6 +20,12 @@ technique BloomExtract
 {
     pass Pass1
     {
-        PixelShader = compile ps_2_0 PixelShaders();
+		#if SM4
+			PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+		#elif SM3
+			PixelShader = compile ps_3_0 PixelShaderFunction();
+		#else
+			PixelShader = compile ps_2_0 PixelShaderFunction();
+		#endif
     }
 }

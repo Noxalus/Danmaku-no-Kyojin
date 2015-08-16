@@ -8,7 +8,7 @@ float Alpha;
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_POSITION;
 
     // TODO: add input channels such as texture
     // coordinates and vertex colors here.
@@ -16,7 +16,7 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_POSITION;
 
     // TODO: add vertex shader outputs such as colors and texture
     // coordinates here. These values will automatically be interpolated
@@ -36,7 +36,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET0
 {
     // TODO: add your pixel shader code here.
 	float4 color = float4(0.f, 0.f, 0.f, 0.f);
@@ -52,7 +52,15 @@ technique Technique1
     {
         // TODO: set renderstates here.
 
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+		#if SM4
+			VertexShader = compile vs_4_0_level_9_1 VertexShaderFunction();
+			PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+		#elif SM3
+			VertexShader = compile vs_3_0 VertexShaderFunction();
+			PixelShader = compile ps_3_0 PixelShaderFunction();
+		#else
+			VertexShader = compile vs_2_0 VertexShaderFunction();
+			PixelShader = compile ps_2_0 PixelShaderFunction();
+		#endif
     }
 }

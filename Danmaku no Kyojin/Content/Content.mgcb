@@ -1,0 +1,876 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin
+/intermediateDir:obj
+/platform:Windows
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Graphics/Fonts/ControlFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Graphics/Fonts/ControlFont.spritefont
+
+#begin Graphics/Fonts/TitleFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Graphics/Fonts/TitleFont.spritefont
+
+#begin Graphics/Fonts/TimerSeconds.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Graphics/Fonts/TimerSeconds.spritefont
+
+#begin XML/sample.xml
+/copy:XML/sample.xml
+
+#begin XML/3way.xml
+/copy:XML/3way.xml
+
+#begin XML/homing.xml
+/copy:XML/homing.xml
+
+#begin XML/Samples/[1943]_rolling_fire.xml
+/copy:XML/Samples/[1943]_rolling_fire.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_1.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_1.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_2.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_2.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_3.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_3.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_4.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_4.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_5.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_5.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_6.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_6.xml
+
+#begin XML/Samples/[Bulletsmorph]_aba_7.xml
+/copy:XML/Samples/[Bulletsmorph]_aba_7.xml
+
+#begin XML/Samples/[Bulletsmorph]_convergent.xml
+/copy:XML/Samples/[Bulletsmorph]_convergent.xml
+
+#begin XML/Samples/[Bulletsmorph]_double_seduction.xml
+/copy:XML/Samples/[Bulletsmorph]_double_seduction.xml
+
+#begin XML/Samples/[Bulletsmorph]_kunekune_plus_homing.xml
+/copy:XML/Samples/[Bulletsmorph]_kunekune_plus_homing.xml
+
+#begin XML/Samples/[Bulletsmorph]_satoru4.xml
+/copy:XML/Samples/[Bulletsmorph]_satoru4.xml
+
+#begin XML/Samples/[ChaosSeed]_big_monkey_boss.xml
+/copy:XML/Samples/[ChaosSeed]_big_monkey_boss.xml
+
+#begin XML/Samples/[Daiouzyou]_hibachi_1.xml
+/copy:XML/Samples/[Daiouzyou]_hibachi_1.xml
+
+#begin XML/Samples/[Daiouzyou]_hibachi_3.xml
+/copy:XML/Samples/[Daiouzyou]_hibachi_3.xml
+
+#begin XML/Samples/[Daiouzyou]_hibachi_4.xml
+/copy:XML/Samples/[Daiouzyou]_hibachi_4.xml
+
+#begin XML/Samples/[Daiouzyou]_round_1_boss.xml
+/copy:XML/Samples/[Daiouzyou]_round_1_boss.xml
+
+#begin XML/Samples/[Daiouzyou]_round_3_boss.xml
+/copy:XML/Samples/[Daiouzyou]_round_3_boss.xml
+
+#begin XML/Samples/[Daiouzyou]_round_3_boss_last.xml
+/copy:XML/Samples/[Daiouzyou]_round_3_boss_last.xml
+
+#begin XML/Samples/[Daiouzyou]_round_4_boss.xml
+/copy:XML/Samples/[Daiouzyou]_round_4_boss.xml
+
+#begin XML/Samples/[Daiouzyou]_round_4_boss_1.xml
+/copy:XML/Samples/[Daiouzyou]_round_4_boss_1.xml
+
+#begin XML/Samples/[Daiouzyou]_round_4_boss_2.xml
+/copy:XML/Samples/[Daiouzyou]_round_4_boss_2.xml
+
+#begin XML/Samples/[Daiouzyou]_round_4_boss_4.xml
+/copy:XML/Samples/[Daiouzyou]_round_4_boss_4.xml
+
+#begin XML/Samples/[Daiouzyou]_round_4_boss_5.xml
+/copy:XML/Samples/[Daiouzyou]_round_4_boss_5.xml
+
+#begin XML/Samples/[Daiouzyou]_round_5_boss_1.xml
+/copy:XML/Samples/[Daiouzyou]_round_5_boss_1.xml
+
+#begin XML/Samples/[Daiouzyou]_round_5_boss_2.xml
+/copy:XML/Samples/[Daiouzyou]_round_5_boss_2.xml
+
+#begin XML/Samples/[Daiouzyou]_round_6_boss_2.xml
+/copy:XML/Samples/[Daiouzyou]_round_6_boss_2.xml
+
+#begin XML/Samples/[Daiouzyou]_round_6_boss_3.xml
+/copy:XML/Samples/[Daiouzyou]_round_6_boss_3.xml
+
+#begin XML/Samples/[Daiouzyou]_round_6_boss_4.xml
+/copy:XML/Samples/[Daiouzyou]_round_6_boss_4.xml
+
+#begin XML/Samples/[Daiouzyou]_round_6_boss_5.xml
+/copy:XML/Samples/[Daiouzyou]_round_6_boss_5.xml
+
+#begin XML/Samples/[Dodonpachi]_kitiku_2.xml
+/copy:XML/Samples/[Dodonpachi]_kitiku_2.xml
+
+#begin XML/Samples/[Dodonpachi]_kitiku_3.xml
+/copy:XML/Samples/[Dodonpachi]_kitiku_3.xml
+
+#begin XML/Samples/[Dodonpachi]_kitiku_5.xml
+/copy:XML/Samples/[Dodonpachi]_kitiku_5.xml
+
+#begin XML/Samples/[ESP_RADE]_round_123_boss_izuna_hakkyou.xml
+/copy:XML/Samples/[ESP_RADE]_round_123_boss_izuna_hakkyou.xml
+
+#begin XML/Samples/[ESP_RADE]_round_123_boss_pelaboy_hakkyou.xml
+/copy:XML/Samples/[ESP_RADE]_round_123_boss_pelaboy_hakkyou.xml
+
+#begin XML/Samples/[ESP_RADE]_round_123_boss_satoru_5way.xml
+/copy:XML/Samples/[ESP_RADE]_round_123_boss_satoru_5way.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_alice_clone.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_alice_clone.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_1_a.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_1_a.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_1_b.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_1_b.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_2.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_2.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_3.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_3.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_4.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_4.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_gara_5.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_gara_5.xml
+
+#begin XML/Samples/[ESP_RADE]_round_5_boss_kakusi_hakkyou.xml
+/copy:XML/Samples/[ESP_RADE]_round_5_boss_kakusi_hakkyou.xml
+
+#begin XML/Samples/[G-Wange]_round_trip_bit.xml
+/copy:XML/Samples/[G-Wange]_round_trip_bit.xml
+
+#begin XML/Samples/[Garegga]_black_heart_mk2_winder.xml
+/copy:XML/Samples/[Garegga]_black_heart_mk2_winder.xml
+
+#begin XML/Samples/[Guwange]_round_3_boss_fast_3way.xml
+/copy:XML/Samples/[Guwange]_round_3_boss_fast_3way.xml
+
+#begin XML/Samples/[Guwange]_round_4_boss_eye_ball.xml
+/copy:XML/Samples/[Guwange]_round_4_boss_eye_ball.xml
+
+#begin XML/Samples/[G_DARIUS]_homing_laser.xml
+/copy:XML/Samples/[G_DARIUS]_homing_laser.xml
+
+#begin XML/Samples/[Ketui_LT]_1boss_bit.xml
+/copy:XML/Samples/[Ketui_LT]_1boss_bit.xml
+
+#begin XML/Samples/[Ketui_LT]_2boss_winder_crash.xml
+/copy:XML/Samples/[Ketui_LT]_2boss_winder_crash.xml
+
+#begin XML/Samples/[Ketui_LT]_3boss_kunekune.xml
+/copy:XML/Samples/[Ketui_LT]_3boss_kunekune.xml
+
+#begin XML/Samples/[Ketui_LT]_3boss_roll_and_aim.xml
+/copy:XML/Samples/[Ketui_LT]_3boss_roll_and_aim.xml
+
+#begin XML/Samples/[MDA]_10flower_2.xml
+/copy:XML/Samples/[MDA]_10flower_2.xml
+
+#begin XML/Samples/[MDA]_14b_2-3w.xml
+/copy:XML/Samples/[MDA]_14b_2-3w.xml
+
+#begin XML/Samples/[MDA]_75l-42.xml
+/copy:XML/Samples/[MDA]_75l-42.xml
+
+#begin XML/Samples/[MDA]_circular.xml
+/copy:XML/Samples/[MDA]_circular.xml
+
+#begin XML/Samples/[MDA]_circular_model.xml
+/copy:XML/Samples/[MDA]_circular_model.xml
+
+#begin XML/Samples/[MDA]_double_w.xml
+/copy:XML/Samples/[MDA]_double_w.xml
+
+#begin XML/Samples/[MDA]_fukuro.xml
+/copy:XML/Samples/[MDA]_fukuro.xml
+
+#begin XML/Samples/[MDA]_gnnnyari.xml
+/copy:XML/Samples/[MDA]_gnnnyari.xml
+
+#begin XML/Samples/[MDA]_mojya.xml
+/copy:XML/Samples/[MDA]_mojya.xml
+
+#begin XML/Samples/[MDA]_mossari.xml
+/copy:XML/Samples/[MDA]_mossari.xml
+
+#begin XML/Samples/[MDA]_wind_cl.xml
+/copy:XML/Samples/[MDA]_wind_cl.xml
+
+#begin XML/Samples/[Noiz2sa]_5_players.xml
+/copy:XML/Samples/[Noiz2sa]_5_players.xml
+
+#begin XML/Samples/[Noiz2sa]_88way.xml
+/copy:XML/Samples/[Noiz2sa]_88way.xml
+
+#begin XML/Samples/[Noiz2sa]_bit.xml
+/copy:XML/Samples/[Noiz2sa]_bit.xml
+
+#begin XML/Samples/[Noiz2sa]_rollbar.xml
+/copy:XML/Samples/[Noiz2sa]_rollbar.xml
+
+#begin XML/Samples/[Original]_accusation.xml
+/copy:XML/Samples/[Original]_accusation.xml
+
+#begin XML/Samples/[Original]_air_elemental.xml
+/copy:XML/Samples/[Original]_air_elemental.xml
+
+#begin XML/Samples/[Original]_backfire.xml
+/copy:XML/Samples/[Original]_backfire.xml
+
+#begin XML/Samples/[Original]_balloon_bomb.xml
+/copy:XML/Samples/[Original]_balloon_bomb.xml
+
+#begin XML/Samples/[Original]_btb_1.xml
+/copy:XML/Samples/[Original]_btb_1.xml
+
+#begin XML/Samples/[Original]_btb_2.xml
+/copy:XML/Samples/[Original]_btb_2.xml
+
+#begin XML/Samples/[Original]_btb_3.xml
+/copy:XML/Samples/[Original]_btb_3.xml
+
+#begin XML/Samples/[Original]_btb_4.xml
+/copy:XML/Samples/[Original]_btb_4.xml
+
+#begin XML/Samples/[Original]_btb_5.xml
+/copy:XML/Samples/[Original]_btb_5.xml
+
+#begin XML/Samples/[Original]_btb_6.xml
+/copy:XML/Samples/[Original]_btb_6.xml
+
+#begin XML/Samples/[Original]_censored.xml
+/copy:XML/Samples/[Original]_censored.xml
+
+#begin XML/Samples/[Original]_chimera.xml
+/copy:XML/Samples/[Original]_chimera.xml
+
+#begin XML/Samples/[Original]_cont_circle.xml
+/copy:XML/Samples/[Original]_cont_circle.xml
+
+#begin XML/Samples/[Original]_dokkaan.xml
+/copy:XML/Samples/[Original]_dokkaan.xml
+
+#begin XML/Samples/[Original]_ellipse_bomb.xml
+/copy:XML/Samples/[Original]_ellipse_bomb.xml
+
+#begin XML/Samples/[Original]_entangled_space.xml
+/copy:XML/Samples/[Original]_entangled_space.xml
+
+#begin XML/Samples/[Original]_extinction.xml
+/copy:XML/Samples/[Original]_extinction.xml
+
+#begin XML/Samples/[Original]_fujin_ranbu_fake.xml
+/copy:XML/Samples/[Original]_fujin_ranbu_fake.xml
+
+#begin XML/Samples/[Original]_fujin_ranbu_true.xml
+/copy:XML/Samples/[Original]_fujin_ranbu_true.xml
+
+#begin XML/Samples/[Original]_gurutyo.xml
+/copy:XML/Samples/[Original]_gurutyo.xml
+
+#begin XML/Samples/[Original]_gyakuhunsya.xml
+/copy:XML/Samples/[Original]_gyakuhunsya.xml
+
+#begin XML/Samples/[Original]_hajike.xml
+/copy:XML/Samples/[Original]_hajike.xml
+
+#begin XML/Samples/[Original]_housya.xml
+/copy:XML/Samples/[Original]_housya.xml
+
+#begin XML/Samples/[Original]_kagome.xml
+/copy:XML/Samples/[Original]_kagome.xml
+
+#begin XML/Samples/[Original]_kedama.xml
+/copy:XML/Samples/[Original]_kedama.xml
+
+#begin XML/Samples/[Original]_knight_1.xml
+/copy:XML/Samples/[Original]_knight_1.xml
+
+#begin XML/Samples/[Original]_knight_2.xml
+/copy:XML/Samples/[Original]_knight_2.xml
+
+#begin XML/Samples/[Original]_knight_3.xml
+/copy:XML/Samples/[Original]_knight_3.xml
+
+#begin XML/Samples/[Original]_knight_4.xml
+/copy:XML/Samples/[Original]_knight_4.xml
+
+#begin XML/Samples/[Original]_kotai.xml
+/copy:XML/Samples/[Original]_kotai.xml
+
+#begin XML/Samples/[Original]_kujira.xml
+/copy:XML/Samples/[Original]_kujira.xml
+
+#begin XML/Samples/[Original]_light_lv10.xml
+/copy:XML/Samples/[Original]_light_lv10.xml
+
+#begin XML/Samples/[Original]_light_lv25.xml
+/copy:XML/Samples/[Original]_light_lv25.xml
+
+#begin XML/Samples/[Original]_light_max.xml
+/copy:XML/Samples/[Original]_light_max.xml
+
+#begin XML/Samples/[Original]_optic_seeker.xml
+/copy:XML/Samples/[Original]_optic_seeker.xml
+
+#begin XML/Samples/[Original]_pan.xml
+/copy:XML/Samples/[Original]_pan.xml
+
+#begin XML/Samples/[Original]_progear_cheap_fake.xml
+/copy:XML/Samples/[Original]_progear_cheap_fake.xml
+
+#begin XML/Samples/[Original]_sakuretudan.xml
+/copy:XML/Samples/[Original]_sakuretudan.xml
+
+#begin XML/Samples/[Original]_shooting_star.xml
+/copy:XML/Samples/[Original]_shooting_star.xml
+
+#begin XML/Samples/[Original]_star_in_the_sky.xml
+/copy:XML/Samples/[Original]_star_in_the_sky.xml
+
+#begin XML/Samples/[Original]_stone6.xml
+/copy:XML/Samples/[Original]_stone6.xml
+
+#begin XML/Samples/[Original]_stop_and_run.xml
+/copy:XML/Samples/[Original]_stop_and_run.xml
+
+#begin XML/Samples/[Original]_tsunami.xml
+/copy:XML/Samples/[Original]_tsunami.xml
+
+#begin XML/Samples/[Original]_uneri.xml
+/copy:XML/Samples/[Original]_uneri.xml
+
+#begin XML/Samples/[Original]_water_lv10.xml
+/copy:XML/Samples/[Original]_water_lv10.xml
+
+#begin XML/Samples/[Original]_water_lv25.xml
+/copy:XML/Samples/[Original]_water_lv25.xml
+
+#begin XML/Samples/[Original]_water_max.xml
+/copy:XML/Samples/[Original]_water_max.xml
+
+#begin XML/Samples/[Original]_yokokasoku.xml
+/copy:XML/Samples/[Original]_yokokasoku.xml
+
+#begin XML/Samples/[Original]_zako_atack.xml
+/copy:XML/Samples/[Original]_zako_atack.xml
+
+#begin XML/Samples/[OtakuTwo]_accel_jump.xml
+/copy:XML/Samples/[OtakuTwo]_accel_jump.xml
+
+#begin XML/Samples/[OtakuTwo]_circle_fireworks.xml
+/copy:XML/Samples/[OtakuTwo]_circle_fireworks.xml
+
+#begin XML/Samples/[OtakuTwo]_circle_fireworks2.xml
+/copy:XML/Samples/[OtakuTwo]_circle_fireworks2.xml
+
+#begin XML/Samples/[OtakuTwo]_circle_roll.xml
+/copy:XML/Samples/[OtakuTwo]_circle_roll.xml
+
+#begin XML/Samples/[OtakuTwo]_circle_trap.xml
+/copy:XML/Samples/[OtakuTwo]_circle_trap.xml
+
+#begin XML/Samples/[OtakuTwo]_dis_bee_1.xml
+/copy:XML/Samples/[OtakuTwo]_dis_bee_1.xml
+
+#begin XML/Samples/[OtakuTwo]_dis_bee_hakkyou.xml
+/copy:XML/Samples/[OtakuTwo]_dis_bee_hakkyou.xml
+
+#begin XML/Samples/[OtakuTwo]_restriction_stasis.xml
+/copy:XML/Samples/[OtakuTwo]_restriction_stasis.xml
+
+#begin XML/Samples/[OtakuTwo]_roll_misago.xml
+/copy:XML/Samples/[OtakuTwo]_roll_misago.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0012.xml
+/copy:XML/Samples/[OtakuTwo]_self-0012.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0034.xml
+/copy:XML/Samples/[OtakuTwo]_self-0034.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0036.xml
+/copy:XML/Samples/[OtakuTwo]_self-0036.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0062.xml
+/copy:XML/Samples/[OtakuTwo]_self-0062.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0063.xml
+/copy:XML/Samples/[OtakuTwo]_self-0063.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0071.xml
+/copy:XML/Samples/[OtakuTwo]_self-0071.xml
+
+#begin XML/Samples/[OtakuTwo]_self-0081.xml
+/copy:XML/Samples/[OtakuTwo]_self-0081.xml
+
+#begin XML/Samples/[OtakuTwo]_self-1010.xml
+/copy:XML/Samples/[OtakuTwo]_self-1010.xml
+
+#begin XML/Samples/[OtakuTwo]_self-1011.xml
+/copy:XML/Samples/[OtakuTwo]_self-1011.xml
+
+#begin XML/Samples/[OtakuTwo]_self-1020.xml
+/copy:XML/Samples/[OtakuTwo]_self-1020.xml
+
+#begin XML/Samples/[OtakuTwo]_self-1021.xml
+/copy:XML/Samples/[OtakuTwo]_self-1021.xml
+
+#begin XML/Samples/[OtakuTwo]_self-2010.xml
+/copy:XML/Samples/[OtakuTwo]_self-2010.xml
+
+#begin XML/Samples/[OtakuTwo]_self-2011.xml
+/copy:XML/Samples/[OtakuTwo]_self-2011.xml
+
+#begin XML/Samples/[OtakuTwo]_self-2020.xml
+/copy:XML/Samples/[OtakuTwo]_self-2020.xml
+
+#begin XML/Samples/[OtakuTwo]_slow_move.xml
+/copy:XML/Samples/[OtakuTwo]_slow_move.xml
+
+#begin XML/Samples/[Progear]_round_10_boss_before_final.xml
+/copy:XML/Samples/[Progear]_round_10_boss_before_final.xml
+
+#begin XML/Samples/[Progear]_round_1_boss_grow_bullets.xml
+/copy:XML/Samples/[Progear]_round_1_boss_grow_bullets.xml
+
+#begin XML/Samples/[Progear]_round_2_boss_struggling.xml
+/copy:XML/Samples/[Progear]_round_2_boss_struggling.xml
+
+#begin XML/Samples/[Progear]_round_3_boss_back_burst.xml
+/copy:XML/Samples/[Progear]_round_3_boss_back_burst.xml
+
+#begin XML/Samples/[Progear]_round_3_boss_wave_bullets.xml
+/copy:XML/Samples/[Progear]_round_3_boss_wave_bullets.xml
+
+#begin XML/Samples/[Progear]_round_4_boss_fast_rocket.xml
+/copy:XML/Samples/[Progear]_round_4_boss_fast_rocket.xml
+
+#begin XML/Samples/[Progear]_round_5_boss_last_round_wave.xml
+/copy:XML/Samples/[Progear]_round_5_boss_last_round_wave.xml
+
+#begin XML/Samples/[Progear]_round_5_middle_boss_rockets.xml
+/copy:XML/Samples/[Progear]_round_5_middle_boss_rockets.xml
+
+#begin XML/Samples/[Progear]_round_6_boss_parabola_shot.xml
+/copy:XML/Samples/[Progear]_round_6_boss_parabola_shot.xml
+
+#begin XML/Samples/[Progear]_round_9_boss.xml
+/copy:XML/Samples/[Progear]_round_9_boss.xml
+
+#begin XML/Samples/[Psyvariar]_4-D_boss_MZIQ.xml
+/copy:XML/Samples/[Psyvariar]_4-D_boss_MZIQ.xml
+
+#begin XML/Samples/[Psyvariar]_X-A_boss_opening.xml
+/copy:XML/Samples/[Psyvariar]_X-A_boss_opening.xml
+
+#begin XML/Samples/[Psyvariar]_X-A_boss_winder.xml
+/copy:XML/Samples/[Psyvariar]_X-A_boss_winder.xml
+
+#begin XML/Samples/[Psyvariar]_X-B_colony_shape_satellite.xml
+/copy:XML/Samples/[Psyvariar]_X-B_colony_shape_satellite.xml
+
+#begin XML/Samples/[SilverGun]_4D_boss_PENTA.xml
+/copy:XML/Samples/[SilverGun]_4D_boss_PENTA.xml
+
+#begin XML/Samples/[STORM_CALIBAR]_last_boss_double_roll_bullets.xml
+/copy:XML/Samples/[STORM_CALIBAR]_last_boss_double_roll_bullets.xml
+
+#begin XML/Samples/[tenmado]_3_boss_2.xml
+/copy:XML/Samples/[tenmado]_3_boss_2.xml
+
+#begin XML/Samples/[tenmado]_5_boss_1.xml
+/copy:XML/Samples/[tenmado]_5_boss_1.xml
+
+#begin XML/Samples/[tenmado]_5_boss_3.xml
+/copy:XML/Samples/[tenmado]_5_boss_3.xml
+
+#begin XML/Samples/[XEVIOUS]_garu_zakato.xml
+/copy:XML/Samples/[XEVIOUS]_garu_zakato.xml
+
+#begin XML/Samples/[XII_STAG]_3b.xml
+/copy:XML/Samples/[XII_STAG]_3b.xml
+
+#begin XML/Samples/[xsoldier]_8_boss_main.xml
+/copy:XML/Samples/[xsoldier]_8_boss_main.xml
+
+#begin Graphics/Shaders/Bloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/Shaders/Bloom.fx
+
+#begin Graphics/Shaders/BloomExtract.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/Shaders/BloomExtract.fx
+
+#begin Graphics/Shaders/BloomCombine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/Shaders/BloomCombine.fx
+
+#begin Graphics/Shaders/GaussianBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/Shaders/GaussianBlur.fx
+
+#begin XML/unilateral.xml
+/copy:XML/unilateral.xml
+
+#begin XML/circles.xml
+/copy:XML/circles.xml
+
+#begin XML/spiral.xml
+/copy:XML/spiral.xml
+
+#begin Audio/SE/buy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/buy.wav
+
+#begin Audio/SE/choose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/choose.wav
+
+#begin Audio/SE/hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/hit.wav
+
+#begin Audio/SE/hurt.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/hurt.wav
+
+#begin Audio/SE/select.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/select.wav
+
+#begin Audio/SE/boss_shoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/boss_shoot.wav
+
+#begin Audio/SE/pass.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/pass.wav
+
+#begin Audio/SE/dead.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/dead.wav
+
+#begin Audio/SE/boss_dead.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SE/boss_dead.wav
+
+#begin XML/Tests/test1.xml
+/copy:XML/Tests/test1.xml
+
+#begin Graphics/Entities/boss_bullet_type1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type1.png
+
+#begin Graphics/Entities/boss_bullet_type2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type2.png
+
+#begin Graphics/Entities/boss_bullet_type3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type3.png
+
+#begin Graphics/Entities/player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/player.png
+
+#begin Graphics/Entities/player_bullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/player_bullet.png
+
+#begin Graphics/Pictures/gauge_left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/gauge_left.png
+
+#begin Graphics/Pictures/gauge_middle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/gauge_middle.png
+
+#begin Graphics/Pictures/gauge_right.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/gauge_right.png
+
+#begin Graphics/Pictures/life_icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/life_icon.png
+
+#begin Graphics/Pictures/player_hitbox.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/player_hitbox.png
+
+#begin Graphics/Pictures/background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/background.png
+
+#begin Graphics/Pictures/gamepad_icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/gamepad_icon.png
+
+#begin Graphics/Pictures/keyboard_icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/keyboard_icon.png
+
+#begin Graphics/Pictures/logo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/logo.png
+
+#begin Graphics/Entities/boss_bullet_type4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type4.png
+
+#begin Graphics/Entities/boss_bullet_type5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type5.png
+
+#begin Graphics/Entities/boss_bullet_type6.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_bullet_type6.png
+
+#begin XML/Patterns/basic.xml
+/copy:XML/Patterns/basic.xml
+
+#begin XML/Patterns/shootgun.xml
+/copy:XML/Patterns/shootgun.xml
+
+#begin Graphics/Pictures/laser.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/laser.png
+
+#begin Graphics/Pictures/glow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Pictures/glow.png
+
+#begin Graphics/Shaders/Edge.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Graphics/Shaders/Edge.fx
+
+#begin Graphics/Entities/base_turret.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/base_turret.png
+
+#begin Graphics/Entities/boss_core.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphics/Entities/boss_core.png
+
+#begin Audio/Musics/background.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Musics/background.mp3
+
+#begin Audio/Musics/menu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Musics/menu.mp3
+
