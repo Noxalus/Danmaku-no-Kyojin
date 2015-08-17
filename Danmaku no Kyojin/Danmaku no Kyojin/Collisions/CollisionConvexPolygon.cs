@@ -20,12 +20,6 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public bool IsFilled { get; set; }
 
-        public float HealthPoint
-        {
-            get { return _healthPoint; }
-            set { _healthPoint = value; }
-        }
-
         private List<Vector2> _axes;
         private List<Vector2> _circleAxes;
         private List<Vector2> _vertices;

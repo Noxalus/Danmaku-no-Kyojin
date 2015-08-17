@@ -26,20 +26,17 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private Mover _mover;
         private List<BulletPattern> _bulletPatterns;
         private int _currentPatternIndex;
-
         private float _health;
         private bool _displayHp;
         private static readonly Color InitialColor = new Color(0f, 0.75f, 0f, 0.65f);
         private static readonly Color HitColor = new Color(0f, 0.75f, 0f, 0.75f);
         private Color _color;
         private TimeSpan _changeColorTimer;
-
         private int _iteration;
         private float _step;
-
         private float _accelerationDecreaseFactor;
-
         private BossCore _core;
+        private Dictionary<CollisionConvexPolygon, float> _collisionBoxesHp; 
 
         // Turrets
         private List<Turret> _turrets;
@@ -93,6 +90,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             _turrets = turrets ?? new List<Turret>();
             _polygonShape = polygonShape;
+            _collisionBoxesHp = new Dictionary<CollisionConvexPolygon, float>();
         }
 
         public override void Initialize()
@@ -261,9 +259,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
                         if (bullet != null)
                         {
-                            collisionConvexPolygon.HealthPoint -= bullet.Power;
+                            _collisionBoxesHp[collisionConvexPolygon] -= bullet.Power;
 
-                            if (collisionConvexPolygon.HealthPoint <= 0)
+                            if (_collisionBoxesHp[collisionConvexPolygon] <= 0)
                             {
                                 float hue1 = GameRef.Rand.NextFloat(0, 6);
                                 float hue2 = (hue1 + GameRef.Rand.NextFloat(0, 2)) % 6f;
@@ -308,12 +306,12 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             // TODO: Part is dead?
             // A boss part is dead when its center is dead?
             // or when the number of sub-parts is less than a number?
-            //if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
-            //    center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
-            //{
-            //    TakeDamage(99999);
-            //}
-            //else
+            if (center.X > (Size.X / 2f - 2 * _step) + Position.X - Origin.X &&
+                center.X < (Size.X / 2f + 2 * _step) + Position.X - Origin.X)
+            {
+                TakeDamage(99999);
+            }
+            else
             {
                 var boxLocalPosition = box.GetLocalPosition();
                 
@@ -455,8 +453,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     var collisionConvexPolygon = collisionBox as CollisionConvexPolygon;
                     if (collisionConvexPolygon != null)
                     {
-                        var text = collisionConvexPolygon.HealthPoint.ToString();
-                        var position = collisionConvexPolygon.GetCenter();
+                        var text = _collisionBoxesHp[collisionConvexPolygon].ToString();
+                        var position = collisionConvexPolygon.GetCenterInWorldSpace();
 
                         position.X -= ControlManager.SpriteFont.MeasureString(text).X / 2;
                         position.Y -= ControlManager.SpriteFont.MeasureString(text).Y / 2;
@@ -484,6 +482,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private void ComputeCollisionBoxes()
         {
             CollisionBoxes.Clear();
+            _collisionBoxesHp.Clear();
 
             // TODO: Handle the case where there is 2 vertices with Y = 0
             var vertices = _structure.GetVertices();
@@ -546,7 +545,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                         topVertices[i]
                     };
 
-                    CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, boxVertices));
+                    var collisionBox = new CollisionConvexPolygon(this, Vector2.Zero, boxVertices);
+                    CollisionBoxes.Add(collisionBox);
+                    _collisionBoxesHp.Add(collisionBox, 100f);
+
                 }
             }
         }
