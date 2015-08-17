@@ -58,7 +58,14 @@ namespace Danmaku_no_Kyojin
         public static Vector2 PlayerBulletVelocity = new Vector2(1000f, 1000f);
         public const int PlayerLives = 5;
 
-        // Boss config
+        // Camera
+        public static readonly Vector2 CameraDistanceFromPlayer = new Vector2(
+            Resolution.X/ 3f, 
+            Resolution.Y / 3f
+        );
+        public static float CameraInterpolationAmount = 0.075f;
+
+        // Boss
         public static float MinBossPartArea = 10000f;
 
         // GameRef

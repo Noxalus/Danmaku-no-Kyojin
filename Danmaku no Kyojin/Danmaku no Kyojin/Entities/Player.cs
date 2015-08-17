@@ -60,6 +60,7 @@ namespace Danmaku_no_Kyojin.Entities
 
         // Camera
         private Camera2D _camera;
+        private Vector2 _cameraPosition;
 
         // Random
         private static Random _random;
@@ -86,6 +87,7 @@ namespace Danmaku_no_Kyojin.Entities
             Position = _originPosition;
             Origin = Vector2.Zero;
             _random = new Random();
+            _cameraPosition = Vector2.Zero;
         }
 
         public override void Initialize()
@@ -190,8 +192,8 @@ namespace Danmaku_no_Kyojin.Entities
                     }
 
                     // Mouse
-                    _distance.X = (_viewport.Width / 2) - InputHandler.MouseState.X;
-                    _distance.Y = (_viewport.Height / 2) - InputHandler.MouseState.Y;
+                    _distance.X = (_viewport.Width / 2f) - InputHandler.MouseState.X;
+                    _distance.Y = (_viewport.Height / 2f) - InputHandler.MouseState.Y;
 
                     Rotation = (float)Math.Atan2(_distance.Y, _distance.X) - MathHelper.PiOver2;
 
@@ -252,8 +254,19 @@ namespace Danmaku_no_Kyojin.Entities
 
                 UpdatePosition(dt);
             }
+            
+            _cameraPosition.X = MathHelper.Lerp(
+                _cameraPosition.X, 
+                Position.X - Config.CameraDistanceFromPlayer.X * (float)Math.Cos(Rotation + MathHelper.PiOver2), 
+                Config.CameraInterpolationAmount
+            );
+            _cameraPosition.Y = MathHelper.Lerp(
+                _cameraPosition.Y, 
+                Position.Y - Config.CameraDistanceFromPlayer.Y * (float)Math.Sin(Rotation + MathHelper.PiOver2), 
+                Config.CameraInterpolationAmount
+            );
 
-            _camera.Update(this.Position);
+            _camera.Update(_cameraPosition);
         }
 
         private void UpdatePosition(float dt)
