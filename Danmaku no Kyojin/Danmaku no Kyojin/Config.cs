@@ -22,7 +22,7 @@ namespace Danmaku_no_Kyojin
 
         // Screen
         public static bool FullScreen = false;
-        public static readonly Point Resolution = new Point(800, 600);
+        public static readonly Point Resolution = new Point(1280, 720);
 
         // Bullet Time
         public const float DesiredTimeModifier = 2f;
@@ -63,7 +63,11 @@ namespace Danmaku_no_Kyojin
             Resolution.X/ 3f, 
             Resolution.Y / 3f
         );
-        public static float CameraInterpolationAmount = 0.075f;
+        public static float CameraMotionInterpolationAmount = 0.075f;
+        public static float CameraZoomInterpolationAmount = 0.075f;
+        public static float CameraZoomLimit = 3f;
+        public static float CameraZoomMin = 0.3f;
+        public static float CameraZoomMax = 1f;
 
         // Boss
         public static float MinBossPartArea = 10000f;
