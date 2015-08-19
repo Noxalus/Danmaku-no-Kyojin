@@ -18,8 +18,6 @@ namespace Danmaku_no_Kyojin.Screens
         // Camera
         Viewport _defaultView;
 
-        private Texture2D _pixel;
-
         private List<Player> Players { get; set; }
         private Boss _boss;
 
@@ -63,7 +61,7 @@ namespace Danmaku_no_Kyojin.Screens
             player1.Initialize();
             Players.Add(player1);
 
-            _boss = new Boss(GameRef, Players, 30, 25);
+            _boss = new Boss(GameRef, Players, Config.MinBossIteration);
             _boss.Initialize();
 
         }
@@ -105,8 +103,7 @@ namespace Danmaku_no_Kyojin.Screens
                         gameTime = newGameTime;
                     }
 
-                    int i;
-                    for (i = 0; i < p.GetBullets().Count; i++)
+                    for (var i = 0; i < p.GetBullets().Count; i++)
                     {
                         var currentPlayerBullet = p.GetBullets()[i];
                         currentPlayerBullet.Update(gameTime);

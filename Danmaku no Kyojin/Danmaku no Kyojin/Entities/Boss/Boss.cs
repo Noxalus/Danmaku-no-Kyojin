@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Controls;
+using Danmaku_no_Kyojin.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -15,6 +16,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private DnK _gameRef;
 
         private TimeSpan _timer;
+        private int _defeatCounter;
 
         // Bullet engine
         public MoverManager MoverManager { get; set; }
@@ -30,10 +32,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         // Structure
         private BossPart _mainPart;
+        private bool _mainPartIsDead;
         private readonly List<BossPart> _parts;
         private BossCore _core;
         private int _iteration;
         private float _step;
+
+        // Previous structure
+        private BossPart _previousBossPart;
 
         // To debug
         private int _currentPartIndex;
@@ -46,26 +52,23 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         public Boss(DnK gameRef, List<Player> players, int iteration = 50, float step = 25)
         {
             _gameRef = gameRef;
+            _defeatCounter = 0;
             MoverManager = new MoverManager(gameRef);
             GameManager.GameDifficulty = Config.GameDifficultyDelegate;
             _players = players;
             _iteration = iteration;
             _step = step;
+            _previousBossPart = null;
 
             _parts = new List<BossPart>();
             _currentPartIndex = 0;
+
+            int targetPlayerId = _gameRef.Rand.Next(0, _players.Count);
+            MoverManager.Initialize(_players[targetPlayerId].GetPosition);
         }
 
         public void Initialize()
         {
-            int targetPlayerId = _gameRef.Rand.Next(0, _players.Count);
-
-            MoverManager.Initialize(_players[targetPlayerId].GetPosition);
-            MoverManager.movers.Clear();
-
-            _ready = true;
-            _timer = Config.BossInitialTimer;
-
             LoadContent();
         }
 
@@ -83,8 +86,34 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 _completeBulletPatterns.Add(pattern);
             }
 
-            _mainPart = new BossPart(_gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f), 4242f, _iteration, _step);
-            _mainPart.Initialize();
+            Reset();
+        }
+
+        private void Reset()
+        {
+            MoverManager.movers.Clear();
+
+            _mainPartIsDead = false;
+            _ready = true;
+            _timer = Config.BossInitialTimer;
+
+            if (_previousBossPart == null)
+            {
+                _mainPart = new BossPart(
+                    _gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f),
+                    4242f, _iteration, _step, null, null, true
+                );
+
+                _mainPart.Initialize();
+            }
+            else
+            {
+                _mainPart = _previousBossPart;
+                _mainPart.IterateStructure(_iteration);
+            }
+
+            _previousBossPart = (BossPart)_mainPart.Clone();
+
             _parts.Add(_mainPart);
 
             _core = new BossCore(_gameRef, _mainPart);
@@ -99,7 +128,18 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 _timer = Config.BossInitialTimer;
             }
 
+            // If the main part is destroyed, we destroy all parts
+            // (or if the boss core is destroyed instead)
+            if (!_core.IsAlive)
+            {
+                _defeatCounter++;
+                Reset();
+            }
+
             _core.Update(gameTime);
+
+            if (!_mainPartIsDead && !_mainPart.IsAlive)
+                _mainPartIsDead = true;
 
             for (int i = 0; i < _parts.Count; i++)
             {
@@ -109,22 +149,13 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     _parts.Remove(_parts[i]);
             }
 
-            if (_parts.Count == 0)
+            if (Config.Debug)
             {
-                // TODO: If all boss' parts are destroyed
-                // => We want to increment its size
-            }
-
-            // TODO: We need to detect when a part is splitted to instanciate a new BossPart
-
-            // [Debug] Move the current selected part with keyboard
-            if (_parts.Count > 0)
-            {
-                var currentBossPart = _parts[_currentPartIndex];
-                var dt = (float) gameTime.ElapsedGameTime.TotalSeconds*100;
-
-                if (Config.Debug)
+                if (_parts.Count > 0)
                 {
+                    var currentBossPart = _parts[_currentPartIndex];
+                    var dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
+
                     /*
                     //check input to increment/decrement the current bullet pattern
                     if (InputHandler.KeyPressed(Keys.A))
@@ -161,7 +192,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     {
                         AddBullet(false);
                     }
-                    else */if (InputHandler.KeyDown(Keys.Space))
+                    else */
+                    if (InputHandler.KeyDown(Keys.Space))
                     {
                         currentBossPart.GenerateStructure();
                     }
@@ -173,66 +205,66 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     {
                         currentBossPart.IterateStructure();
                     }
-                }
 
-                // Motion
+                    // Motion
 
-                if (InputHandler.KeyPressed(Keys.N))
-                    _currentPartIndex = (_currentPartIndex + 1) % _parts.Count;
+                    if (InputHandler.KeyPressed(Keys.N))
+                        _currentPartIndex = (_currentPartIndex + 1) % _parts.Count;
 
-                var acceleration = 0.1f;
-                if (InputHandler.KeyDown(Keys.I))
-                    currentBossPart.ApplyImpulse(new Vector2(0, -1), new Vector2(acceleration));
-                if (InputHandler.KeyDown(Keys.L))
-                    currentBossPart.ApplyImpulse(new Vector2(1, 0), new Vector2(acceleration));
-                if (InputHandler.KeyDown(Keys.K))
-                    currentBossPart.ApplyImpulse(new Vector2(0, 1), new Vector2(acceleration));
-                if (InputHandler.KeyDown(Keys.J))
-                    currentBossPart.ApplyImpulse(new Vector2(-1, 0), new Vector2(acceleration));
+                    var acceleration = 0.1f;
+                    if (InputHandler.KeyDown(Keys.I))
+                        currentBossPart.ApplyImpulse(new Vector2(0, -1), new Vector2(acceleration));
+                    if (InputHandler.KeyDown(Keys.L))
+                        currentBossPart.ApplyImpulse(new Vector2(1, 0), new Vector2(acceleration));
+                    if (InputHandler.KeyDown(Keys.K))
+                        currentBossPart.ApplyImpulse(new Vector2(0, 1), new Vector2(acceleration));
+                    if (InputHandler.KeyDown(Keys.J))
+                        currentBossPart.ApplyImpulse(new Vector2(-1, 0), new Vector2(acceleration));
 
-                // Left vector
-                if (InputHandler.KeyPressed(Keys.F))
-                {
-                    var direction = new Vector2(
-                        (float)Math.Cos(currentBossPart.Rotation) * -1,
-                        (float)-Math.Sin(currentBossPart.Rotation)
-                    );
+                    // Left vector
+                    if (InputHandler.KeyPressed(Keys.F))
+                    {
+                        var direction = new Vector2(
+                            (float)Math.Cos(currentBossPart.Rotation) * -1,
+                            (float)-Math.Sin(currentBossPart.Rotation)
+                        );
 
-                    /*
-                    var direction = new Vector2(
-                        (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
-                        (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
-                    );
-                    */
+                        /*
+                        var direction = new Vector2(
+                            (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
+                            (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
+                        );
+                        */
 
-                    currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
-                }
+                        currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
+                    }
 
-                // Right vector
-                if (InputHandler.KeyPressed(Keys.G))
-                {
-                    var direction = new Vector2(
-                        (float)-Math.Cos(currentBossPart.Rotation) * -1,
-                        (float)Math.Sin(currentBossPart.Rotation)
-                    );
+                    // Right vector
+                    if (InputHandler.KeyPressed(Keys.G))
+                    {
+                        var direction = new Vector2(
+                            (float)-Math.Cos(currentBossPart.Rotation) * -1,
+                            (float)Math.Sin(currentBossPart.Rotation)
+                        );
 
-                    direction = new Vector2(-direction.Y, direction.X);
+                        direction = new Vector2(-direction.Y, direction.X);
 
-                    currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
-                }
+                        currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
+                    }
 
-                if (InputHandler.KeyDown(Keys.PageUp))
-                {
-                    currentBossPart.Rotation += dt * 0.01f;
-                }
-                else if (InputHandler.KeyDown(Keys.PageDown))
-                {
-                    currentBossPart.Rotation -= dt * 0.01f;
-                }
+                    if (InputHandler.KeyDown(Keys.PageUp))
+                    {
+                        currentBossPart.Rotation += dt * 0.01f;
+                    }
+                    else if (InputHandler.KeyDown(Keys.PageDown))
+                    {
+                        currentBossPart.Rotation -= dt * 0.01f;
+                    }
 
-                if (InputHandler.KeyPressed(Keys.H))
-                {
-                    currentBossPart.DisplayHpSwitch();
+                    if (InputHandler.KeyPressed(Keys.H))
+                    {
+                        currentBossPart.DisplayHpSwitch();
+                    }
                 }
             }
 
@@ -242,7 +274,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         public bool Intersects(Entity entity)
         {
-            return _parts.Any(part => part.Intersects(entity));
+            return _parts.Any(part => part.Intersects(entity)) | _core.Intersects(entity);
         }
 
         public void Draw(GameTime gameTime, Matrix viewMatrix)
@@ -250,8 +282,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             foreach (var part in _parts)
             {
                 part.Draw(gameTime, viewMatrix);
-           }
+            }
 
+            _core.Draw(gameTime);
         }
 
         public bool IsReady()

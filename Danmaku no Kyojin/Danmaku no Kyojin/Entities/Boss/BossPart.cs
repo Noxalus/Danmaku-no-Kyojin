@@ -18,9 +18,10 @@ using Microsoft.Xna.Framework.Input;
 namespace Danmaku_no_Kyojin.Entities.Boss
 {
     // BossPart class contains motion + turrets logic and can be splitted in 2 BossPart
-    class BossPart : Entity
+    class BossPart : Entity, ICloneable
     {
         private readonly Boss _bossRef;
+        private readonly bool _mainPart;
         private BossStructure _structure;
         private MoverManager _moverManager;
         private Mover _mover;
@@ -72,10 +73,12 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             int iteration = 50, 
             float step = 25,
             List<Turret> turrets = null,
-            PolygonShape polygonShape = null)
+            PolygonShape polygonShape = null,
+            bool mainPart = false)
             : base(gameRef)
         {
             _bossRef = bossRef;
+            _mainPart = mainPart;
             _moverManager = moverManager;
             _bulletPatterns = bulletPatterns ?? new List<BulletPattern>();
 
@@ -91,6 +94,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _turrets = turrets ?? new List<Turret>();
             _polygonShape = polygonShape;
             _collisionBoxesHp = new Dictionary<CollisionConvexPolygon, float>();
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         public override void Initialize()
@@ -114,10 +122,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             // Audio
             if (_deadSound == null)
                 _deadSound = GameRef.Content.Load<SoundEffect>(@"Audio/SE/boss_dead");
-
+            /*
             _core = new BossCore(GameRef, this);
             _core.Initialize();
-
+            */
             base.LoadContent();
         }
 
@@ -237,7 +245,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 }
             }
 
-            _core.Update(gameTime);
+            //_core.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -301,7 +309,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private void Split(CollisionConvexPolygon box)
         {
             var newPolygonShape = _structure.Split(box);
-            var center = box.GetCenter();
+            var center = box.GetCenterInWorldSpace();
 
             // TODO: Part is dead?
             // A boss part is dead when its center is dead?
@@ -315,12 +323,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             {
                 var boxLocalPosition = box.GetLocalPosition();
                 
-                // TODO: Fix part detection
                 // Left (1) or right (-1) part?
                 var factor = (boxLocalPosition.X > Origin.X) ? 1 : -1;
                 
                 // If the break out part is not large enough => we don't create another part
-                // TODO: Use area instead of vertex number
                 if (newPolygonShape.Vertices != null && newPolygonShape.GetArea() > Config.MinBossPartArea)
                 {
                     var bossPart = new BossPart(
@@ -473,7 +479,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 turret.Draw(gameTime);
             }
 
-            _core.Draw(gameTime);
+            //_core.Draw(gameTime);
 
             base.Draw(gameTime);
         }
@@ -490,7 +496,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             var topVertices = new List<Vector2>(); // the highest vertex for each step
             var currentStep = 0f;
 
-            for (int i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
                 // Bottom part
                 if (vertices[i].Y >= 0)
@@ -533,23 +539,22 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             else
                 topVertices.Reverse();
 
-            if (bottomVertices.Count == topVertices.Count)
+            if (bottomVertices.Count != topVertices.Count)
+                    return;
+
+            for (var i = 1; i < bottomVertices.Count; i += 2)
             {
-                for (int i = 1; i < bottomVertices.Count; i += 2)
+                var boxVertices = new List<Vector2>
                 {
-                    var boxVertices = new List<Vector2>
-                    {
-                        bottomVertices[i],
-                        bottomVertices[i - 1],
-                        topVertices[i - 1],
-                        topVertices[i]
-                    };
+                    bottomVertices[i],
+                    bottomVertices[i - 1],
+                    topVertices[i - 1],
+                    topVertices[i]
+                };
 
-                    var collisionBox = new CollisionConvexPolygon(this, Vector2.Zero, boxVertices);
-                    CollisionBoxes.Add(collisionBox);
-                    _collisionBoxesHp.Add(collisionBox, 100f);
-
-                }
+                var collisionBox = new CollisionConvexPolygon(this, Vector2.Zero, boxVertices);
+                CollisionBoxes.Add(collisionBox);
+                _collisionBoxesHp.Add(collisionBox, 100f);
             }
         }
 
