@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Controls;
 using Danmaku_no_Kyojin.Entities;
@@ -20,9 +21,13 @@ namespace Danmaku_no_Kyojin.Screens
         private Vector2 _bulletInitialPosition;
 
         MoverManager _moverManager;
-        private List<BulletPattern> _myPatterns = new List<BulletPattern>();
-        private List<string> _patternNames = new List<string>();
+        private readonly List<BulletPattern> _myPatterns = new List<BulletPattern>();
+        private readonly List<string> _patternNames = new List<string>();
+        private readonly String _patternDirectory;
+        private readonly String _patternFileName;
+        private readonly FileInfo _patternFile;
         private int _currentPattern = 0;
+        private FileSystemWatcher _watcher;
 
         // Random
         public static readonly Random Rand = new Random();
@@ -35,6 +40,9 @@ namespace Danmaku_no_Kyojin.Screens
             : base(game, manager)
         {
             _bulletInitialPosition = new Vector2(Config.GameArea.X / 2f, Config.GameArea.Y / 3f);
+            _patternDirectory = @"Content\Data\Patterns\";
+            _patternFileName = "test.xml";
+            _patternFile = new FileInfo(_patternDirectory + _patternFileName);
         }
 
         public override void Initialize()
@@ -55,6 +63,62 @@ namespace Danmaku_no_Kyojin.Screens
 
             _moverManager.Initialize(_player.GetPosition);
             _moverManager.movers.Clear();
+
+            AddBullet(true);
+
+            // Watch the bullet pattern file
+            _watcher = new FileSystemWatcher
+            {
+                Path = _patternDirectory,
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = _patternFileName
+            };
+
+            // Add event handler
+            _watcher.Changed += OnChanged;
+
+            // Begin watching
+            _watcher.EnableRaisingEvents = true;
+
+        }
+
+        // Define the event handlers. 
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            try
+            {
+                _watcher.EnableRaisingEvents = false;
+             
+                // Wait until the file is not in used
+                while (IsFileLocked(_patternFile)) { Thread.Sleep(10); }
+
+                LoadPatternFile();
+                AddBullet();
+            }
+            finally
+            {
+                _watcher.EnableRaisingEvents = true;
+            }
+        }
+
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                stream?.Close();
+            }
+
+            return false;
         }
 
         protected override void LoadContent()
@@ -63,54 +127,41 @@ namespace Danmaku_no_Kyojin.Screens
 
             _backgroundImage = GameRef.Content.Load<Texture2D>("Graphics/Pictures/background");
 
-            //Get all the xml files
-            foreach (var source in Directory.GetFiles(@"Content\XML\Tests", "*.xml", SearchOption.AllDirectories))
-            {
-                //store the name
-                _patternNames.Add(source);
-
-                //load the pattern
-                var pattern = new BulletPattern();
-                pattern.ParseXML(source);
-                _myPatterns.Add(pattern);
-            }
-
-            _currentPattern = 0;
-            AddBullet(true);
+            LoadPatternFile();
         }
 
-        protected override void UnloadContent()
+        private void LoadPatternFile()
         {
+            _myPatterns.Clear();
+            _patternNames.Clear();
+            
+            _patternNames.Add("Test");
+            var pattern = new BulletPattern();
+            pattern.ParseXML(_patternDirectory + _patternFileName);
+            _myPatterns.Add(pattern);
         }
 
         public override void Update(GameTime gameTime)
         {
-            HandleInput();
-
             if (InputHandler.PressedCancel())
             {
                 UnloadContent();
                 StateManager.ChangeState(GameRef.TitleScreen);
             }
 
-            base.Update(gameTime);
+            HandleInput();
 
             _player.Update(gameTime);
 
-            // Fire the pattern when there is no bullet on the screen
-            if (_moverManager.movers.Count < 1)
-                AddBullet();
-
             _moverManager.Update(gameTime);
             _moverManager.FreeMovers();
+
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            ControlManager.Draw(GameRef.SpriteBatch);
-
-            var backgroundColor = Color.CornflowerBlue;
-            GraphicsDevice.Clear(backgroundColor);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Draw game arena background
             GameRef.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, _player.Camera.GetTransformation());
@@ -121,10 +172,7 @@ namespace Danmaku_no_Kyojin.Screens
 
             _player.Draw(gameTime);
 
-            foreach (var mover in _moverManager.movers)
-            {
-                mover.Draw(gameTime);
-            }
+            _moverManager.Draw(gameTime);
 
             GameRef.SpriteBatch.End();
 
@@ -153,20 +201,21 @@ namespace Danmaku_no_Kyojin.Screens
                 AddBullet();
             else if (InputHandler.KeyDown(Keys.Space))
                 AddBullet();
+            else if (InputHandler.KeyPressed(Keys.R))
+                _moverManager.movers.Clear();
+            else if (InputHandler.KeyPressed(Keys.E))
+                System.Diagnostics.Process.Start(_patternDirectory + _patternFileName);
         }
 
         private void AddBullet(bool clear = false)
         {
             if (clear)
-            {
-                //clear out all the bulelts
                 _moverManager.movers.Clear();
-            }
 
             //add a new bullet in the center of the screen
             var mover = (Mover)_moverManager.CreateBullet();
             mover.X = _bulletInitialPosition.X;
-            mover.Y = _bulletInitialPosition.Y - 5;
+            mover.Y = _bulletInitialPosition.Y;
             mover.SetBullet(_myPatterns[_currentPattern].RootNode);
         }
     }
