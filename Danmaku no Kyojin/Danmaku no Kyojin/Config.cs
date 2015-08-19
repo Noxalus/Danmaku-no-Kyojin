@@ -39,16 +39,16 @@ namespace Danmaku_no_Kyojin
             {"Slow", Keys.LeftShift },
         };
 
-        public static readonly Buttons[] PlayerGamepadInput = new Buttons[]
+        public static readonly Buttons[] PlayerGamepadInput =
         {
             Buttons.LeftTrigger, Buttons.RightTrigger
         };
 
-        public static Controller[] PlayersController = new Controller[]
-            {
-                Controller.Keyboard,
-                Controller.GamePad
-            };
+        public static Controller[] PlayersController =
+        {
+            Controller.Keyboard,
+            Controller.GamePad
+        };
 
         public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 3);
         public static readonly TimeSpan DefaultBulletTimeTimer = new TimeSpan(0, 0, 1);
@@ -63,19 +63,22 @@ namespace Danmaku_no_Kyojin
             Resolution.X/ 3f, 
             Resolution.Y / 3f
         );
-        public static float CameraMotionInterpolationAmount = 0.075f;
-        public static float CameraZoomInterpolationAmount = 0.075f;
-        public static float CameraZoomLimit = 3f;
-        public static float CameraZoomMin = 0.3f;
-        public static float CameraZoomMax = 1f;
+        public const float CameraMotionInterpolationAmount = 0.05f;
+        public const float CameraZoomInterpolationAmount = 0.05f;
+        public const float CameraZoomLimit = 3f;
+        public const float CameraZoomMin = 0.3f;
+        public const float CameraZoomMax = 1f;
+        public const bool DisableCameraZoom = false;
 
         // Boss
         public static float MinBossPartArea = 10000f;
+        public static int MinBossIteration = 5;
 
         // GameRef
         public static readonly Point GameArea = new Point(2400, 1800);
 
-        public static float GameDifficulty = 0.5f; 
+        public const float GameDifficulty = 0.5f;
+
         public static float GameDifficultyDelegate()
         {
             return GameDifficulty;

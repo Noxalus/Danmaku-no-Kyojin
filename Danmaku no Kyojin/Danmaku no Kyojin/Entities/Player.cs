@@ -61,6 +61,7 @@ namespace Danmaku_no_Kyojin.Entities
         // Camera
         private Camera2D _camera;
         private Vector2 _cameraPosition;
+        private bool _forceZoom;
 
         // Random
         private static Random _random;
@@ -88,6 +89,7 @@ namespace Danmaku_no_Kyojin.Entities
             Origin = Vector2.Zero;
             _random = new Random();
             _cameraPosition = new Vector2(_viewport.Width / 2f, _viewport.Height / 2f);
+            _forceZoom = false;
         }
 
         public override void Initialize()
@@ -209,6 +211,11 @@ namespace Danmaku_no_Kyojin.Entities
                     {
                         Fire(gameTime);
                     }
+
+                    if (InputHandler.MouseState.RightButton == ButtonState.Pressed)
+                        _forceZoom = true;
+                    else if (_forceZoom)
+                        _forceZoom = false;
                 }
                 else if (_controller == Config.Controller.GamePad)
                 {
@@ -269,18 +276,30 @@ namespace Danmaku_no_Kyojin.Entities
 
             _camera.Update(_cameraPosition);
 
-            // Update camera zoom according to mouse distance from player
-            var mouseWorldPosition = new Vector2(
-                _cameraPosition.X - GameRef.Graphics.GraphicsDevice.Viewport.Width / 2f + InputHandler.MouseState.X,
-                _cameraPosition.Y - GameRef.Graphics.GraphicsDevice.Viewport.Height / 2f + InputHandler.MouseState.Y
-            );
+            if (!Config.DisableCameraZoom)
+            {
+                // Update camera zoom according to mouse distance from player
+                var mouseWorldPosition = new Vector2(
+                    _cameraPosition.X - GameRef.Graphics.GraphicsDevice.Viewport.Width/2f + InputHandler.MouseState.X,
+                    _cameraPosition.Y - GameRef.Graphics.GraphicsDevice.Viewport.Height/2f + InputHandler.MouseState.Y
+                    );
 
-            var mouseDistanceFromPlayer = (float)Math.Sqrt(Math.Pow(Position.X - mouseWorldPosition.X, 2) + Math.Pow(Position.Y - mouseWorldPosition.Y, 2));
+                var mouseDistanceFromPlayer =
+                    (float)
+                        Math.Sqrt(Math.Pow(Position.X - mouseWorldPosition.X, 2) +
+                                  Math.Pow(Position.Y - mouseWorldPosition.Y, 2));
 
-            var cameraZoom = GameRef.Graphics.GraphicsDevice.Viewport.Width / mouseDistanceFromPlayer;
-            cameraZoom = cameraZoom > Config.CameraZoomLimit ? 1f : MathHelper.Clamp(cameraZoom / Config.CameraZoomLimit, Config.CameraZoomMin, Config.CameraZoomMax);
+                var cameraZoom = GameRef.Graphics.GraphicsDevice.Viewport.Width/mouseDistanceFromPlayer;
 
-            _camera.Zoom = MathHelper.Lerp(_camera.Zoom, cameraZoom, Config.CameraZoomInterpolationAmount);
+                if (_forceZoom)
+                    cameraZoom = 1f;
+                else
+                    cameraZoom = cameraZoom > Config.CameraZoomLimit
+                        ? 1f
+                        : MathHelper.Clamp(cameraZoom/Config.CameraZoomLimit, Config.CameraZoomMin, Config.CameraZoomMax);
+
+                _camera.Zoom = MathHelper.Lerp(_camera.Zoom, cameraZoom, Config.CameraZoomInterpolationAmount);
+            }
         }
 
         private void UpdatePosition(float dt)
