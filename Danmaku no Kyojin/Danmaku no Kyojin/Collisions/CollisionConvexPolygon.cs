@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Danmaku_no_Kyojin.Utils;
-using System.Diagnostics;
 
 namespace Danmaku_no_Kyojin.Collisions
 {
@@ -21,7 +20,6 @@ namespace Danmaku_no_Kyojin.Collisions
         public bool IsFilled { get; set; }
 
         private List<Vector2> _axes;
-        private List<Vector2> _circleAxes;
         private List<Vector2> _vertices;
         private Vector2 _localPosition;
         private Vector2 _center;
@@ -32,7 +30,7 @@ namespace Danmaku_no_Kyojin.Collisions
 
         #region Accessors
 
-        public List<Vector2> GetAxes()
+        private List<Vector2> GetAxes()
         {
             return _axes;
         }
@@ -45,7 +43,6 @@ namespace Danmaku_no_Kyojin.Collisions
             Parent = parent;
             Vertices = vertices;
             _axes = new List<Vector2>();
-            _circleAxes = new List<Vector2>();
             _healthPoint = healthPoint;
             _localPosition = Vector2.Zero;
             _center = Vector2.Zero;
@@ -55,76 +52,135 @@ namespace Danmaku_no_Kyojin.Collisions
 
         public override bool Intersects(CollisionElement collisionElement)
         {
-            if (collisionElement is CollisionConvexPolygon)
-                return Intersects(collisionElement as CollisionConvexPolygon);
+            var polygon = collisionElement as CollisionConvexPolygon;
+            if (polygon != null)
+                return Intersects(polygon);
 
-            if (collisionElement is CollisionCircle)
-                return Intersects(collisionElement as CollisionCircle);
+            var circle = collisionElement as CollisionCircle;
+            if (circle != null)
+                return Intersects(circle);
 
             return collisionElement.Intersects(this);
         }
 
         private bool Intersects(CollisionConvexPolygon element)
         {
-            // loop over the axes of this polygon
+            // Loop over the axes of this polygon
             for (var i = 0; i < _axes.Count; i++)
             {
                 var axis = _axes[i];
-                // project both shapes onto the axis
+                
+                // Project both shapes onto the axis
                 var p1 = Project(axis);
                 var p2 = element.Project(axis);
-                // do the projections overlap?
+
+                // Do the projections overlap?
                 if (!Overlap(p1, p2))
                 {
-                    // then we can guarantee that the shapes do not overlap
+                    // Then we can guarantee that the shapes do not overlap
                     return false;
                 }
             }
             
-            // loop over element polygon's axes
+            // Loop over element polygon's axes
             List<Vector2> axes = element.GetAxes();
             for (int i = 0; i < axes.Count; i++)
             {
                 Vector2 axis = axes[i];
-                // project both shapes onto the axis
+                
+                // Project both shapes onto the axis
                 Vector2 p1 = Project(axis);
                 Vector2 p2 = element.Project(axis);
-                // do the projections overlap?
+                
+                // Do the projections overlap?
                 if (!Overlap(p1, p2))
                 {
-                    // then we can guarantee that the shapes do not overlap
+                    // Then we can guarantee that the shapes do not overlap
                     return false;
                 }
             }
 
-            // if we get here then we know that every axis had overlap on it
+            // If we get here then we know that every axis had overlap on it
             // so we can guarantee an intersection
             return true;
         }
 
-        private bool Intersects(CollisionCircle element)
+        private bool Intersects(CollisionCircle circle)
         {
-            ComputeCircleAxes(element);
+            float radiusSquared = circle.Radius * circle.Radius;
+            var vertex = GetWorldPosition(Vertices[Vertices.Count - 1]);
+            var circleCenter = circle.GetCenter();
+            float nearestDistance = float.MaxValue;
+            bool nearestIsInside = false;
+            int nearestVertex = -1;
+            bool lastIsInside = false;
 
-            // loop over the axes of this polygon
-            for (int i = 0; i < _axes.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                Vector2 axis = _axes[i];
-                // project both shapes onto the axis
-                Vector2 p1 = this.Project(axis);
-                Vector2 p2 = element.Project(axis);
+                var nextVertex = GetWorldPosition(Vertices[i]);
+                var axis = circleCenter - vertex;
+                float distance = axis.LengthSquared() - radiusSquared;
 
-                // do the projections overlap?
-                if (!Overlap(p1, p2))
+                if (distance <= 0)
+                    return true;
+
+                bool isInside = false;
+                var edge = nextVertex - vertex;
+                float edgeLengthSquared = edge.LengthSquared();
+
+                if (!edgeLengthSquared.Equals(0))
                 {
-                    // then we can guarantee that the shapes do not overlap
-                    return false;
+                    float dot = Vector2.Dot(edge, axis);
+
+                    if (dot >= 0 && dot <= edgeLengthSquared)
+                    {
+                        var projection = vertex + (dot / edgeLengthSquared) * edge;
+
+                        axis = projection - circleCenter;
+
+                        if (axis.LengthSquared() <= radiusSquared)
+                            return true;
+
+                        if (edge.X > 0)
+                        {
+                            if (axis.Y > 0)
+                                return false;
+                        }
+                        else if (edge.X < 0)
+                        {
+                            if (axis.Y < 0)
+                                return false;
+                        }
+                        else if (edge.Y > 0)
+                        {
+                            if (axis.X < 0)
+                                return false;
+                        }
+                        else
+                        {
+                            if (axis.X > 0)
+                                return false;
+                        }
+
+                        isInside = true;
+                    }
                 }
+
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestIsInside = isInside || lastIsInside;
+                    nearestVertex = i;
+                }
+
+                vertex = nextVertex;
+                lastIsInside = isInside;
             }
 
-            // if we get here then we know that every axis had overlap on it
-            // so we can guarantee an intersection
-            return true;
+            if (nearestVertex == 0)
+                return nearestIsInside || lastIsInside;
+
+            return nearestIsInside;
         }
 
         public override void Draw(SpriteBatch sp)
@@ -144,23 +200,14 @@ namespace Danmaku_no_Kyojin.Collisions
                     position.X,
                     position.Y, Color.Red);
 
-                Vector2 axis = Vector2.Normalize(position - previousPosition);
                 /*
+                Vector2 axis = Vector2.Normalize(position - previousPosition);
                 sp.DrawLine(
                     (previousPosition.X + position.X) / 2f, 
                     (previousPosition.Y + position.Y) / 2f,
                     (previousPosition.X) + axis.Y * 2000, 
                     (previousPosition.Y) - axis.X * 2000,
                     Color.Red);
-                */
-                /*
-                if (_circleAxes.Count > 0)
-                {
-                    sp.DrawLine(
-                        previousPosition.X, previousPosition.Y,
-                        (previousPosition.X) + _circleAxes[i - 1].X * 2000, (previousPosition.Y) - _circleAxes[i - 1].Y * -2000,
-                        Color.Red);
-                }
                 */
 
                 previousPosition = position;
@@ -260,9 +307,7 @@ namespace Danmaku_no_Kyojin.Collisions
                 var currentCenter = (Vertices[i] + Vertices[(i + 1) % Vertices.Count]) / 2f;
 
                 if (previousCenter != Vector2.Zero)
-                {
                     center = (previousCenter + currentCenter) / 2f;
-                }
 
                 previousCenter = currentCenter;
             }
@@ -295,27 +340,13 @@ namespace Danmaku_no_Kyojin.Collisions
             }
         }
 
-        private void ComputeCircleAxes(CollisionCircle element)
-        {
-            _circleAxes.Clear();
-
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                Vector2 position = GetWorldPosition(Vertices[i]);
-
-                Vector2 edge = element.GetCenter() - position;
-                var normal = new Vector2(edge.Y, -edge.X);
-                _circleAxes.Add(normal);
-            }
-        }
-
-        public bool Overlap(Vector2 p1, Vector2 p2)
+        private bool Overlap(Vector2 p1, Vector2 p2)
         {
             // P = (X, Y) with X = min and Y = max
             return (p1.Y > p2.X && p1.X < p2.Y) || (p2.Y > p1.X && p2.Y < p1.X);
         }
 
-        public Vector2 Project(Vector2 axis)
+        private Vector2 Project(Vector2 axis)
         {
             if (Vertices.Count == 0)
                 return Vector2.Zero;

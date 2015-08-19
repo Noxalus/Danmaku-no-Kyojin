@@ -19,16 +19,7 @@ namespace Danmaku_no_Kyojin.Entities
 
             WaveMode = false;
 
-            var vertices = new List<Vector2>
-                {
-                    new Vector2(0, 0),
-                    new Vector2(sprite.Width, 0),
-                    new Vector2(sprite.Width, sprite.Height),
-                    new Vector2(0, sprite.Height),
-                };
-
-            CollisionBoxes.Add(new CollisionConvexPolygon(this, Vector2.Zero, vertices));
-            //CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, sprite.Width / 2f));
+            CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, sprite.Width / 2f));
 
             Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
         }
