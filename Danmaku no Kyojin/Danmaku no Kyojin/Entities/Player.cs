@@ -49,6 +49,12 @@ namespace Danmaku_no_Kyojin.Entities
         private int _lives;
         public bool IsInvincible { get; set; }
         private TimeSpan _invincibleTime;
+        private TimeSpan _timeBeforeRespawn;
+
+        // Shield
+        private Texture2D _shieldSprite;
+        private Vector2 _shieldOrigin;
+        private CollisionCircle _shieldCollisionCircle;
 
         // HUD
         private int _score;
@@ -61,7 +67,7 @@ namespace Danmaku_no_Kyojin.Entities
         // Camera
         private Camera2D _camera;
         private Vector2 _cameraPosition;
-        private bool _forceZoom;
+        private bool _focusMode;
 
         // Random
         private static Random _random;
@@ -89,7 +95,8 @@ namespace Danmaku_no_Kyojin.Entities
             Origin = Vector2.Zero;
             _random = new Random();
             _cameraPosition = new Vector2(_viewport.Width / 2f, _viewport.Height / 2f);
-            _forceZoom = false;
+            _focusMode = false;
+            _timeBeforeRespawn = TimeSpan.Zero;
         }
 
         public override void Initialize()
@@ -103,20 +110,15 @@ namespace Danmaku_no_Kyojin.Entities
             _lives = 10;//Improvements.LivesNumberData[PlayerData.LivesNumberIndex].Key;
 
             IsInvincible = false;
-            _invincibleTime = Improvements.InvicibleTimeData[PlayerData.InvicibleTimeIndex].Key;
+            _invincibleTime = Config.PlayerInvicibleTime;
 
             BulletTime = false;
-
             BulletFrequence = new TimeSpan(0);
-
             IsAlive = true;
 
             _score = 0;
-
             _bulletTimeTimer = Config.DefaultBulletTimeTimer;
-
             _hitboxRadius = (float)Math.PI * 1.5f * 2;
-
             _camera = new Camera2D(_viewport, 1f);
 
             base.Initialize();
@@ -130,6 +132,10 @@ namespace Danmaku_no_Kyojin.Entities
             _bulletSprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/player_bullet");
             _hitboxSprite = GameRef.Content.Load<Texture2D>("Graphics/Pictures/player_hitbox");
             CollisionBoxes.Add(new CollisionCircle(this, new Vector2(Sprite.Height / 6f, Sprite.Height / 6f), _hitboxRadius/2f));
+
+            _shieldSprite = GameRef.Content.Load<Texture2D>("Graphics/Entities/shield");
+            _shieldOrigin = new Vector2(_shieldSprite.Width / 2f, _shieldSprite.Height / 2f);
+            _shieldCollisionCircle = new CollisionCircle(this, Vector2.Zero, _shieldSprite.Width / 2f);
 
             _lifeIcon = GameRef.Content.Load<Texture2D>("Graphics/Pictures/life_icon");
 
@@ -152,16 +158,28 @@ namespace Danmaku_no_Kyojin.Entities
 
             if (IsInvincible)
             {
-                _invincibleTime -= gameTime.ElapsedGameTime;
-
-                if (_invincibleTime.Milliseconds <= 0)
+                if (_timeBeforeRespawn.TotalMilliseconds > 0)
                 {
-                    _invincibleTime = Config.PlayerInvicibleTimer;
-                    Position = _originPosition;
-                    IsInvincible = false;
+                    _timeBeforeRespawn -= gameTime.ElapsedGameTime;
+
+                    if (_timeBeforeRespawn.TotalMilliseconds <= 0)
+                    {
+                        Position = _originPosition;
+                    }
+                }
+                else
+                {
+                    _invincibleTime -= gameTime.ElapsedGameTime;
+
+                    if (_invincibleTime.TotalMilliseconds <= 0)
+                    {
+                        _invincibleTime = Config.PlayerInvicibleTime;
+                        IsInvincible = false;
+                        CollisionBoxes.Remove(_shieldCollisionCircle);
+                    }
                 }
             }
-            else
+            //else
             {
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -213,9 +231,15 @@ namespace Danmaku_no_Kyojin.Entities
                     }
 
                     if (InputHandler.MouseState.RightButton == ButtonState.Pressed)
-                        _forceZoom = true;
-                    else if (_forceZoom)
-                        _forceZoom = false;
+                    {
+                        _focusMode = true;
+                        SlowMode = true;
+                    }
+                    else if (_focusMode)
+                    {
+                        _focusMode = false;
+                        SlowMode = false;
+                    }
                 }
                 else if (_controller == Config.Controller.GamePad)
                 {
@@ -291,7 +315,7 @@ namespace Danmaku_no_Kyojin.Entities
 
                 var cameraZoom = GameRef.Graphics.GraphicsDevice.Viewport.Width/mouseDistanceFromPlayer;
 
-                if (_forceZoom)
+                if (_focusMode)
                     cameraZoom = 1f;
                 else
                     cameraZoom = cameraZoom > Config.CameraZoomLimit
@@ -321,9 +345,12 @@ namespace Danmaku_no_Kyojin.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            if (!IsInvincible)
+            if (_timeBeforeRespawn.TotalMilliseconds <= 0)
             {
                 GameRef.SpriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, Origin, 1f, SpriteEffects.None, 0f);
+
+                if (IsInvincible)
+                    GameRef.SpriteBatch.Draw(_shieldSprite, Position, null, Color.White, 0f, new Vector2(_shieldSprite.Width / 2f, _shieldSprite.Height / 2f), 1f, SpriteEffects.None, 0f);
 
                 // Draw Hitbox
                 if (SlowMode)
@@ -481,7 +508,12 @@ namespace Danmaku_no_Kyojin.Entities
                     // Add randomness to bullet direction
                     float aimAngle = direction.ToAngle();
                     Quaternion aimQuat = Quaternion.CreateFromYawPitchRoll(0, 0, aimAngle);
-                    float randomSpread = GameRef.Rand.NextFloat(-.25f, .25f);
+                    float spreadAmount = 0.25f;
+
+                    if (_focusMode)
+                        spreadAmount /= 3f;
+
+                    float randomSpread = GameRef.Rand.NextFloat(-spreadAmount, spreadAmount);
 
                     direction = MathUtil.FromPolar(aimAngle + randomSpread, 11f);
                     direction.Normalize();
@@ -581,7 +613,9 @@ namespace Danmaku_no_Kyojin.Entities
                     GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, Position, color, 190, 1.5f, state);
                 }
 
+                _timeBeforeRespawn = Config.PlayerTimeBeforeRespawn;
                 IsInvincible = true;
+                CollisionBoxes.Add(_shieldCollisionCircle);
             }
         }
 

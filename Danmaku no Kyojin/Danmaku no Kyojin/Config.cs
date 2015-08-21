@@ -50,9 +50,10 @@ namespace Danmaku_no_Kyojin
             Controller.GamePad
         };
 
-        public static readonly TimeSpan PlayerInvicibleTimer = new TimeSpan(0, 0, 3);
-        public static readonly TimeSpan DefaultBulletTimeTimer = new TimeSpan(0, 0, 1);
-        public static readonly TimeSpan PlayerShootFrequency = new TimeSpan(0, 0, 0, 0, 1);
+        public static readonly TimeSpan PlayerTimeBeforeRespawn = TimeSpan.FromSeconds(1);
+        public static readonly TimeSpan PlayerInvicibleTime = TimeSpan.FromSeconds(10);
+        public static readonly TimeSpan DefaultBulletTimeTimer = TimeSpan.FromSeconds(1);
+        public static readonly TimeSpan PlayerShootFrequency = TimeSpan.FromMilliseconds(1);
         public const float PlayerMaxVelocity = 800f;
         public const float PlayerMaxSlowVelocity = 125f;
         public static Vector2 PlayerBulletVelocity = new Vector2(1000f, 1000f);
@@ -68,7 +69,7 @@ namespace Danmaku_no_Kyojin
         public const float CameraZoomLimit = 3f;
         public const float CameraZoomMin = 0.3f;
         public const float CameraZoomMax = 1f;
-        public const bool DisableCameraZoom = false;
+        public const bool DisableCameraZoom = true;
 
         // Boss
         public static float MinBossPartArea = 10000f;
