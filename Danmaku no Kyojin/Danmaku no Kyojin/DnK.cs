@@ -31,6 +31,9 @@ namespace Danmaku_no_Kyojin
 
         public Rectangle ScreenRectangle;
 
+        // Pause
+        public bool Pause;
+
         // Useful pixel
         public readonly Texture2D Pixel;
 
@@ -151,8 +154,6 @@ namespace Danmaku_no_Kyojin
                 Graphics.IsFullScreen = Config.FullScreen; 
                 Graphics.ApplyChanges();
             }
-
-            ParticleManager.Update();
 
             base.Update(gameTime);
         }

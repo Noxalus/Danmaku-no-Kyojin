@@ -93,7 +93,7 @@ namespace Danmaku_no_Kyojin.Screens
                 while (IsFileLocked(_patternFile)) { Thread.Sleep(10); }
 
                 LoadPatternFile();
-                AddBullet();
+                AddBullet(true);
             }
             finally
             {
@@ -143,11 +143,18 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (InputHandler.PressedCancel())
             {
                 UnloadContent();
                 StateManager.ChangeState(GameRef.TitleScreen);
             }
+            else if (InputHandler.KeyPressed(Keys.P))
+                GameRef.Pause = !GameRef.Pause;
+
+            if (GameRef.Pause)
+                return;
 
             HandleInput();
 
@@ -155,8 +162,6 @@ namespace Danmaku_no_Kyojin.Screens
 
             _moverManager.Update(gameTime);
             _moverManager.FreeMovers();
-
-            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)

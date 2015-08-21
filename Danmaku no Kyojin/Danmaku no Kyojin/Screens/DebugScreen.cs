@@ -79,15 +79,20 @@ namespace Danmaku_no_Kyojin.Screens
 
         public override void Update(GameTime gameTime)
         {
-            HandleInput();
+            base.Update(gameTime);
 
             if (InputHandler.PressedCancel())
             {
                 UnloadContent();
                 StateManager.ChangeState(GameRef.TitleScreen);
             }
+            else if (InputHandler.KeyPressed(Keys.P))
+                GameRef.Pause = !GameRef.Pause;
 
-            base.Update(gameTime);
+            if (GameRef.Pause)
+                return;
+
+            HandleInput();
 
             foreach (var p in Players)
             {
@@ -166,9 +171,8 @@ namespace Danmaku_no_Kyojin.Screens
             }
 
             _boss.Update(gameTime);
-            
-            if (Config.Debug && InputHandler.KeyPressed(Keys.C))
-                Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
+
+            GameRef.ParticleManager.Update();
         }
 
         public override void Draw(GameTime gameTime)
@@ -231,22 +235,28 @@ namespace Danmaku_no_Kyojin.Screens
             "Bounding boxes: " + boundingBoxCount,
             new Vector2(0, 60), Color.White);
 
+            GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
+             "Boss core HP: " + _boss.BossCore.Hp,
+             new Vector2(0, 80), Color.White);
+
+            int startY = 120;
+            int elementCount = 4;
             for (int i = 0; i < _boss.Parts.Count; i++)
             {
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " position: " + _boss.Parts[i].Position,
-                 new Vector2(0, 80 + (4 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, (startY + 20 * 1) + (elementCount * 20 * i) + (20 * i)), Color.White);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " origin: " + _boss.Parts[i].Origin,
-                 new Vector2(0, 100 + (4 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, (startY + 20 * 2) + (elementCount * 20 * i) + (20 * i)), Color.White);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " rotation: " + Math.Round(_boss.Parts[i].Rotation, 2) + 
                  " (cos: " + Math.Round(Math.Cos(_boss.Parts[i].Rotation), 2) + 
                  ", sin: " + Math.Round(Math.Sin(_boss.Parts[i].Rotation), 2) + ")",
-                 new Vector2(0, 120 + (4 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, (startY + 20 * 3) + (elementCount * 20 * i) + (20 * i)), Color.White);
                 GameRef.SpriteBatch.DrawString(ControlManager.SpriteFont,
                  "Part #" + i + " area: " + Math.Round(_boss.Parts[i].GetArea(), 2),
-                 new Vector2(0, 140 + (4 * 20 * i) + (20 * i)), Color.White);
+                 new Vector2(0, (startY + 20 * 4) + (elementCount * 20 * i) + (20 * i)), Color.White);
             }
 
             GameRef.SpriteBatch.End();
@@ -258,9 +268,9 @@ namespace Danmaku_no_Kyojin.Screens
         private void HandleInput()
         {
             if (InputHandler.KeyPressed(Keys.B))
-            {
                 _useBloom = !_useBloom;
-            }
+            else if (Config.Debug && InputHandler.KeyPressed(Keys.C))
+                Config.DisplayCollisionBoxes = !Config.DisplayCollisionBoxes;
         }
     }
 }
