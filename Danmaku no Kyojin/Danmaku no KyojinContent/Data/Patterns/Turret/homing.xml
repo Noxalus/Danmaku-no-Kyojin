@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE bulletml SYSTEM "http://www.asahi-net.or.jp/~cs8k-cyu/bulletml/bulletml.dtd">
-<bulletml type="vertical" xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+<!DOCTYPE bulletml SYSTEM "../bulletml.dtd">
+<bulletml type="vertical">
   <action label='top'>
     <fire>
       <direction>-90</direction>
@@ -30,11 +30,12 @@
         <actionRef label="homing" />
       </bullet>
     </fire>
+	<vanish/>
   </action>
 
   <action label="homing">
     <repeat>
-      <times>9999</times>
+      <times>50</times>
       <action>
         <changeDirection>
           <direction type="aim">0</direction>

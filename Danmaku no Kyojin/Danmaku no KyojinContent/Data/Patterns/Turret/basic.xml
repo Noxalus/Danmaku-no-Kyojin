@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bulletml SYSTEM "../bulletml.dtd">
+<bulletml type="vertical">
+  <action label='top'>
+    <fire>
+      <direction>-90</direction>
+      <speed>3</speed>
+      <bullet>
+        <actionRef label="homing" />
+      </bullet>
+    </fire>
+    <fire>
+      <direction>-30</direction>
+      <speed>3</speed>
+      <bullet>
+        <actionRef label="homing" />
+      </bullet>
+    </fire>
+    <fire>
+      <direction>30</direction>
+      <speed>3</speed>
+      <bullet>
+        <actionRef label="homing" />
+      </bullet>
+    </fire>
+    <fire>
+      <direction>90</direction>
+      <speed>3</speed>
+      <bullet>
+        <actionRef label="homing" />
+      </bullet>
+    </fire>
+  </action>
+
+  <action label="homing">
+    <repeat>
+      <times>9999</times>
+      <action>
+        <changeDirection>
+          <direction type="aim">0</direction>
+          <term>30</term>
+        </changeDirection>
+        <changeSpeed>
+          <speed type="absolute">3</speed>
+          <term>30</term>
+        </changeSpeed>
+        <wait>8</wait>
+      </action>
+    </repeat>
+  </action>
+</bulletml>

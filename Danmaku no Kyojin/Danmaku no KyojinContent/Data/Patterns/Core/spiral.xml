@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" ?>
-<!DOCTYPE bulletml SYSTEM "http://www.asahi-net.or.jp/~cs8k-cyu/bulletml/bulletml.dtd">
+<!DOCTYPE bulletml SYSTEM "../bulletml.dtd">
 
-<bulletml type="vertical"
-          xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+<bulletml type="vertical">
 
   <action label="top">
     <fire>
       <bulletRef label="3way"/>
     </fire>
+	<vanish/>
   </action>
 
   <bullet label="3way">
@@ -22,7 +22,7 @@
             <action>
               <fire>
                 <direction type="sequence">118</direction>
-                <speed>8</speed>
+                <speed>3</speed>
                 <bullet/>
               </fire>
             </action>
@@ -32,5 +32,4 @@
       <vanish/>
     </action>
   </bullet>
-
 </bulletml>
