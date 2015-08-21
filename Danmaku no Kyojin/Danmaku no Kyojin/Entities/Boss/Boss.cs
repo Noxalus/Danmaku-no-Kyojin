@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using Danmaku_no_Kyojin.BulletEngine;
 using Danmaku_no_Kyojin.Controls;
+using Danmaku_no_Kyojin.Particles;
 using Danmaku_no_Kyojin.Shapes;
+using Danmaku_no_Kyojin.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -49,6 +51,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             get { return _parts; }
         }
 
+        public BossCore BossCore
+        {
+            get { return _core; }
+        }
+
         public Boss(DnK gameRef, List<Player> players, int iteration = 50, float step = 25)
         {
             _gameRef = gameRef;
@@ -75,7 +82,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private void LoadContent()
         {
             //Get all the xml files
-            foreach (var source in Directory.GetFiles(@"Content\XML\Patterns", "*.xml", SearchOption.AllDirectories))
+            foreach (var source in Directory.GetFiles(@"Content\Data\Patterns", "*.xml", SearchOption.AllDirectories))
             {
                 //store the name
                 _patternNames.Add(source);
@@ -116,8 +123,33 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
             _parts.Add(_mainPart);
 
-            _core = new BossCore(_gameRef, _mainPart);
+            int targetPlayerId = _gameRef.Rand.Next(0, _players.Count);
+            _core = new BossCore(_gameRef, _mainPart, _players[targetPlayerId].GetPosition, MoverManager, _completeBulletPatterns);
             _core.Initialize();
+        }
+
+        private void ParticleExplosion(Vector2 position)
+        {
+            float hue1 = _gameRef.Rand.NextFloat(0, 6);
+            float hue2 = (hue1 + _gameRef.Rand.NextFloat(0, 2)) % 6f;
+            Color color1 = ColorUtil.HSVToColor(hue1, 0.5f, 1);
+            Color color2 = ColorUtil.HSVToColor(hue2, 0.5f, 1);
+
+            for (int j = 0; j < 50; j++)
+            {
+                float speed = 18f * (1f - 1 / _gameRef.Rand.NextFloat(1f, 10f));
+                var state = new ParticleState()
+                {
+                    Velocity = _gameRef.Rand.NextVector2(speed, speed),
+                    Type = ParticleType.Enemy,
+                    LengthMultiplier = 1f
+                };
+
+                Color color = Color.Lerp(color1, color2, _gameRef.Rand.NextFloat(0, 1));
+
+                _gameRef.ParticleManager.CreateParticle(_gameRef.LineParticle, position,
+                    color, 190, 1.5f, state);
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -132,6 +164,12 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             // (or if the boss core is destroyed instead)
             if (!_core.IsAlive)
             {
+                // Destroy all parts
+                foreach (var part in Parts)
+                {
+                    part.TakeDamage(9999);
+                }
+
                 _defeatCounter++;
                 Reset();
             }
@@ -139,7 +177,10 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _core.Update(gameTime);
 
             if (!_mainPartIsDead && !_mainPart.IsAlive)
+            {
                 _mainPartIsDead = true;
+                _core.Activate();
+            }
 
             for (int i = 0; i < _parts.Count; i++)
             {
@@ -149,50 +190,70 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     _parts.Remove(_parts[i]);
             }
 
+            // Check bullets to players collision
+            for (int i = 0; i < MoverManager.movers.Count; i++)
+            {
+                foreach (var player in _players)
+                {
+                    if (MoverManager.movers[i].Intersects(player))
+                    {
+                        // Destroyed by shield?
+                        if (player.IsInvincible)
+                        {
+                            ParticleExplosion(MoverManager.movers[i].Position);
+                            MoverManager.RemoveBullet(MoverManager.movers[i]);
+                        }
+                        else
+                            player.Hit();
+                    }
+                }
+            }
+
             if (Config.Debug)
             {
+                /*
+                //check input to increment/decrement the current bullet pattern
+                if (InputHandler.KeyPressed(Keys.A))
+                {
+                    //decrement the pattern
+                    if (0 >= _currentPatternIndex)
+                    {
+                        //if it is at the beginning, move to the end
+                        _currentPatternIndex = _bulletPatterns.Count - 1;
+                    }
+                    else
+                    {
+                        _currentPatternIndex--;
+                    }
+
+                    AddBullet(true);
+                }
+                else if (InputHandler.KeyPressed(Keys.X))
+                {
+                    //increment the pattern
+                    if ((_bulletPatterns.Count - 1) <= _currentPatternIndex)
+                    {
+                        //if it is at the beginning, move to the end
+                        _currentPatternIndex = 0;
+                    }
+                    else
+                    {
+                        _currentPatternIndex++;
+                    }
+
+                    AddBullet(true);
+                }
+                else if (InputHandler.KeyPressed(Keys.LeftControl))
+                {
+                    AddBullet(false);
+                }
+                else */
+
                 if (_parts.Count > 0)
                 {
                     var currentBossPart = _parts[_currentPartIndex];
                     var dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 100;
 
-                    /*
-                    //check input to increment/decrement the current bullet pattern
-                    if (InputHandler.KeyPressed(Keys.A))
-                    {
-                        //decrement the pattern
-                        if (0 >= _currentPatternIndex)
-                        {
-                            //if it is at the beginning, move to the end
-                            _currentPatternIndex = _bulletPatterns.Count - 1;
-                        }
-                        else
-                        {
-                            _currentPatternIndex--;
-                        }
-
-                        AddBullet(true);
-                    }
-                    else if (InputHandler.KeyPressed(Keys.X))
-                    {
-                        //increment the pattern
-                        if ((_bulletPatterns.Count - 1) <= _currentPatternIndex)
-                        {
-                            //if it is at the beginning, move to the end
-                            _currentPatternIndex = 0;
-                        }
-                        else
-                        {
-                            _currentPatternIndex++;
-                        }
-
-                        AddBullet(true);
-                    }
-                    else if (InputHandler.KeyPressed(Keys.LeftControl))
-                    {
-                        AddBullet(false);
-                    }
-                    else */
                     if (InputHandler.KeyDown(Keys.Space))
                     {
                         currentBossPart.GenerateStructure();
@@ -201,7 +262,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     {
                         currentBossPart.IterateStructure();
                     }
-                    else if (InputHandler.KeyDown(Keys.P))
+                    else if (InputHandler.KeyDown(Keys.O))
                     {
                         currentBossPart.IterateStructure();
                     }
@@ -228,13 +289,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                             (float)Math.Cos(currentBossPart.Rotation) * -1,
                             (float)-Math.Sin(currentBossPart.Rotation)
                         );
-
-                        /*
-                        var direction = new Vector2(
-                            (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
-                            (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
-                        );
-                        */
+                       
+                        //var direction = new Vector2(
+                        //    (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
+                        //    (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
+                        //);
 
                         currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
                     }
@@ -280,11 +339,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         public void Draw(GameTime gameTime, Matrix viewMatrix)
         {
             foreach (var part in _parts)
-            {
                 part.Draw(gameTime, viewMatrix);
-            }
 
             _core.Draw(gameTime);
+
+            MoverManager.Draw(gameTime);
         }
 
         public bool IsReady()

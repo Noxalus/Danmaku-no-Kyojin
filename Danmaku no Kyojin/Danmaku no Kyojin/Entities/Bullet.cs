@@ -16,11 +16,8 @@ namespace Danmaku_no_Kyojin.Entities
         {
             Rotation = (float)Math.Atan2(direction.Y, direction.X) - MathHelper.PiOver2;
             _distance = 0;
-
             WaveMode = false;
-
             CollisionBoxes.Add(new CollisionCircle(this, Vector2.Zero, sprite.Width / 2f));
-
             Power = Improvements.ShootPowerData[PlayerData.ShootPowerIndex].Key;
         }
 

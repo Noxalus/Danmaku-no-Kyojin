@@ -48,8 +48,8 @@ namespace Danmaku_no_Kyojin.BulletEngine
         /// </summary>
         public Bullet CreateBullet()
         {
-            if (_shoot != null)
-                _shoot.Play();   
+            _shoot?.Play();
+
             var mover = new Mover(_gameRef, this);
             movers.Add(mover); //Moverを登録
             mover.Initialize(); //初期化
@@ -92,6 +92,12 @@ namespace Danmaku_no_Kyojin.BulletEngine
                     i--;
                 }
             }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            foreach (var mover in movers)
+                mover.Draw(gameTime);
         }
     }
 }

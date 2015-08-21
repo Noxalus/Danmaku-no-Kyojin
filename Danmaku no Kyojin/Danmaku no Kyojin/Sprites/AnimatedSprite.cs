@@ -16,6 +16,7 @@ namespace Danmaku_no_Kyojin.Sprites
         Vector2 _position;
         Vector2 _velocity;
         float _speed = 2.5f;
+        private int _playCount;
 
         readonly Animation _animation;
 
@@ -133,15 +134,17 @@ namespace Danmaku_no_Kyojin.Sprites
                 _animations.Add(key, (Animation)animation[key].Clone());
 
             _controlable = true;
-            this._position = position;
+            _position = position;
+            _playCount = 0;
         }
 
         public AnimatedSprite(Texture2D sprite, Animation animation, Vector2 position)
         {
             _texture = sprite;
-            this._animation = animation;
+            _animation = animation;
             _controlable = false;
-            this._position = position;
+            _position = position;
+            _playCount = 0;
         }
 
         #endregion
@@ -159,10 +162,13 @@ namespace Danmaku_no_Kyojin.Sprites
             }
             else
             {
-                if (_isAnimating)
+                if (_isAnimating || _playCount > 0)
+                {
                     _animation.Update(gameTime);
-                else
-                    _animation.Reset();
+
+                    if (_playCount > 0 && _animation.CurrentFrame == _animation.FrameCount - 1)
+                        _playCount -= 1;
+                }
             }
         }
 
@@ -183,7 +189,7 @@ namespace Danmaku_no_Kyojin.Sprites
 
             spriteBatch.Draw(
                 _texture,
-                new Vector2(_position.X, _position.Y),
+                _position,
                 sourceRectangle,
                 color, rotation, origin, scale, effects, layerDepth
             );
@@ -193,12 +199,11 @@ namespace Danmaku_no_Kyojin.Sprites
 
         #region Method Regions
 
-        public void LockToMap()
+        public void Play(int playCount = 1)
         {
-            _position.X = MathHelper.Clamp(_position.X, 0, -Width);
-            _position.Y = MathHelper.Clamp(_position.Y, 0, -Height);
+            _playCount = playCount;
         }
-
+        
         public void ChangeFramesPerSecond(int newValue)
         {
             if (_controlable)
@@ -208,17 +213,6 @@ namespace Danmaku_no_Kyojin.Sprites
             }
             else
                 _animation.FramesPerSecond = newValue;
-        }
-
-        public void ChangePosition(Vector2 p)
-        {
-            _position = p;
-        }
-
-        public void ChangePosition(float x, float y)
-        {
-            _position.X = x;
-            _position.Y = y;
         }
         #endregion
     }
