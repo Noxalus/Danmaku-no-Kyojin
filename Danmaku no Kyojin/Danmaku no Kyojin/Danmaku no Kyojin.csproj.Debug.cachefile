@@ -40,6 +40,7 @@ Content\Graphics\Entities\boss_core.xnb
 Content\Audio\Musics\background.xnb
 Content\Audio\Musics\menu.xnb
 Content\Graphics\Entities\shield.xnb
+Content\Graphics\Pictures\trail.xnb
 Content\Audio\Musics\background.wma
 Content\Audio\Musics\menu.wma
 Content\Data\Patterns\Core\circle.xml
