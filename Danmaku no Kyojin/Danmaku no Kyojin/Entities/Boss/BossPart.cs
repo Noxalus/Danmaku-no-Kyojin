@@ -22,6 +22,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
     {
         private readonly Boss _bossRef;
         private readonly bool _mainPart;
+        private List<Player> _players;
         private BossStructure _structure;
         private MoverManager _moverManager;
         private Mover _mover;
@@ -36,6 +37,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         private int _iteration;
         private float _step;
         private float _accelerationDecreaseFactor;
+        private Vector2 _targetPosition;
+        private float _targetAngle;
         private BossCore _core;
         private Dictionary<CollisionConvexPolygon, float> _collisionBoxesHp; 
 
@@ -47,6 +50,9 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
         // Sprites
         private Texture2D _healthBar;
+
+        // IA
+        private TimeSpan _behaviourTimer;
 
         // Sounds
         private SoundEffect _deadSound;
@@ -63,9 +69,18 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             return (_structure != null) ? _structure.GetArea() : 0f;
         }
 
+        public float AngularVelocity { get; set; }
+
+        public List<Turret> GetTurrets()
+        {
+            return _turrets;
+        } 
+        
+
         public BossPart(
             DnK gameRef,
             Boss bossRef,
+            List<Player> playerList,
             MoverManager moverManager, 
             List<BulletPattern> bulletPatterns, 
             Color color, 
@@ -79,6 +94,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
         {
             _bossRef = bossRef;
             _mainPart = mainPart;
+            _players = playerList;
             _moverManager = moverManager;
             _bulletPatterns = bulletPatterns ?? new List<BulletPattern>();
 
@@ -94,6 +110,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             _turrets = turrets ?? new List<Turret>();
             _polygonShape = polygonShape;
             _collisionBoxesHp = new Dictionary<CollisionConvexPolygon, float>();
+			_targetPosition = Vector2.Zero;
+            _targetAngle = 0f;
         }
 
         public object Clone()
@@ -155,14 +173,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             /*
             _turrets.Clear();
 
-            foreach (var vertex in _structure.Vertices)
+            foreach (var vertex in _structure.GetVertices())
             {
                 if (true) //GameRef.Rand.NextDouble() > 0.75f)
                 {
                     var patternIndex = GameRef.Rand.Next(_bulletPatterns.Count);
                     var color = patternIndex == 0 ? Color.DarkBlue : Color.DarkRed;
 
-                    var turret = new Turret(GameRef, this, _players[0], new Vector2(vertex.X, vertex.Y), _bulletPatterns[patternIndex], color);
+                    var turret = new Turret(GameRef, this, _players[0], _moverManager, new Vector2(vertex.X, vertex.Y), _bulletPatterns[patternIndex], color);
                     turret.Initialize();
                     _turrets.Add(turret);
                 }
@@ -203,6 +221,32 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             X += Direction.X * (Velocity * Acceleration.X) * dt;
             Y += Direction.Y * (Velocity * Acceleration.Y) * dt;
 
+
+            _targetPosition = _players.First().Position;
+
+            /*
+            if (_targetPosition != Position)
+            {
+                float amount = MathHelper.Clamp(dt / 100, 0, 1);
+
+                X = MathHelper.Lerp(X, _targetPosition.X, amount);
+                Y = MathHelper.Lerp(Y, _targetPosition.Y, amount);
+            }
+            */
+
+            var playerPosition = _players.First().Position;
+            var distance = playerPosition - Position;
+            _targetAngle = (float)Math.Atan2(distance.Y, distance.X) - MathHelper.PiOver2;
+
+            Console.WriteLine("Target angle: " + _targetAngle);
+
+            if (Math.Abs(Rotation - _targetAngle) > 0.01f)
+            {
+                float amount = MathHelper.Clamp(dt / 10, 0, 1);
+
+                Rotation = MathHelper.Lerp(Rotation, _targetAngle, amount);
+            }
+
             if (Math.Abs(Acceleration.X) < 0.01f && Math.Abs(Acceleration.Y) < 0.01f)
             {
                 Acceleration = Vector2.Zero;
@@ -210,22 +254,30 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             }
 
             if (Acceleration.X > 0)
-            {
                 Acceleration = new Vector2(Acceleration.X - (_accelerationDecreaseFactor * dt), Acceleration.Y);
-            }
             else if (Acceleration.X < 0)
-            {
                 Acceleration = new Vector2(Acceleration.X + (_accelerationDecreaseFactor * dt), Acceleration.Y);
-            }
+
+            if (Acceleration.X < 0.01f && Acceleration.X > -0.01f)
+                Acceleration = new Vector2(0f, Acceleration.Y);
 
             if (Acceleration.Y > 0)
-            {
                 Acceleration = new Vector2(Acceleration.X, Acceleration.Y - (_accelerationDecreaseFactor * dt));
-            }
             else if (Acceleration.Y < 0)
-            {
                 Acceleration = new Vector2(Acceleration.X, Acceleration.Y + (_accelerationDecreaseFactor * dt));
-            }
+
+            if (Acceleration.Y < 0.01f && Acceleration.Y > -0.01f)
+                Acceleration = new Vector2(Acceleration.X, 0f);
+
+            if (AngularVelocity > 0f)
+                AngularVelocity = AngularVelocity - (_accelerationDecreaseFactor * dt);
+            else if (AngularVelocity < 0f)
+                AngularVelocity = AngularVelocity + (_accelerationDecreaseFactor*dt);
+
+            if (AngularVelocity < 0.01f && AngularVelocity > -0.01f)
+                AngularVelocity = 0f;
+
+            Rotation += AngularVelocity;
 
             // Turrets
             foreach (var turret in _turrets)
@@ -246,6 +298,8 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             }
 
             //_core.Update(gameTime);
+
+            HandleBehaviour(gameTime);
 
             base.Update(gameTime);
         }
@@ -330,7 +384,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                 if (newPolygonShape.Vertices != null && newPolygonShape.GetArea() > Config.MinBossPartArea)
                 {
                     var bossPart = new BossPart(
-                        GameRef, _bossRef, _moverManager, null, _color,
+                        GameRef, _bossRef, _players, _moverManager, null, _color,
                         _health, 0, 25f, null, newPolygonShape
                     );
 
@@ -439,6 +493,11 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             Direction.Normalize();
 
             Acceleration = acceleration;
+        }
+
+        public void ApplyAngularImpulse(float force)
+        {
+            AngularVelocity = force;
         }
 
         public void Draw(GameTime gameTime, Matrix viewMatrix)
@@ -609,6 +668,46 @@ namespace Danmaku_no_Kyojin.Entities.Boss
 
                 GameRef.ParticleManager.CreateParticle(GameRef.LineParticle, position,
                     color, 190, 1.5f, state);
+            }
+        }
+
+        private void HandleBehaviour(GameTime gameTime)
+        {
+            // TODO: Choose a random behavious
+            // - Rotate to the player position
+            // - Accelerate toward the player position
+            // - Random rotation/angular impulse
+            // - Random position/impulse
+
+            if (_behaviourTimer < TimeSpan.Zero)
+            {
+                var randomTimer = GameRef.Rand.Next(5, 20);
+                _behaviourTimer = TimeSpan.FromSeconds(randomTimer);
+
+                var random = (float) GameRef.Rand.NextDouble();
+
+                if (random < 0.25f)
+                {
+                    ApplyAngularImpulse(random);
+                }
+                else if (random < 0.5f)
+                {
+                    var randomDirection = new Vector2(random);
+                    randomDirection.Normalize();
+                    ApplyImpulse(randomDirection, new Vector2(random));
+                }
+                else if (GameRef.Rand.NextDouble() < 0.75f)
+                {
+
+                }
+                else if (GameRef.Rand.NextDouble() < 1)
+                {
+
+                }
+            }
+            else
+            {
+                _behaviourTimer -= gameTime.ElapsedGameTime;
             }
         }
     }

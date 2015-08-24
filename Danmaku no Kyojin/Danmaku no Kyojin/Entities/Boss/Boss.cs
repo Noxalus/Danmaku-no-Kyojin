@@ -107,7 +107,7 @@ namespace Danmaku_no_Kyojin.Entities.Boss
             if (_previousBossPart == null)
             {
                 _mainPart = new BossPart(
-                    _gameRef, this, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f),
+                    _gameRef, this, _players, MoverManager, _completeBulletPatterns, new Color(0f, 0.75f, 0f, 0.65f),
                     4242f, _iteration, _step, null, null, true
                 );
 
@@ -282,21 +282,16 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                     if (InputHandler.KeyDown(Keys.J))
                         currentBossPart.ApplyImpulse(new Vector2(-1, 0), new Vector2(acceleration));
 
-                    // Left vector
-                    if (InputHandler.KeyPressed(Keys.F))
-                    {
-                        var direction = new Vector2(
-                            (float)Math.Cos(currentBossPart.Rotation) * -1,
-                            (float)-Math.Sin(currentBossPart.Rotation)
-                        );
-                       
-                        //var direction = new Vector2(
-                        //    (float)Math.Cos(currentBossPart.Rotation + (Math.PI / 2f) * -1),
-                        //    (float)Math.Sin(currentBossPart.Rotation + (Math.PI / 2f) * 1)
-                        //);
+                // Left vector
+                if (InputHandler.KeyDown(Keys.F))
+                {
+                    var direction = new Vector2(
+                        (float)-Math.Sin(currentBossPart.Rotation),
+                        (float)Math.Cos(currentBossPart.Rotation)
+                    );
 
-                        currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
-                    }
+                    currentBossPart.ApplyImpulse(direction, new Vector2(0.05f));
+                }
 
                     // Right vector
                     if (InputHandler.KeyPressed(Keys.G))
@@ -311,14 +306,14 @@ namespace Danmaku_no_Kyojin.Entities.Boss
                         currentBossPart.ApplyImpulse(direction, new Vector2(acceleration));
                     }
 
-                    if (InputHandler.KeyDown(Keys.PageUp))
-                    {
-                        currentBossPart.Rotation += dt * 0.01f;
-                    }
-                    else if (InputHandler.KeyDown(Keys.PageDown))
-                    {
-                        currentBossPart.Rotation -= dt * 0.01f;
-                    }
+                if (InputHandler.KeyDown(Keys.PageUp))
+                {
+                    currentBossPart.ApplyAngularImpulse(.1f);
+                }
+                else if (InputHandler.KeyDown(Keys.PageDown))
+                {
+                    currentBossPart.ApplyAngularImpulse(-0.1f);
+                }
 
                     if (InputHandler.KeyPressed(Keys.H))
                     {
